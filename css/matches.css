@@ -640,28 +640,72 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 14px;
-            padding: 4px;
+            padding: 3px;
             margin-bottom: 9px;
-            gap: 4px;
+            gap: 3px;
             box-shadow: var(--shadow);
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .status-switch-btn {
-            flex: 1;
+            flex: 1 1 0;
+            min-width: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 8px 10px;
+            gap: 5px;
+            padding: 7px 4px;
             border-radius: 11px;
             border: none;
             background: transparent;
             color: var(--text-muted);
-            font-size: 0.77rem;
+            font-size: 0.74rem;
             font-weight: 800;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .status-switch-btn i {
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .status-switch-btn .btn-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            min-width: 0;
+        }
+
+        .status-switch-btn .text-compact {
+            display: none;
+        }
+
+        @media (max-width: 385px) {
+            .matches-status-switch {
+                padding: 2px;
+                gap: 2px;
+            }
+            .status-switch-btn {
+                padding: 6px 3px;
+                font-size: 0.69rem;
+                gap: 3px;
+            }
+            .status-switch-btn .text-full {
+                display: none;
+            }
+            .status-switch-btn .text-compact {
+                display: inline;
+            }
+            .status-count-badge {
+                padding: 0 4px;
+                font-size: 0.64rem;
+            }
         }
 
         .status-switch-btn.active {
@@ -682,6 +726,7 @@
             border-radius: 999px;
             font-size: 0.68rem;
             font-weight: 900;
+            flex-shrink: 0;
         }
 
         /* شريط التبديل بين الرياضات العالمية */

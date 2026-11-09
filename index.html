@@ -135,18 +135,27 @@
 
             <!-- مفتاح التبديل المزدوج لنوع المباريات (1xBet Dual Status Switcher) -->
             <div class="matches-status-switch" id="matchesStatusSwitch">
-                <button type="button" class="status-switch-btn active" data-status="all" id="statusBtnAll">
+                <button type="button" class="status-switch-btn active" data-status="all" id="statusBtnAll" title="جميع المباريات">
                     <i class="fa-solid fa-layer-group"></i>
-                    <span>جميع المباريات</span>
+                    <span class="btn-text">
+                        <span class="text-full">جميع المباريات</span>
+                        <span class="text-compact">الكل</span>
+                    </span>
                 </button>
-                <button type="button" class="status-switch-btn btn-live" data-status="live" id="statusBtnLive">
+                <button type="button" class="status-switch-btn btn-live" data-status="live" id="statusBtnLive" title="مباشر الآن">
                     <span class="live-dot-pulse"></span>
-                    <span>مباشر (LIVE)</span>
+                    <span class="btn-text">
+                        <span class="text-full">مباشر (LIVE)</span>
+                        <span class="text-compact">مباشر</span>
+                    </span>
                     <span class="status-count-badge" id="liveStatusBadge">0</span>
                 </button>
-                <button type="button" class="status-switch-btn" data-status="pre" id="statusBtnPre">
+                <button type="button" class="status-switch-btn" data-status="pre" id="statusBtnPre" title="المباريات القادمة والجدول">
                     <i class="fa-regular fa-clock"></i>
-                    <span>المباريات القادمة والجدول</span>
+                    <span class="btn-text">
+                        <span class="text-full">المباريات القادمة</span>
+                        <span class="text-compact">القادمة</span>
+                    </span>
                 </button>
             </div>
 
