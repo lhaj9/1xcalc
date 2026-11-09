@@ -541,16 +541,17 @@
             const venueName = comp.venue?.fullName || '';
 
             let scoreCenter = '';
-            if (hasScores || isLive || isFinished) {
+            if ((isLive || isFinished) && hasScores) {
+                // مباراة جارية مباشرة أو منتهية بنتيجة مؤكدة
                 scoreCenter = `
                     <div class="score-center-strip">
                         <div class="score-dual-row">
                             <span class="team-score-num ${isLive ? 'digit-live' : (homeWon ? 'digit-winner' : (awayWon ? 'digit-loser' : ''))}">
-                                ${isNaN(homeScore) ? 0 : homeScore}
+                                ${homeScore}
                             </span>
                             <span class="score-sep">:</span>
                             <span class="team-score-num ${isLive ? 'digit-live' : (awayWon ? 'digit-winner' : (homeWon ? 'digit-loser' : ''))}">
-                                ${isNaN(awayScore) ? 0 : awayScore}
+                                ${awayScore}
                             </span>
                         </div>
                         <span class="status-sub-label ${isLive ? 'live-label' : ''}">
@@ -558,11 +559,32 @@
                         </span>
                     </div>
                 `;
-            } else {
+            } else if (isLive && !hasScores) {
+                // مباراة انطلقت لتوها ولم تسجل أهداف بعد
                 scoreCenter = `
                     <div class="score-center-strip">
-                        <span class="vs-text">VS</span>
-                        <span class="kickoff-label"><i class="fa-regular fa-clock"></i> ${formatMatchTime(ev.date)}</span>
+                        <div class="score-dual-row">
+                            <span class="team-score-num digit-live">0</span>
+                            <span class="score-sep">:</span>
+                            <span class="team-score-num digit-live">0</span>
+                        </div>
+                        <span class="status-sub-label live-label">
+                            <span class="live-dot-pulse"></span> ${statusDetail || 'مباشر'}
+                        </span>
+                    </div>
+                `;
+            } else {
+                // مباراة قادمة غير ملعوبة: عرض - : - مع تفاصيل/توقيت اللقاء (لا تظهر أصفار 0-0 أبداً)
+                scoreCenter = `
+                    <div class="score-center-strip">
+                        <div class="score-dual-row">
+                            <span class="team-score-num score-pre-dash">-</span>
+                            <span class="score-sep">:</span>
+                            <span class="team-score-num score-pre-dash">-</span>
+                        </div>
+                        <span class="status-sub-label">
+                            ${statusDetail || 'قريباً'}
+                        </span>
                     </div>
                 `;
             }

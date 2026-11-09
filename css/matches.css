@@ -484,9 +484,15 @@
             font-size: 1.45rem;
             font-weight: 950;
             line-height: 1;
-            color: var(--text-muted);
+            color: var(--text-main);
             min-width: 25px;
             text-align: center;
+        }
+
+        .team-score-num.score-pre-dash {
+            color: var(--text-muted);
+            opacity: 0.75;
+            font-weight: 800;
         }
 
         .team-score-num.digit-winner {

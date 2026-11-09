@@ -293,6 +293,12 @@
             opacity: 0.5;
         }
 
+        .stats-hero-score-num.score-pre-dash {
+            color: var(--text-muted);
+            opacity: 0.75;
+            font-weight: 800;
+        }
+
         .stats-hero-sep {
             font-size: 1.5rem;
             font-weight: 900;

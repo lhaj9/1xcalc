@@ -179,29 +179,48 @@
             const heroBanner = document.getElementById('statsHeroBanner');
             if (heroBanner) {
                 let scoreCenterHtml = '';
-                if (hasScore || isLive || isFinished) {
+                if ((isLive || isFinished) && hasScore) {
                     scoreCenterHtml = `
                         <div class="stats-hero-center">
                             <div class="stats-hero-score-row">
                                 <span class="stats-hero-score-num ${isLive ? 'digit-live' : (homeWon ? 'score-winner' : (awayWon ? 'score-loser' : ''))}">
-                                    ${isNaN(homeScore) ? 0 : homeScore}
+                                    ${homeScore}
                                 </span>
                                 <span class="stats-hero-sep">:</span>
                                 <span class="stats-hero-score-num ${isLive ? 'digit-live' : (awayWon ? 'score-winner' : (homeWon ? 'score-loser' : ''))}">
-                                    ${isNaN(awayScore) ? 0 : awayScore}
+                                    ${awayScore}
                                 </span>
                             </div>
-                            <span class="stats-hero-status ${isLive ? 'tag-live' : (isFinished ? 'tag-post' : 'tag-pre')}">
+                            <span class="stats-hero-status ${isLive ? 'tag-live' : 'tag-post'}">
                                 ${isLive ? '<span class="live-dot-pulse"></span> ' : ''}${statusDetail}
                             </span>
                             ${venueName ? `<span class="stats-hero-venue">🏟️ ${venueName}</span>` : ''}
                         </div>
                     `;
-                } else {
+                } else if (isLive) {
                     scoreCenterHtml = `
                         <div class="stats-hero-center">
-                            <span class="stats-hero-score-num" style="font-size:1.4rem; color:var(--text-muted);">VS</span>
-                            <span class="stats-hero-status tag-pre">${statusDetail}</span>
+                            <div class="stats-hero-score-row">
+                                <span class="stats-hero-score-num digit-live">0</span>
+                                <span class="stats-hero-sep">:</span>
+                                <span class="stats-hero-score-num digit-live">0</span>
+                            </div>
+                            <span class="stats-hero-status tag-live">
+                                <span class="live-dot-pulse"></span> ${statusDetail}
+                            </span>
+                            ${venueName ? `<span class="stats-hero-venue">🏟️ ${venueName}</span>` : ''}
+                        </div>
+                    `;
+                } else {
+                    // مباراة قادمة غير ملعوبة: عرض - : - بدلاً من 0 : 0
+                    scoreCenterHtml = `
+                        <div class="stats-hero-center">
+                            <div class="stats-hero-score-row">
+                                <span class="stats-hero-score-num score-pre-dash">-</span>
+                                <span class="stats-hero-sep">:</span>
+                                <span class="stats-hero-score-num score-pre-dash">-</span>
+                            </div>
+                            <span class="stats-hero-status tag-pre">${statusDetail || 'لم تبدأ بعد'}</span>
                             ${venueName ? `<span class="stats-hero-venue">🏟️ ${venueName}</span>` : ''}
                         </div>
                     `;
