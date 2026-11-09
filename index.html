@@ -2264,19 +2264,26 @@
 
         /* ==================== نافذة تفاصيل وإحصائيات المباراة المتقدمة (Match Stats & Details Sheet) ==================== */
         #matchStatsModal.modal-overlay {
-            backdrop-filter: blur(12px) saturate(160%);
-            -webkit-backdrop-filter: blur(12px) saturate(160%);
-            background: rgba(4, 8, 18, 0.76);
-            z-index: 125;
+            backdrop-filter: blur(14px) saturate(160%);
+            -webkit-backdrop-filter: blur(14px) saturate(160%);
+            background: rgba(4, 8, 18, 0.78);
+            z-index: 2500;
             transition: opacity 0.25s ease;
+        }
+
+        body.stats-modal-open .bottom-nav-bar {
+            display: none !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
         }
 
         .match-stats-sheet {
             background: var(--bg-card);
             width: 100%;
             max-width: 550px;
-            max-height: 90vh;
-            border-radius: 24px 24px 0 0;
+            height: 94vh;
+            max-height: 94vh;
+            border-radius: 22px 22px 0 0;
             border-top: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
@@ -2294,59 +2301,82 @@
             .match-stats-sheet {
                 border-radius: 22px;
                 border: 1px solid var(--border-color);
-                max-height: 86vh;
+                height: auto;
+                max-height: 88vh;
             }
-        }
-
-        .stats-drag-handle {
-            width: 38px;
-            height: 4px;
-            background: var(--border-color);
-            border-radius: 999px;
-            margin: 8px auto 2px auto;
-            opacity: 0.7;
         }
 
         .stats-sheet-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 16px;
+            padding: 11px 14px;
             border-bottom: 1px solid var(--border-color);
             background: var(--bg-card);
+            gap: 8px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .stats-top-back-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 10px;
+            padding: 7px 13px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .stats-top-back-btn:active {
+            transform: scale(0.94);
+            background: var(--accent-bg);
+            color: var(--accent-primary);
         }
 
         .stats-header-info {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             overflow: hidden;
+            flex: 1;
+            justify-content: center;
         }
 
         .stats-header-league-logo {
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             object-fit: contain;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            flex-shrink: 0;
         }
 
         .stats-header-flag {
-            width: 20px;
-            height: 14px;
+            width: 18px;
+            height: 13px;
             object-fit: cover;
             border-radius: 3px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+            flex-shrink: 0;
         }
 
         .stats-header-titles {
             display: flex;
             flex-direction: column;
-            line-height: 1.25;
+            line-height: 1.2;
             overflow: hidden;
+            text-align: right;
         }
 
         .stats-header-league-name {
-            font-size: 0.84rem;
+            font-size: 0.82rem;
             font-weight: 900;
             color: var(--text-main);
             white-space: nowrap;
@@ -2355,7 +2385,7 @@
         }
 
         .stats-header-round {
-            font-size: 0.69rem;
+            font-size: 0.67rem;
             font-weight: 700;
             color: var(--text-muted);
             white-space: nowrap;
@@ -2366,7 +2396,75 @@
         .stats-header-actions {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
+            flex-shrink: 0;
+        }
+
+        .stats-header-action-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 9px;
+            padding: 6px 10px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .stats-header-action-btn:active {
+            transform: scale(0.94);
+        }
+
+        .stats-header-close-x {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 9px;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .stats-header-close-x:hover,
+        .stats-header-close-x:active {
+            color: var(--danger-accent);
+            border-color: var(--danger-accent);
+        }
+
+        .btn-stats-bottom-close {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+            margin-bottom: 25px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-stats-bottom-close:hover,
+        .btn-stats-bottom-close:active {
+            color: var(--danger-accent);
+            border-color: var(--danger-accent);
+            background: rgba(239, 68, 68, 0.08);
         }
 
         /* لافتة النتيجة والفرق الرئيسية داخل النافذة */
@@ -3228,7 +3326,7 @@
             display: none;
             align-items: flex-end;
             justify-content: center;
-            z-index: 100;
+            z-index: 2500;
         }
 
         .modal-overlay.open {
@@ -4562,9 +4660,11 @@
     <!-- ==================== نافذة تفاصيل وإحصائيات المباراة المنبثقة (Match Stats & Details Sheet) ==================== -->
     <div class="modal-overlay" id="matchStatsModal" aria-hidden="true">
         <div class="modal-sheet match-stats-sheet">
-            <div class="stats-drag-handle"></div>
-
             <div class="stats-sheet-header">
+                <button type="button" class="stats-top-back-btn" id="closeStatsModalBtn" title="رجوع لقائمة المباريات">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>رجوع</span>
+                </button>
                 <div class="stats-header-info">
                     <img id="statsLeagueLogo" src="" alt="" class="stats-header-league-logo" style="display: none;">
                     <img id="statsLeagueFlag" src="" alt="" class="stats-header-flag" style="display: none;">
@@ -4574,10 +4674,11 @@
                     </div>
                 </div>
                 <div class="stats-header-actions">
-                    <button type="button" class="icon-btn" id="refreshStatsBtn" title="تحديث لحظي" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
+                    <button type="button" class="stats-header-action-btn" id="refreshStatsBtn" title="تحديث لحظي">
                         <i class="fa-solid fa-arrows-rotate"></i>
+                        <span>تحديث</span>
                     </button>
-                    <button type="button" class="icon-btn" id="closeStatsModalBtn" title="إغلاق" style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">✕</button>
+                    <button type="button" class="stats-header-close-x" id="closeStatsModalX" title="إغلاق النافذة">✕</button>
                 </div>
             </div>
 
@@ -7006,10 +7107,11 @@
                 btn.classList.toggle('active', btn.dataset.tab === 'statsTabOverview');
             });
 
-            // فتح النافذة وقفل تمرير الخلفية
+            // فتح النافذة وقفل تمرير الخلفية وإخفاء شريط التنقل السفلي
             modal.classList.add('open');
             modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            document.body.classList.add('stats-modal-open');
 
             // حالة التحميل الأنيقة
             const heroBanner = document.getElementById('statsHeroBanner');
@@ -7074,6 +7176,7 @@
                 modal.setAttribute('aria-hidden', 'true');
             }
             document.body.style.overflow = '';
+            document.body.classList.remove('stats-modal-open');
         };
 
         const refreshCurrentMatchStats = async () => {
@@ -7340,6 +7443,10 @@
                         </div>
                     `;
                 }).join('')}
+                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
+                </button>
             `;
         };
 
@@ -7392,6 +7499,10 @@
                         </div>
                     `;
                 }).join('')}
+                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
+                </button>
             `;
         };
 
@@ -7471,6 +7582,11 @@
                         <span>حساب الصفقة</span>
                     </button>
                 </div>
+
+                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
+                </button>
             `;
         };
 
@@ -7478,6 +7594,7 @@
         const statsModalEl = document.getElementById('matchStatsModal');
         if (statsModalEl) {
             document.getElementById('closeStatsModalBtn')?.addEventListener('click', closeMatchStats);
+            document.getElementById('closeStatsModalX')?.addEventListener('click', closeMatchStats);
             document.getElementById('refreshStatsBtn')?.addEventListener('click', refreshCurrentMatchStats);
             statsModalEl.addEventListener('click', (e) => {
                 if (e.target === statsModalEl) closeMatchStats();
