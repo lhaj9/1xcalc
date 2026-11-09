@@ -12,7 +12,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="1XCALC">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/10037/10037390.png">
+
+    <!-- أيقونات الموقع والتطبيق للشاشات المختلفة (Favicon & PWA Icons) -->
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
 
     <!-- أيقونات سحابية من الإنترنت (Font Awesome 6.5) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -23,60 +28,60 @@
             --bg-main: #f4f6fa;
             --bg-card: #ffffff;
             --bg-input: #f8fafc;
-            --bg-elevated: #edf2f7;
+            --bg-elevated: #eef2f8;
             --text-main: #0e1726;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --accent-primary: #1055a4; /* أزرق 1xBet الأساسي */
+            --accent-primary: #1055a4; /* أزرق 1xBet الملكي */
             --accent-hover: #0c4383;
             --accent-bg: rgba(16, 85, 164, 0.08);
             --blue-accent: #166fe5;
             --blue-bg: rgba(22, 111, 229, 0.08);
-            --green-accent: #10b981; /* أخضر 1xBet الرياضي */
-            --green-bg: rgba(16, 185, 129, 0.09);
-            --amber-accent: #f59e0b;
+            --green-accent: #00b649; /* أخضر الشعار الزمردي النابض */
+            --green-bg: rgba(0, 182, 73, 0.09);
+            --purple-accent: #681cfb; /* بنفسجي الشعار الكهربائي الحيوي */
+            --purple-bg: rgba(104, 28, 251, 0.08);
+            --amber-accent: #f59e0b; /* ذهبي الشعار الدافئ */
             --amber-bg: rgba(245, 158, 11, 0.09);
             --danger-accent: #ef4444;
             --danger-bg: rgba(239, 68, 68, 0.08);
-            --purple-accent: #8b5cf6;
-            --purple-bg: rgba(139, 92, 246, 0.08);
             --shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
             --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.08);
             --bottom-nav-bg: #ffffff;
             --bottom-nav-border: #e2e8f0;
-            --betslip-fab-bg: linear-gradient(135deg, #1d6fe9 0%, #0d4b9b 100%);
+            --betslip-fab-bg: linear-gradient(135deg, #681cfb 0%, #1055a4 50%, #00b649 100%);
             --odds-card-bg: #f8fafc;
             --odds-card-border: #e2e8f0;
         }
 
         :root[data-theme="dark"] {
-            --bg-main: #0c111a; /* كحلي داكن رياضي 1xBet */
-            --bg-card: #151d2a;
-            --bg-input: #1b2536;
-            --bg-elevated: #232f44;
-            --text-main: #f3f6fa;
-            --text-muted: #8b99ad;
-            --border-color: #243044;
-            --accent-primary: #2176ff;
-            --accent-hover: #1965e0;
-            --accent-bg: rgba(33, 118, 255, 0.14);
+            --bg-main: #090e19; /* كحلي ليلي عميق متناسق مع خلفية الشعار */
+            --bg-card: #121a28;
+            --bg-input: #182236;
+            --bg-elevated: #202d46;
+            --text-main: #f4f7fc;
+            --text-muted: #8e9db2;
+            --border-color: #222f46;
+            --accent-primary: #2575fc;
+            --accent-hover: #1c66e5;
+            --accent-bg: rgba(37, 117, 252, 0.14);
             --blue-accent: #3b82f6;
             --blue-bg: rgba(59, 130, 246, 0.14);
-            --green-accent: #10b981;
-            --green-bg: rgba(16, 185, 129, 0.14);
-            --amber-accent: #f59e0b;
-            --amber-bg: rgba(245, 158, 11, 0.14);
+            --green-accent: #00d053; /* أخضر زمردي ساطع في الوضع المظلم */
+            --green-bg: rgba(0, 208, 83, 0.14);
+            --purple-accent: #7c3aed; /* بنفسجي كهربائي مشرق */
+            --purple-bg: rgba(124, 58, 237, 0.16);
+            --amber-accent: #fbbf24; /* ذهبي مشرق */
+            --amber-bg: rgba(251, 191, 36, 0.14);
             --danger-accent: #ef4444;
             --danger-bg: rgba(239, 68, 68, 0.14);
-            --purple-accent: #a855f7;
-            --purple-bg: rgba(168, 85, 247, 0.14);
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-            --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.45);
-            --bottom-nav-bg: #121824;
-            --bottom-nav-border: #1e283b;
-            --betslip-fab-bg: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-            --odds-card-bg: #1a2334;
-            --odds-card-border: #243147;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 14px 35px rgba(0, 0, 0, 0.55);
+            --bottom-nav-bg: #0f1624;
+            --bottom-nav-border: #1a2538;
+            --betslip-fab-bg: linear-gradient(135deg, #681cfb 0%, #2575fc 50%, #00d053 100%);
+            --odds-card-bg: #151e2f;
+            --odds-card-border: #223049;
         }
 
         * {
@@ -196,9 +201,18 @@
         .brand-area {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             direction: ltr !important;
             unicode-bidi: isolate;
+        }
+
+        .brand-app-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            object-fit: contain;
+            box-shadow: 0 3px 10px rgba(104, 28, 251, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .brand-1xbet {
@@ -3072,6 +3086,7 @@
         <!-- هيدر تطبيق 1XCALC المستوحى من 1xBet -->
         <header class="app-header">
             <div class="brand-area" dir="ltr">
+                <img src="./icon-192.png" alt="1XCALC Logo" class="brand-app-icon">
                 <span class="brand-1xbet" dir="ltr">
                     <span class="logo-1x">1X</span><span class="logo-bet">CALC</span>
                 </span>
@@ -3235,8 +3250,7 @@
                 <div class="grid-2" style="margin-top: 10px;">
                     <div class="ratio-card blue-box">
                         <div class="ratio-header">
-                            <img src="https://cdn-icons-png.flaticon.com/512/10037/10037390.png" alt="الأزرق"
-                                class="logo-sm">
+                            <i class="fa-solid fa-circle-dot" style="color: var(--blue-accent); font-size: 1.05rem;"></i>
                             <span>احتمال الأزرق</span>
                         </div>
                         <input type="number" id="ratio1" class="ratio-input" placeholder="0.00" inputmode="decimal"
@@ -3245,8 +3259,7 @@
 
                     <div class="ratio-card green-box">
                         <div class="ratio-header">
-                            <img src="https://cdn-icons-png.flaticon.com/512/10037/10037255.png" alt="الأخضر"
-                                class="logo-sm">
+                            <i class="fa-solid fa-circle-dot" style="color: var(--green-accent); font-size: 1.05rem;"></i>
                             <span>احتمال الأخضر</span>
                         </div>
                         <input type="number" id="ratio2" class="ratio-input" placeholder="0.00" inputmode="decimal"
@@ -3260,8 +3273,7 @@
             <div class="grid-2" style="margin-bottom: 11px;">
                 <div class="result-card blue-res">
                     <div class="res-title">
-                        <img src="https://cdn-icons-png.flaticon.com/512/10037/10037390.png" alt="الأزرق"
-                            class="logo-sm">
+                        <i class="fa-solid fa-coins" style="color: var(--blue-accent); font-size: 1rem;"></i>
                         <span>مبلغ الأزرق</span>
                     </div>
                     <div class="stake-value" id="resultBlue">0.0</div>
@@ -3271,8 +3283,7 @@
 
                 <div class="result-card green-res">
                     <div class="res-title">
-                        <img src="https://cdn-icons-png.flaticon.com/512/10037/10037255.png" alt="الأخضر"
-                            class="logo-sm">
+                        <i class="fa-solid fa-coins" style="color: var(--green-accent); font-size: 1rem;"></i>
                         <span>مبلغ الأخضر</span>
                     </div>
                     <div class="stake-value" id="resultGreen">0.0</div>
@@ -5740,7 +5751,7 @@
                 code: 'all',
                 name: 'كل الدوريات الكبرى',
                 shortName: 'الكل',
-                logo: 'https://cdn-icons-png.flaticon.com/512/10037/10037390.png',
+                logo: './icon-192.png',
                 flagImg: ''
             },
             {
@@ -6100,8 +6111,8 @@
                 badgeHtml = `<span class="match-status-badge status-pre"><i class="fa-regular fa-clock"></i> ${formatMatchTime(ev.date)}</span>`;
             }
 
-            const homeLogo = home.team?.logo || 'https://cdn-icons-png.flaticon.com/512/10037/10037390.png';
-            const awayLogo = away.team?.logo || 'https://cdn-icons-png.flaticon.com/512/10037/10037255.png';
+            const homeLogo = home.team?.logo || './icon-192.png';
+            const awayLogo = away.team?.logo || './icon-192.png';
             const homeName = home.team?.displayName || 'صاحب الأرض';
             const awayName = away.team?.displayName || 'الضيف';
             const matchTitle = `${homeName} ضد ${awayName}`;

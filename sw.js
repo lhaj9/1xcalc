@@ -1,8 +1,16 @@
-const CACHE_NAME = 'arb-calc-pwa-v11';
+const CACHE_NAME = 'arb-calc-pwa-v12';
 const ASSETS = [
     './',
     './index.html',
-    './manifest.json'
+    './manifest.json',
+    './README.md',
+    './favicon.ico',
+    './favicon.png',
+    './icon-192.png',
+    './icon-512.png',
+    './apple-touch-icon.png',
+    './icon-192.webp',
+    './icon-512.webp'
 ];
 
 self.addEventListener('install', (event) => {
