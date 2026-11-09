@@ -373,12 +373,12 @@
         }
 
         .tab-panel {
-            display: none;
+            display: none !important;
             animation: fadeInSlide 0.24s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .tab-panel.active {
-            display: block;
+            display: block !important;
         }
 
         @keyframes fadeInSlide {
@@ -1447,7 +1447,34 @@
             font-size: 0.68rem;
         }
 
-        /* ==================== تصميم كروت القسائم وإدارتها ==================== */
+        /* ==================== تصميم كروت القسائم وإدارتها مع وضع التركيز والزغللة ==================== */
+        #tab3 {
+            position: relative;
+        }
+
+        /* وضع التركيز: زغللة وتعتيم جميع العناصر التي لا تخص القسيمة المفتوحة */
+        #tab3.has-focused-slip .portfolio-hero,
+        #tab3.has-focused-slip .slips-toolbar,
+        #tab3.has-focused-slip .filter-bar,
+        #tab3.has-focused-slip .slips-hint-bar {
+            filter: blur(4px) opacity(0.32);
+            pointer-events: none;
+            transition: filter 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.28s ease;
+            user-select: none;
+        }
+
+        #tab3.has-focused-slip .slip-ticket:not(.expanded) {
+            filter: blur(3.5px) opacity(0.3);
+            transform: scale(0.975);
+            transition: filter 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.28s ease, transform 0.28s ease;
+            cursor: pointer;
+        }
+
+        #tab3.has-focused-slip .slip-ticket:not(.expanded):hover {
+            opacity: 0.55;
+            filter: blur(1.5px);
+        }
+
         .slip-ticket {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -1455,7 +1482,8 @@
             margin-bottom: 12px;
             box-shadow: var(--shadow);
             overflow: hidden;
-            transition: all 0.2s ease;
+            transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
         }
 
         .slip-ticket.status-pending {
@@ -1474,9 +1502,72 @@
             border-right: 5px solid var(--danger-accent);
         }
 
+        /* تمييز القسيمة المفتوحة بحدود واضحة وظلال بارزة وشارة واضحة */
         .slip-ticket.expanded {
-            border-color: var(--accent-primary);
-            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 45;
+            filter: none !important;
+            opacity: 1 !important;
+            transform: scale(1.02);
+            border: 2px solid var(--accent-primary) !important;
+            border-radius: 18px;
+            box-shadow: 0 16px 42px rgba(16, 85, 164, 0.22), 0 0 0 4px var(--accent-bg);
+            margin: 16px 0;
+        }
+
+        :root[data-theme="dark"] .slip-ticket.expanded {
+            box-shadow: 0 18px 48px rgba(0, 0, 0, 0.75), 0 0 0 3px rgba(33, 118, 255, 0.28);
+            border-color: #3b82f6 !important;
+        }
+
+        .slip-active-badge {
+            display: none;
+            background: var(--accent-bg);
+            color: var(--accent-primary);
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(16, 85, 164, 0.25);
+            align-items: center;
+            gap: 4px;
+        }
+
+        .slip-ticket.expanded .slip-active-badge {
+            display: inline-flex;
+        }
+
+        .slip-footer-collapse-bar {
+            margin-top: 10px;
+            padding-top: 9px;
+            border-top: 1px dashed var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slip-collapse-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 10px;
+            padding: 8px 18px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            width: 100%;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .slip-collapse-btn:active {
+            transform: scale(0.97);
+            background: var(--accent-bg);
+            color: var(--accent-primary);
         }
 
         /* كتل الإجراءات المفتوحة المنظمة */
@@ -2667,36 +2758,7 @@
                     </div>
                 </div>
             </div>
-                    <div class="roi-pill">
-                        <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">العائد ROI / النجاح
-                        </div>
-                        <div id="statRoiAndWinRate"
-                            style="font-size: 0.84rem; font-weight: 900; direction: ltr; color: var(--accent-primary);">
-                            0% | 0%</div>
-                    </div>
-                </div>
-
-                <div class="stats-grid-4">
-                    <div class="mini-stat">
-                        <div class="mini-stat-lbl">⏳ قيد اللعب</div>
-                        <div class="mini-stat-val" id="statPendingCount" style="color: var(--amber-accent);">0</div>
-                    </div>
-                    <div class="mini-stat">
-                        <div class="mini-stat-lbl">💵 مستثمر نشط</div>
-                        <div class="mini-stat-val" id="statActiveInvested" style="color: var(--blue-accent);">0$</div>
-                    </div>
-                    <div class="mini-stat">
-                        <div class="mini-stat-lbl">✅ رابحة</div>
-                        <div class="mini-stat-val" id="statWonCount" style="color: var(--green-accent);">0</div>
-                    </div>
-                    <div class="mini-stat">
-                        <div class="mini-stat-lbl">❌ خاسرة</div>
-                        <div class="mini-stat-val" id="statLostCount" style="color: var(--danger-accent);">0</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="slips-toolbar">
+                    <div class="slips-toolbar">
                 <input type="text" id="searchSlipsInput" class="search-slips-input"
                     placeholder="🔍 ابحث باسم المباراة أو القسيمة...">
             </div>
@@ -2714,7 +2776,7 @@
                         id="fCountLost">0</span></button>
             </div>
 
-            <div
+            <div class="slips-hint-bar"
                 style="font-size: 0.73rem; color: var(--text-muted); margin-bottom: 8px; text-align: center; font-weight: 700;">
                 💡 انقر على أي قسيمة لتوسيعها، وإدخال احتمال الرهان الثاني، أو إغلاقها وتحديد نتيجتها
             </div>
@@ -3495,6 +3557,14 @@
                 trg.classList.toggle('active', trg.dataset.targetTab === tabId);
             });
 
+            // إعادة ضبط وضع تركيز القسائم عند مغادرة قسم القسائم
+            if (tabId !== 'tab3') {
+                expandedSlipIds.clear();
+                const tab3El = document.getElementById('tab3');
+                if (tab3El) tab3El.classList.remove('has-focused-slip');
+                document.querySelectorAll('.slip-ticket.expanded').forEach(el => el.classList.remove('expanded'));
+            }
+
             // 5. استدعاء ريندر التبويب المحدد
             if (tabId === 'tab3') {
                 renderSlips();
@@ -3641,8 +3711,25 @@
                     </div>
                 `;
             }).join('');
+            const tab3El = document.getElementById('tab3');
+            if (tab3El) {
+                tab3El.classList.toggle('has-focused-slip', expandedSlipIds.size > 0);
+            }
+
             updateMenuStats();
         };
+
+        // النقر على خلفية تبويب القسائم خارج القسيمة المفتوحة يطويها ويعيد الشاشة لطبيعتها
+        const tab3Panel = document.getElementById('tab3');
+        if (tab3Panel) {
+            tab3Panel.addEventListener('click', (e) => {
+                if (expandedSlipIds.size > 0 && !e.target.closest('.slip-ticket')) {
+                    expandedSlipIds.clear();
+                    document.querySelectorAll('.slip-ticket.expanded').forEach(el => el.classList.remove('expanded'));
+                    tab3Panel.classList.remove('has-focused-slip');
+                }
+            });
+        }
 
         window.applyHistoryItemToCalc = (source, id) => {
             if (source === 't1') {
@@ -4144,14 +4231,29 @@
         });
 
         window.toggleSlipExpand = (id) => {
-            if (expandedSlipIds.has(id)) {
-                expandedSlipIds.delete(id);
-            } else {
+            const wasOpen = expandedSlipIds.has(id);
+
+            // طي أي قسيمة مفتوحة مسبقاً للتركيز على قسيمة واحدة فقط
+            expandedSlipIds.forEach(prevId => {
+                const prevEl = document.getElementById(`slip-card-${prevId}`);
+                if (prevEl) prevEl.classList.remove('expanded');
+            });
+            expandedSlipIds.clear();
+
+            if (!wasOpen) {
                 expandedSlipIds.add(id);
+                const cardEl = document.getElementById(`slip-card-${id}`);
+                if (cardEl) {
+                    cardEl.classList.add('expanded');
+                    setTimeout(() => {
+                        cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 80);
+                }
             }
-            const cardEl = document.getElementById(`slip-card-${id}`);
-            if (cardEl) {
-                cardEl.classList.toggle('expanded', expandedSlipIds.has(id));
+
+            const tab3El = document.getElementById('tab3');
+            if (tab3El) {
+                tab3El.classList.toggle('has-focused-slip', expandedSlipIds.size > 0);
             }
         };
 
@@ -4471,6 +4573,7 @@
                                 <div class="slip-title-wrap">
                                     <span class="status-dot ${st.dot}"></span>
                                     <span class="slip-title">${slip.title}</span>
+                                    <span class="slip-active-badge"><i class="fa-solid fa-pen-ruler"></i> جارية للتعديل</span>
                                 </div>
                                 <span class="status-tag ${st.cls}">${st.text}</span>
                             </div>
@@ -4633,6 +4736,13 @@
                                 </button>
                                 <button type="button" class="tool-link-btn btn-delete" onclick="deleteSlip(${slip.id})">
                                     <i class="fa-solid fa-trash-can"></i> حذف القسيمة
+                                </button>
+                            </div>
+
+                            <!-- 5. زر طي وإغلاق القسيمة لتمييز نهاية حدودها بوضوح -->
+                            <div class="slip-footer-collapse-bar">
+                                <button type="button" class="slip-collapse-btn" onclick="toggleSlipExpand(${slip.id})">
+                                    <i class="fa-solid fa-chevron-up"></i> إغلاق وطي تفاصيل القسيمة ✕
                                 </button>
                             </div>
                         </div>
