@@ -4383,49 +4383,7 @@
             trg.addEventListener('click', () => switchTab(trg.dataset.targetTab));
         });
 
-        // ==================== السحب للتمرير بين التبويبات (Touch Swipe Navigation) ====================
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let touchStartTime = 0;
 
-        document.addEventListener('touchstart', (e) => {
-            if (e.target.closest('.modal-overlay.open') ||
-                e.target.closest('input') ||
-                e.target.closest('select') ||
-                e.target.closest('.table-wrapper') ||
-                e.target.closest('.category-pills-bar') ||
-                e.target.closest('.chips-row') ||
-                e.target.closest('.filter-bar')) {
-                return;
-            }
-            const t = e.touches[0];
-            touchStartX = t.clientX;
-            touchStartY = t.clientY;
-            touchStartTime = Date.now();
-        }, { passive: true });
-
-        document.addEventListener('touchend', (e) => {
-            if (!touchStartTime) return;
-            const t = e.changedTouches[0];
-            const diffX = t.clientX - touchStartX;
-            const diffY = t.clientY - touchStartY;
-            const duration = Date.now() - touchStartTime;
-            touchStartTime = 0;
-
-            if (Math.abs(diffX) >= 55 && Math.abs(diffY) <= 50 && duration <= 600) {
-                const currentPanel = document.querySelector('.tab-panel.active');
-                const currentTabId = currentPanel ? currentPanel.id : 'tabHome';
-                const currentIndex = availableTabs.indexOf(currentTabId);
-                if (currentIndex === -1) return;
-
-                // في RTL: السحب لليسار (diffX < 0) يعني التالي، والسحب لليمين (diffX > 0) يعني السابق
-                if (diffX > 0 && currentIndex < availableTabs.length - 1) {
-                    switchTab(availableTabs[currentIndex + 1]);
-                } else if (diffX < 0 && currentIndex > 0) {
-                    switchTab(availableTabs[currentIndex - 1]);
-                }
-            }
-        }, { passive: true });
 
         // ==================== دوال ريندر السجل الشامل وقائمة التحكم ====================
         const renderFullHistory = () => {
