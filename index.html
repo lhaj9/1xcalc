@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#121214" id="metaThemeColor">
+    <meta name="theme-color" content="#0f1015" id="metaThemeColor">
 
     <!-- إعدادات PWA وتطبيق الآيفون -->
     <link rel="manifest" href="./manifest.json">
@@ -184,7 +184,7 @@
 
         .header-actions {
             display: flex;
-            gap: 8px;
+            gap: 7px;
         }
 
         .icon-btn {
@@ -198,11 +198,19 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 1.05rem;
+            font-size: 1.02rem;
+            transition: transform 0.15s ease, border-color 0.2s ease;
         }
 
         .icon-btn:active {
-            transform: scale(0.93);
+            transform: scale(0.92);
+        }
+
+        .icon-btn.help-btn {
+            background: var(--accent-bg);
+            border-color: rgba(99, 102, 241, 0.4);
+            color: var(--accent-primary);
+            font-weight: 900;
         }
 
         /* شريط التبويبات */
@@ -555,7 +563,7 @@
             color: #fff;
         }
 
-        /* قسم فحص ومحاكاة الاحتمال الفعلي للخيار الثاني (جديد) */
+        /* محاكي وفاحص الاحتمال الفعلي للخيار الثاني */
         .simulator-card {
             background: linear-gradient(180deg, var(--purple-bg), var(--bg-card));
             border: 1.5px solid var(--purple-accent);
@@ -763,9 +771,9 @@
         .portfolio-top {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding-bottom: 11px;
-            margin-bottom: 11px;
+            align-items: flex-start;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
         }
 
@@ -773,7 +781,7 @@
             font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 700;
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .pnl-main-val {
@@ -782,9 +790,18 @@
             direction: ltr;
         }
 
+        .pnl-sub-breakdown {
+            display: flex;
+            gap: 10px;
+            font-size: 0.71rem;
+            font-weight: 800;
+            margin-top: 4px;
+            direction: ltr;
+        }
+
         .roi-pill {
             background: var(--bg-elevated);
-            padding: 5px 10px;
+            padding: 6px 10px;
             border-radius: 10px;
             text-align: center;
         }
@@ -908,7 +925,6 @@
             border-right-width: 5px;
         }
 
-        /* الرأس المدمج الذي يظهر دائماً */
         .slip-compact-header {
             padding: 12px 13px;
             cursor: pointer;
@@ -960,6 +976,7 @@
 
         .dot-lost {
             background: var(--danger-accent);
+            box-shadow: 0 0 8px var(--danger-accent);
         }
 
         .slip-title {
@@ -1018,15 +1035,17 @@
             align-items: center;
             gap: 8px;
             font-weight: 800;
+            flex-wrap: wrap;
         }
 
         .compact-pnl-badge {
             font-weight: 900;
             direction: ltr;
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             display: flex;
             align-items: center;
             gap: 5px;
+            flex-shrink: 0;
         }
 
         .expand-chevron {
@@ -1040,7 +1059,6 @@
             color: var(--accent-primary);
         }
 
-        /* الجسم الداخلي للقسيمة (مخفي افتراضياً ويظهر عند النقر) */
         .slip-expand-body {
             display: none;
             padding: 0 13px 13px 13px;
@@ -1076,7 +1094,10 @@
             border-color: rgba(245, 158, 11, 0.4);
         }
 
-        /* صندوق محاكاة وتعديل الاحتمال الثاني داخل القسيمة */
+        .leg-box.played-leg {
+            border-color: rgba(16, 185, 129, 0.45);
+        }
+
         .slip-live-calc {
             background: var(--bg-input);
             border: 1.5px solid var(--purple-accent);
@@ -1138,6 +1159,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
         }
 
         .slip-actions-grid {
@@ -1160,6 +1183,7 @@
             align-items: center;
             justify-content: center;
             gap: 4px;
+            text-align: center;
         }
 
         .slip-act-btn.full-width {
@@ -1222,8 +1246,8 @@
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(3px);
+            background: rgba(0, 0, 0, 0.68);
+            backdrop-filter: blur(4px);
             display: none;
             align-items: flex-end;
             justify-content: center;
@@ -1238,11 +1262,179 @@
             background: var(--bg-card);
             width: 100%;
             max-width: 540px;
-            border-radius: 20px 20px 0 0;
+            border-radius: 22px 22px 0 0;
             padding: 18px 16px 26px 16px;
             border-top: 1px solid var(--border-color);
             max-height: 90vh;
             overflow-y: auto;
+            animation: slideUp 0.25s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(35px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ==================== تصميم نافذة دليل الاستخدام (Markdown Guide Modal) ==================== */
+        .help-modal-sheet {
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 88vh;
+            max-height: 88vh;
+            overflow: hidden;
+        }
+
+        .help-modal-header {
+            padding: 14px 16px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .help-header-title {
+            font-size: 0.96rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .help-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .github-ext-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 9px;
+            font-size: 0.73rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .github-ext-btn:active {
+            background: var(--bg-elevated);
+        }
+
+        .help-quick-nav {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 9px 14px;
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            scrollbar-width: none;
+        }
+
+        .help-quick-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .help-nav-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 5px 11px;
+            border-radius: 18px;
+            font-size: 0.73rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .help-nav-pill:hover,
+        .help-nav-pill.active {
+            background: var(--accent-primary);
+            color: #fff;
+            border-color: var(--accent-primary);
+        }
+
+        .help-modal-body {
+            padding: 14px 15px 30px 15px;
+            overflow-y: auto;
+            flex: 1;
+            line-height: 1.65;
+        }
+
+        /* تنسيق عناصر ملف المارك داون داخل النافذة */
+        .md-sec-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 13px 14px;
+            margin-bottom: 12px;
+        }
+
+        .md-sec-card h1 {
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: var(--accent-primary);
+            margin-bottom: 8px;
+        }
+
+        .md-sec-card h2 {
+            font-size: 0.94rem;
+            font-weight: 900;
+            color: var(--amber-accent);
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .md-sec-card h3 {
+            font-size: 0.86rem;
+            font-weight: 900;
+            color: var(--blue-accent);
+            margin: 10px 0 6px 0;
+        }
+
+        .md-sec-card p {
+            font-size: 0.8rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .md-sec-card ul,
+        .md-sec-card ol {
+            padding-right: 18px;
+            margin-bottom: 8px;
+        }
+
+        .md-sec-card li {
+            font-size: 0.79rem;
+            margin-bottom: 5px;
+            color: var(--text-main);
+        }
+
+        .md-sec-card code {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 1px 6px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--green-accent);
+            direction: ltr;
+            display: inline-block;
         }
 
         .setting-row {
@@ -1354,10 +1546,11 @@
             </div>
         </div>
 
-        <!-- الهيدر -->
+        <!-- الهيدر العلوي مع زر علامة الاستفهام (دليل الاستخدام) بجانب زر الوضع المظلم -->
         <header class="app-header">
             <div class="app-title">⚡ مدير وحاسبة الصفقات</div>
             <div class="header-actions">
+                <button class="icon-btn help-btn" id="openHelpBtn" title="دليل وطريقة عمل التطبيق">❓</button>
                 <button class="icon-btn" id="themeQuickBtn" title="تبديل المظهر">🌙</button>
                 <button class="icon-btn" id="openSettingsBtn" title="الإعدادات">⚙️</button>
             </div>
@@ -1385,18 +1578,22 @@
                 <div class="grid-2" style="margin-top: 10px;">
                     <div class="ratio-card blue-box">
                         <div class="ratio-header">
-                            <img src="https://cdn-icons-png.flaticon.com/512/10037/10037390.png" alt="الأزرق" class="logo-sm">
+                            <img src="https://cdn-icons-png.flaticon.com/512/10037/10037390.png" alt="الأزرق"
+                                class="logo-sm">
                             <span>احتمال الأزرق</span>
                         </div>
-                        <input type="number" id="ratio1" class="ratio-input" placeholder="0.00" inputmode="decimal" step="any">
+                        <input type="number" id="ratio1" class="ratio-input" placeholder="0.00" inputmode="decimal"
+                            step="any">
                     </div>
 
                     <div class="ratio-card green-box">
                         <div class="ratio-header">
-                            <img src="https://cdn-icons-png.flaticon.com/512/10037/10037255.png" alt="الأخضر" class="logo-sm">
+                            <img src="https://cdn-icons-png.flaticon.com/512/10037/10037255.png" alt="الأخضر"
+                                class="logo-sm">
                             <span>احتمال الأخضر</span>
                         </div>
-                        <input type="number" id="ratio2" class="ratio-input" placeholder="0.00" inputmode="decimal" step="any">
+                        <input type="number" id="ratio2" class="ratio-input" placeholder="0.00" inputmode="decimal"
+                            step="any">
                     </div>
                 </div>
             </div>
@@ -1406,7 +1603,8 @@
             <div class="grid-2" style="margin-bottom: 11px;">
                 <div class="result-card blue-res">
                     <div class="res-title">
-                        <img src="https://cdn-icons-png.flaticon.com/512/10037/10037390.png" alt="الأزرق" class="logo-sm">
+                        <img src="https://cdn-icons-png.flaticon.com/512/10037/10037390.png" alt="الأزرق"
+                            class="logo-sm">
                         <span>مبلغ الأزرق</span>
                     </div>
                     <div class="stake-value" id="resultBlue">0.0</div>
@@ -1416,7 +1614,8 @@
 
                 <div class="result-card green-res">
                     <div class="res-title">
-                        <img src="https://cdn-icons-png.flaticon.com/512/10037/10037255.png" alt="الأخضر" class="logo-sm">
+                        <img src="https://cdn-icons-png.flaticon.com/512/10037/10037255.png" alt="الأخضر"
+                            class="logo-sm">
                         <span>مبلغ الأخضر</span>
                     </div>
                     <div class="stake-value" id="resultGreen">0.0</div>
@@ -1426,9 +1625,10 @@
             </div>
 
             <div class="card">
-                <div class="field-label" style="margin-bottom: 6px;">🎟️ حفظ هذه المعادلة كقسيمة مباراة مؤمّنة</div>
+                <div class="field-label" style="margin-bottom: 6px;">🎟️ حفظ هذه المعادلة كقسيمة في سجل الصفقات</div>
                 <div class="save-slip-bar">
-                    <input type="text" id="tab1SlipName" class="slip-name-input" placeholder="اسم المباراة أو السوق (اختياري)...">
+                    <input type="text" id="tab1SlipName" class="slip-name-input"
+                        placeholder="اسم المباراة أو السوق (اختياري)...">
                     <button type="button" class="save-slip-btn" id="saveTab1SlipBtn">حفظ القسيمة ➕</button>
                 </div>
             </div>
@@ -1436,7 +1636,8 @@
             <div class="card">
                 <div class="history-header" id="historyToggle1">
                     <span class="field-label">📜 سجل التغطية الثنائية (<span id="historyCount1">0</span>)</span>
-                    <span style="font-size: 0.78rem; color: var(--accent-primary); font-weight: bold;">عرض / إخفاء ▾</span>
+                    <span style="font-size: 0.78rem; color: var(--accent-primary); font-weight: bold;">عرض / إخفاء
+                        ▾</span>
                 </div>
                 <div class="history-list" id="historyContent1">
                     <div id="historyList1"></div>
@@ -1463,7 +1664,8 @@
                             <span>💵</span>
                             <span id="stakeInputLabel">مبلغ الرهان 1</span>
                         </div>
-                        <input type="number" id="t2AmountInput" class="ratio-input" value="20" inputmode="decimal" step="any">
+                        <input type="number" id="t2AmountInput" class="ratio-input" value="20" inputmode="decimal"
+                            step="any">
                     </div>
 
                     <div class="ratio-card amber-box">
@@ -1471,7 +1673,8 @@
                             <span>📈</span>
                             <span>احتمال الرهان 1 (O1)</span>
                         </div>
-                        <input type="number" id="t2Odds1Input" class="ratio-input" placeholder="مثلاً 4.10" value="4.10" inputmode="decimal" step="any">
+                        <input type="number" id="t2Odds1Input" class="ratio-input" placeholder="مثلاً 4.10" value="4.10"
+                            inputmode="decimal" step="any">
                     </div>
                 </div>
 
@@ -1511,7 +1714,7 @@
                 </div>
             </div>
 
-            <!-- ==================== الميزة الجديدة: محاكي وفاحص الاحتمال الفعلي للرهان الثاني ==================== -->
+            <!-- محاكي وفاحص الاحتمال الفعلي للرهان الثاني -->
             <div class="simulator-card">
                 <div class="sim-header">
                     <div class="sim-title">
@@ -1520,11 +1723,14 @@
                     <span class="sim-badge">محاكاة فورية</span>
                 </div>
                 <p style="font-size: 0.74rem; color: var(--text-muted); margin-bottom: 8px;">
-                    أدخل الاحتمال الذي وصل إليه الخيار الثاني حالياً في المباراة لمعرفة نتيجته ومقارنته مع حساباتك دون انتظار:
+                    أدخل الاحتمال الذي وصل إليه الخيار الثاني حالياً في المباراة لمعرفة نتيجته (رابح أم خاسر) ومقارنته
+                    مع حساباتك دون انتظار:
                 </p>
                 <div class="sim-input-row">
                     <button type="button" class="stepper-btn" id="simMinusBtn">−</button>
-                    <input type="number" id="t2CustomOdds2Input" class="input-box" placeholder="أدخل احتمال O2 الحالي (مثلاً 1.85)" inputmode="decimal" step="0.05" style="border-color: var(--purple-accent);">
+                    <input type="number" id="t2CustomOdds2Input" class="input-box"
+                        placeholder="أدخل احتمال O2 الحالي (مثلاً 1.85)" inputmode="decimal" step="0.05"
+                        style="border-color: var(--purple-accent);">
                     <button type="button" class="stepper-btn" id="simPlusBtn">+</button>
                 </div>
 
@@ -1532,18 +1738,27 @@
                     <div class="sim-verdict" id="simVerdictBanner">رابح +0.00 (0%)</div>
                     <div class="grid-2">
                         <div class="ratio-card green-box" style="padding: 7px;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">مبلغ الدخول المطلوب (S2)</div>
-                            <div id="simReqStake2" style="font-size: 1.15rem; font-weight: 900; color: var(--green-accent); direction: ltr; margin: 3px 0;">0.00</div>
-                            <button type="button" class="copy-btn" data-copy="simReqStake2" style="margin-top: 3px; padding: 4px;">نسخ S2 📋</button>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">مبلغ الدخول
+                                المطلوب (S2)</div>
+                            <div id="simReqStake2"
+                                style="font-size: 1.15rem; font-weight: 900; color: var(--green-accent); direction: ltr; margin: 3px 0;">
+                                0.00</div>
+                            <button type="button" class="copy-btn" data-copy="simReqStake2"
+                                style="margin-top: 3px; padding: 4px;">نسخ S2 📋</button>
                         </div>
                         <div class="ratio-card blue-box" style="padding: 7px;">
-                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">المجموع والعائد المضمون</div>
-                            <div id="simTotalStake" style="font-size: 0.9rem; font-weight: 900; color: var(--blue-accent); direction: ltr; margin: 4px 0;">المجموع: 0.00</div>
-                            <div id="simPayout" style="font-size: 0.76rem; font-weight: 800; direction: ltr;">العائد: 0.00</div>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">المجموع والعائد
+                                المضمون</div>
+                            <div id="simTotalStake"
+                                style="font-size: 0.9rem; font-weight: 900; color: var(--blue-accent); direction: ltr; margin: 4px 0;">
+                                المجموع: 0.00</div>
+                            <div id="simPayout" style="font-size: 0.76rem; font-weight: 800; direction: ltr;">العائد:
+                                0.00</div>
                         </div>
                     </div>
                     <div class="sim-compare-note" id="simCompareWithTarget"></div>
-                    <button type="button" class="save-slip-btn" id="applySimToTargetBtn" style="width: 100%; margin-top: 8px; background: var(--purple-accent);">
+                    <button type="button" class="save-slip-btn" id="applySimToTargetBtn"
+                        style="width: 100%; margin-top: 8px; background: var(--purple-accent);">
                         ✨ اعتماد هذا الاحتمال كخطة حالية
                     </button>
                 </div>
@@ -1570,15 +1785,18 @@
                     </div>
                     <div class="summary-row">
                         <span>صافي الربح المستهدف ونسبته:</span>
-                        <span class="summary-val" id="sumRowNetProfit" style="color: var(--green-accent);">+0.00 (0%)</span>
+                        <span class="summary-val" id="sumRowNetProfit" style="color: var(--green-accent);">+0.00
+                            (0%)</span>
                     </div>
                 </div>
 
                 <div style="margin-top: 10px; font-size: 0.74rem; color: var(--text-muted); font-weight: 700;">
-                    🎟️ عند إنشاء القسيمة سيتم تسجيل دخولك في <b>الرهان الأول فقط</b> وتنتقل لقسم القسائم بانتظار التغطية:
+                    🎟️ عند إنشاء القسيمة سيتم تسجيل دخولك في <b>الرهان الأول فقط</b> وتنتقل لقسم القسائم بانتظار
+                    التغطية:
                 </div>
                 <div class="save-slip-bar">
-                    <input type="text" id="tab2SlipName" class="slip-name-input" placeholder="اسم المباراة (مثلاً: برشلونة شوط أول 0.5)...">
+                    <input type="text" id="tab2SlipName" class="slip-name-input"
+                        placeholder="اسم المباراة (مثلاً: برشلونة شوط أول 0.5)...">
                     <button type="button" class="save-slip-btn" id="saveTab2SlipBtn">إنشاء قسيمة بالرهان 1 🎟️</button>
                 </div>
             </div>
@@ -1606,7 +1824,8 @@
             <div class="card">
                 <div class="history-header" id="historyToggle2">
                     <span class="field-label">📜 سجل حسابات التغطية المتأخرة (<span id="historyCount2">0</span>)</span>
-                    <span style="font-size: 0.78rem; color: var(--accent-primary); font-weight: bold;">عرض / إخفاء ▾</span>
+                    <span style="font-size: 0.78rem; color: var(--accent-primary); font-weight: bold;">عرض / إخفاء
+                        ▾</span>
                 </div>
                 <div class="history-list" id="historyContent2">
                     <div id="historyList2"></div>
@@ -1614,17 +1833,29 @@
             </div>
         </section>
 
-        <!-- ==================== التبويب الثالث: إدارة القسائم والصفقات (تصميم عالمي متقدم) ==================== -->
+        <!-- ==================== التبويب الثالث: إدارة القسائم والصفقات ==================== -->
         <section id="tab3" class="tab-panel">
             <div class="portfolio-hero">
                 <div class="portfolio-top">
                     <div>
                         <div class="pnl-main-label">صافي الأرباح المحققة (Realized P&L)</div>
-                        <div class="pnl-main-val" id="statRealizedProfit" style="color: var(--green-accent);">+0.00$</div>
+                        <div class="pnl-main-val" id="statRealizedProfit" style="color: var(--green-accent);">+0.00$
+                        </div>
+                        <div class="pnl-sub-breakdown">
+                            <span id="statGrossWin" style="color: var(--green-accent);">أرباح: +0.00$</span>
+                            <span style="color: var(--border-color);">|</span>
+                            <span id="statGrossLoss" style="color: var(--danger-accent);">خسائر: 0.00$</span>
+                        </div>
+                        <div id="statLockedHedgedPnl"
+                            style="font-size: 0.7rem; color: var(--blue-accent); font-weight: 800; margin-top: 3px; display: none;">
+                        </div>
                     </div>
                     <div class="roi-pill">
-                        <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">العائد ROI / النجاح</div>
-                        <div id="statRoiAndWinRate" style="font-size: 0.84rem; font-weight: 900; direction: ltr; color: var(--accent-primary);">0% | 0%</div>
+                        <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">العائد ROI / النجاح
+                        </div>
+                        <div id="statRoiAndWinRate"
+                            style="font-size: 0.84rem; font-weight: 900; direction: ltr; color: var(--accent-primary);">
+                            0% | 0%</div>
                     </div>
                 </div>
 
@@ -1649,23 +1880,62 @@
             </div>
 
             <div class="slips-toolbar">
-                <input type="text" id="searchSlipsInput" class="search-slips-input" placeholder="🔍 ابحث باسم المباراة أو القسيمة...">
+                <input type="text" id="searchSlipsInput" class="search-slips-input"
+                    placeholder="🔍 ابحث باسم المباراة أو القسيمة...">
             </div>
 
             <div class="filter-bar">
-                <button class="filter-btn active" data-filter="all">الكل <span class="filter-count" id="fCountAll">0</span></button>
-                <button class="filter-btn" data-filter="pending">⏳ انتظار التغطية <span class="filter-count" id="fCountPending">0</span></button>
-                <button class="filter-btn" data-filter="hedged">🛡️ مؤمّنة <span class="filter-count" id="fCountHedged">0</span></button>
-                <button class="filter-btn" data-filter="won">✅ رابحة <span class="filter-count" id="fCountWon">0</span></button>
-                <button class="filter-btn" data-filter="lost">❌ خاسرة <span class="filter-count" id="fCountLost">0</span></button>
+                <button class="filter-btn active" data-filter="all">الكل <span class="filter-count"
+                        id="fCountAll">0</span></button>
+                <button class="filter-btn" data-filter="pending">⏳ انتظار التغطية <span class="filter-count"
+                        id="fCountPending">0</span></button>
+                <button class="filter-btn" data-filter="hedged">🛡️ مؤمّنة <span class="filter-count"
+                        id="fCountHedged">0</span></button>
+                <button class="filter-btn" data-filter="won">✅ رابحة <span class="filter-count"
+                        id="fCountWon">0</span></button>
+                <button class="filter-btn" data-filter="lost">❌ خاسرة <span class="filter-count"
+                        id="fCountLost">0</span></button>
             </div>
 
-            <div style="font-size: 0.73rem; color: var(--text-muted); margin-bottom: 8px; text-align: center; font-weight: 700;">
+            <div
+                style="font-size: 0.73rem; color: var(--text-muted); margin-bottom: 8px; text-align: center; font-weight: 700;">
                 💡 انقر على أي قسيمة لتوسيعها، وإدخال احتمال الرهان الثاني، أو إغلاقها وتحديد نتيجتها
             </div>
 
             <div id="slipsContainer"></div>
         </section>
+    </div>
+
+    <!-- ==================== نافذة دليل وطريقة عمل الموقع (README.md Viewer) ==================== -->
+    <div class="modal-overlay" id="helpGuideModal">
+        <div class="modal-sheet help-modal-sheet">
+            <div class="help-modal-header">
+                <div class="help-header-title">
+                    <span>📖 دليل وطريقة عمل التطبيق</span>
+                </div>
+                <div class="help-header-actions">
+                    <a href="https://github.com/lhaj9/1xcalc/blob/main/README.md" target="_blank"
+                        rel="noopener noreferrer" class="github-ext-btn" title="فتح ملف الشرح على GitHub">
+                        <span>🔗 GitHub</span>
+                    </a>
+                    <button class="icon-btn" id="closeHelpBtn" style="width: 32px; height: 32px;">✕</button>
+                </div>
+            </div>
+
+            <!-- شريط انتقال سريع بين أقسام الدليل داخل نفس النافذة -->
+            <div class="help-quick-nav">
+                <button type="button" class="help-nav-pill active" data-scroll-sec="sec-0">🎯 الغاية والمميزات</button>
+                <button type="button" class="help-nav-pill" data-scroll-sec="sec-1">1️⃣ التغطية الثنائية</button>
+                <button type="button" class="help-nav-pill" data-scroll-sec="sec-2">2️⃣ التغطية المتأخرة
+                    والمحاكي</button>
+                <button type="button" class="help-nav-pill" data-scroll-sec="sec-3">3️⃣ إدارة القسائم</button>
+                <button type="button" class="help-nav-pill" data-scroll-sec="sec-4">⚙️ الإعدادات والتثبيت</button>
+            </div>
+
+            <div class="help-modal-body" id="markdownViewerContainer">
+                <!-- يتم توليد وعرض محتوى README.md هنا بشكل منسق -->
+            </div>
+        </div>
     </div>
 
     <!-- نافذة الإعدادات -->
@@ -1717,8 +1987,10 @@
             </div>
 
             <div class="grid-2" style="margin-top: 10px;">
-                <button type="button" class="small-action-btn" id="exportDataBtn" style="padding: 10px; font-size: 0.8rem;">📤 تصدير نسخة احتياطية</button>
-                <button type="button" class="small-action-btn" id="importDataBtn" style="padding: 10px; font-size: 0.8rem;">📥 استعادة نسخة</button>
+                <button type="button" class="small-action-btn" id="exportDataBtn"
+                    style="padding: 10px; font-size: 0.8rem;">📤 تصدير نسخة احتياطية</button>
+                <button type="button" class="small-action-btn" id="importDataBtn"
+                    style="padding: 10px; font-size: 0.8rem;">📥 استعادة نسخة</button>
                 <input type="file" id="importFileInput" accept=".json" style="display: none;">
             </div>
 
@@ -1753,7 +2025,8 @@
                 <span style="font-size: 1.3rem;">3️⃣</span>
                 <span>اضغط على كلمة <b>"إضافة" (Add)</b> في أعلى الزاوية لتثبيت التطبيق.</span>
             </div>
-            <button type="button" class="primary-install-btn" id="iosGotItBtn">حسناً، فهمت ولا تظهر الرسالة مجدداً</button>
+            <button type="button" class="primary-install-btn" id="iosGotItBtn">حسناً، فهمت ولا تظهر الرسالة
+                مجدداً</button>
         </div>
     </div>
 
@@ -1761,6 +2034,169 @@
 
     <script>
         const htmlEl = document.documentElement;
+
+        // ==================== محتوى دليل الاستخدام المدمج (README.md) ومحلل المارك داون ====================
+        const FALLBACK_README_MD = `# ⚡ مدير وحاسبة الصفقات الرياضية الاحترافية
+
+تطبيق ويب تقدمي (PWA) متكامل ومصمم خصيصاً للهواتف الذكية (Mobile-First)، يهدف إلى مساعدة المستخدمين على حساب صفقات التغطية الرياضية بدقة لحظية، والتخطيط لاستراتيجيات التغطية المتأخرة أثناء المباريات المباشرة (In-Play Hedging)، مع محاكي فوري للاحتمالات ولوحة إدارة قسائم احترافية.
+
+## 🎯 الغاية والمميزات العامة
+* **السرعة والدقة اللحظية:** استخراج المبالغ المطلوبة ونسب الربح الصافية بمجرد كتابة الأرقام دون الحاجة للنقر على أزرار حساب تقليدية.
+* **التخطيط والمحاكاة المباشرة:** معرفة الاحتمال المستهدف للرهان المعاكس، أو إدخال أي احتمال وصل إليه السوق حالياً لمعرفة ما إذا كان رابحاً أم خاسراً ومقارنته مع الهدف.
+* **تطبيق هاتف متكامل (PWA):** قابل للتثبيت على شاشة الهاتف الرئيسية ويعمل بملء الشاشة وبدون إنترنت مع حفظ تلقائي آمن عبر الذاكرة المحلية.
+
+---
+
+## 1️⃣ التبويب الأول: التغطية الثنائية الآنية (Arbitrage / Dutching)
+يُستخدم هذا القسم عندما يكون لديك خياران متعاكسان متاحان في نفس اللحظة وترغب في توزيع رأس مال محدد بينهما بحيث تحصل على نفس العائد المالي مهما كان الخيار الفائز.
+
+### المدخلات والمخرجات:
+* **المدخلات:** رأس المال الإجمالي المراد توزيعه، واحتمال الخيار الأول (الأزرق) واحتمال الخيار الثاني (الأخضر).
+* **شريط الحالة الذكي:** يوضح نسبة الربح أو الخسارة وصافي المبلغ، ويتحول إلى اللون الأخضر في حال كانت المعادلة رابحة أو الأحمر مع شطب النتائج إذا كانت النسب لا تحقق ربحاً.
+* **توزيع المبالغ:** يعرض المبلغ الدقيق الواجب وضعه في كل خيار مع زر نسخ سريع، وإمكانية حفظ المعادلة مباشرة كقسيمة مباراة مؤمّنة.
+
+---
+
+## 2️⃣ التبويب الثاني: التغطية المتأخرة أثناء المباشر (In-Play Delayed Hedge)
+صُمم هذا القسم للاستراتيجيات التي تعتمد على عامل الوقت في المباريات المباشرة (مثل الدخول في بداية المباراة على خيار، ثم الانتظار حتى يرتفع احتمال الخيار المعاكس للدخول فيه وتأمين ربح مضمون).
+
+### نظاما الإدخال المتاحان:
+1. **إدخال مبلغ الرهان الأول فقط:** تدخل المبلغ الذي لعبته فعلياً في الرهان الأول، ويحسب لك التطبيق المبلغ الإضافي المطلوب للرهان الثاني.
+2. **تحديد رأس المال الكلي للرهانين:** تحدد سقف ميزانيتك الكاملة للصفقة، فيقوم التطبيق بتقسيمها ليخبرك بكم تدخل في الرهان الأول وكم تترك للرهان الثاني.
+
+### 🔍 محاكي وفاحص الاحتمال الفعلي (O2):
+* يتيح لك إدخال **الاحتمال الفعلي الذي وصل إليه الخيار الثاني حالياً في المباراة** دون انتظار وصوله للنسبة المستهدفة.
+* يعرض لك المحاكي فوراً: هل الدخول عند هذا الاحتمال **رابح أم خاسر**، والمبلغ المطلوب للدخول به (\`S2\`)، و**مقارنة مباشرة مع هدفك الأساسي** (بكم يزيد أو ينقص عن ربحك المستهدف) مع زر لاعتماده كخطة حالية.
+
+---
+
+## 3️⃣ التبويب الثالث: إدارة القسائم والصفقات (Slips Manager)
+لوحة تحكم احترافية لإدارة صفقاتك الجارية والمنتهية بتصميم البطاقات المدمجة القابلة للتوسيع:
+
+### 📊 لوحة إحصائيات المحفظة:
+* تعرض **صافي الأرباح المحققة (Realized P&L)** مع تفصيل صريح لـ (إجمالي الأرباح الخضراء | إجمالي الخسائر الحمراء).
+* تعرض **العائد على الاستثمار (ROI%)**، **نسبة النجاح (Win Rate%)**، والمبالغ المستثمرة النشطة.
+
+### 🎟️ البطاقات التفاعلية وحاسبة القسيمة:
+* عند إنشاء قسيمة من التبويب الثاني، تُحفظ بالرهان الأول فقط تحت حالة **"⏳ بانتظار التغطية"** وتظهر بتصميم مدمج وأنيق.
+* **عند النقر على أي قسيمة** تتوسع لتكشف عن تفاصيل الرهانين و**محاكي مباشر داخل القسيمة** يمكّنك من إدخال احتمال الرهان الثاني (\`O2\`) لتحديث الحسابات لحظياً.
+* يمكنك بضغطة زر اختيار: **اعتماد الرهان الثاني وإغلاق القسيمة فوراً**، أو **تأمين القسيمة وإبقاء المباراة جارية**، أو تسجيل **ربح الرهان 1 فقط**، أو **خسارة الرهان 1 مبكراً**، أو **إغلاق يدوي (Cashout)**.
+
+---
+
+## ⚙️ الإعدادات والنسخ الاحتياطي والتثبيت
+من خلال أيقونة الإعدادات (⚙️) في أعلى التطبيق يمكنك:
+* تبديل المظهر بين الوضع المظلم (Dark) والوضع الفاتح (Light).
+* اختيار رمز العملة المفضل (\`$\`، \`USDT\`، \`MAD\`، \`€\`)، وتحديد الفواصل العشرية للمبالغ.
+* **تصدير واستعادة نسخة احتياطية (\`JSON\`):** لحفظ كافة قسائمك وسجلاتك أو نقلها لجهاز آخر بأمان.
+* **تثبيت التطبيق على الهاتف:** عبر زر التثبيت المباشر في الإعدادات أو من خلال "إضافة إلى الشاشة الرئيسية" في متصفح Chrome أو Safari.`;
+
+        const formatInlineMd = (text) => {
+            return text
+                .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>');
+        };
+
+        const renderMarkdownToHtml = (mdText) => {
+            const sections = mdText.split(/\n---+\n/);
+            return sections.map((sec, idx) => {
+                const lines = sec.trim().split('\n');
+                let html = `<div class="md-sec-card" id="sec-${idx}">`;
+                let inUl = false;
+                let inOl = false;
+
+                const closeLists = () => {
+                    if (inUl) { html += '</ul>'; inUl = false; }
+                    if (inOl) { html += '</ol>'; inOl = false; }
+                };
+
+                lines.forEach(rawLine => {
+                    const line = rawLine.trim();
+                    if (!line) {
+                        closeLists();
+                        return;
+                    }
+                    if (line.startsWith('# ')) {
+                        closeLists();
+                        html += `<h1>${formatInlineMd(line.slice(2))}</h1>`;
+                    } else if (line.startsWith('## ')) {
+                        closeLists();
+                        html += `<h2>${formatInlineMd(line.slice(3))}</h2>`;
+                    } else if (line.startsWith('### ')) {
+                        closeLists();
+                        html += `<h3>${formatInlineMd(line.slice(4))}</h3>`;
+                    } else if (line.startsWith('* ') || line.startsWith('- ')) {
+                        if (inOl) { html += '</ol>'; inOl = false; }
+                        if (!inUl) { html += '<ul>'; inUl = true; }
+                        html += `<li>${formatInlineMd(line.slice(2))}</li>`;
+                    } else if (/^\d+\.\s+/.test(line)) {
+                        if (inUl) { html += '</ul>'; inUl = false; }
+                        if (!inOl) { html += '<ol>'; inOl = true; }
+                        html += `<li>${formatInlineMd(line.replace(/^\d+\.\s+/, ''))}</li>`;
+                    } else {
+                        closeLists();
+                        html += `<p>${formatInlineMd(line)}</p>`;
+                    }
+                });
+
+                closeLists();
+                html += '</div>';
+                return html;
+            }).join('');
+        };
+
+        const loadAndRenderGuide = async () => {
+            const container = document.getElementById('markdownViewerContainer');
+            // عرض الشرح المدمج فوراً بدون أي تأخير
+            container.innerHTML = renderMarkdownToHtml(FALLBACK_README_MD);
+
+            // محاولة جلب أحدث نسخة من ملف README.md المحلي أو من GitHub في الخلفية
+            try {
+                const res = await fetch('./README.md', { cache: 'no-cache' });
+                if (res.ok) {
+                    const text = await res.text();
+                    if (text && text.trim().length > 100) {
+                        container.innerHTML = renderMarkdownToHtml(text);
+                        return;
+                    }
+                }
+            } catch (_) { }
+
+            try {
+                const ghRes = await fetch('https://raw.githubusercontent.com/lhaj9/1xcalc/main/README.md');
+                if (ghRes.ok) {
+                    const ghText = await ghRes.text();
+                    if (ghText && ghText.trim().length > 100) {
+                        container.innerHTML = renderMarkdownToHtml(ghText);
+                    }
+                }
+            } catch (_) { }
+        };
+
+        // فتح وإغلاق نافذة دليل الاستخدام (علامة الاستفهام)
+        const helpGuideModal = document.getElementById('helpGuideModal');
+        document.getElementById('openHelpBtn').addEventListener('click', () => {
+            helpGuideModal.classList.add('open');
+            loadAndRenderGuide();
+        });
+        document.getElementById('closeHelpBtn').addEventListener('click', () => {
+            helpGuideModal.classList.remove('open');
+        });
+        helpGuideModal.addEventListener('click', (e) => {
+            if (e.target === helpGuideModal) helpGuideModal.classList.remove('open');
+        });
+
+        // أزرار التنقل السريع داخل نافذة الشرح
+        document.querySelectorAll('.help-nav-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.help-nav-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                const targetEl = document.getElementById(pill.dataset.scrollSec);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
 
         // ==================== نظام التثبيت الذكي (PWA + iOS) ====================
         let deferredPrompt = null;
@@ -1773,7 +2209,7 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(() => {});
+                navigator.serviceWorker.register('./sw.js').catch(() => { });
             });
         }
 
@@ -1856,11 +2292,53 @@
 
         let currentTab2Mode = 'stake1';
         let currentSlipFilter = 'all';
-        let expandedSlipIds = new Set(); // حفظ حالة القسائم المفتوحة
+        let expandedSlipIds = new Set();
         let timerT1 = null;
         let timerT2 = null;
 
         const cur = () => appSettings.currency;
+
+        // دالة التدقيق والتصحيح التلقائي للقسائم المحفوظة
+        const sanitizeAndAuditSlips = () => {
+            let modified = false;
+            savedSlips = savedSlips.map(slip => {
+                const s1 = parseFloat(slip.stake1) || 0;
+                const o1 = parseFloat(slip.odds1) || 0;
+                const s2 = parseFloat(slip.stake2) || 0;
+                const o2 = parseFloat(slip.odds2) || 0;
+
+                if (typeof slip.hedgePlayed === 'undefined') {
+                    slip.hedgePlayed = (slip.status === 'hedged' || (s2 > 0 && (slip.totalStake > s1 + 0.001 || slip.type === 'تغطية ثنائية')));
+                    modified = true;
+                }
+
+                if (slip.status === 'won' || slip.status === 'lost') {
+                    const realPnl = parseFloat(slip.realizedProfit) || 0;
+                    if (realPnl < -0.0001 && slip.status === 'won') {
+                        slip.status = 'lost';
+                        modified = true;
+                    } else if (realPnl > 0.0001 && slip.status === 'lost') {
+                        slip.status = 'won';
+                        modified = true;
+                    }
+                    const paid = parseFloat(slip.totalStake) || s1;
+                    if (paid > 0) {
+                        slip.pct = (realPnl / paid) * 100;
+                    }
+                } else if (slip.status === 'hedged') {
+                    const total = s1 + s2;
+                    const minRet = Math.min(s1 * o1, s2 * o2);
+                    slip.totalStake = total;
+                    slip.expectedProfit = minRet - total;
+                    slip.pct = total > 0 ? (slip.expectedProfit / total) * 100 : 0;
+                }
+                return slip;
+            });
+
+            if (modified) {
+                localStorage.setItem('arb_saved_slips', JSON.stringify(savedSlips));
+            }
+        };
 
         const getFormattedDateTime = () => {
             const now = new Date();
@@ -1872,7 +2350,7 @@
             const toast = document.getElementById('toastMsg');
             toast.textContent = msg;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2300);
+            setTimeout(() => toast.classList.remove('show'), 2400);
         };
 
         const applySettings = () => {
@@ -1998,7 +2476,6 @@
         let lastCalcTab2 = null;
         let lastSimCalcTab2 = null;
 
-        // حساب التغطية بناءً على النسبة المستهدفة
         const computeDelayedHedge = (amountVal, odds1, targetPct, mode) => {
             const factor = 1 + (targetPct / 100);
             if (factor <= 0) return null;
@@ -2023,7 +2500,6 @@
             return { impossible: false, stake1, odds1, stake2, odds2, totalStake, payout, netProfit, pct: targetPct };
         };
 
-        // حساب التغطية بناءً على احتمال ثاني (O2) أدخله المستخدم يدوياً للمقارنة والفضول
         const computeByCustomOdds2 = (stake1, odds1, customOdds2) => {
             if (isNaN(stake1) || isNaN(odds1) || isNaN(customOdds2) || stake1 <= 0 || odds1 <= 1 || customOdds2 <= 1) {
                 return null;
@@ -2117,7 +2593,6 @@
                 banner.classList.add('negative');
                 reqOdds2El.textContent = 'غير متاح';
                 reqStake2El.textContent = '0.00';
-                // حتى لو كانت النسبة المستهدفة غير متاحة، نسمح بإنشاء قسيمة بالرهان الأول!
                 lastCalcTab2 = {
                     type: 'تغطية متأخرة',
                     stake1: activeStake1,
@@ -2158,7 +2633,6 @@
                 }, 1000);
             }
 
-            // تحديث المحاكي اليدوي للخيار الثاني
             updateTab2Simulator(activeStake1, odds1, res);
 
             const presetPcts = [0, 5, 10, 15, 20, 25, 30, 50];
@@ -2189,7 +2663,6 @@
             });
         };
 
-        // أزرار التحكم بالمحاكي اليدوي في التبويب الثاني
         t2CustomOdds2Input.addEventListener('input', () => {
             const amountVal = parseFloat(t2AmountInput.value);
             const odds1 = parseFloat(t2Odds1Input.value);
@@ -2284,28 +2757,28 @@
             `).join('');
         };
 
-        // ==================== منطق التبويب الثالث: نظام القسائم العالمي القابل للتوسيع ====================
+        // ==================== منطق التبويب الثالث: نظام القسائم المُدقق بالكامل ====================
         const createSlip = (calcData, customName, initialStatus) => {
             if (!calcData || !calcData.stake1 || !calcData.odds1) {
                 showToast('أدخل بيانات الرهان الأول أولاً لإنشاء القسيمة!');
                 return;
             }
             const newId = Date.now();
+            const isHedgedNow = initialStatus === 'hedged';
+
             const newSlip = {
                 id: newId,
                 title: customName.trim() || (calcData.type === 'تغطية متأخرة' ? 'صفقة مباشر (بانتظار التغطية)' : 'صفقة تغطية ثنائية'),
                 type: calcData.type,
                 createdAt: getFormattedDateTime(),
                 settledAt: null,
-                status: initialStatus, // 'pending' (دخل الرهان 1 فقط) أو 'hedged' (لعب الرهانين)
+                status: initialStatus,
+                hedgePlayed: isHedgedNow,
                 stake1: calcData.stake1,
                 odds1: calcData.odds1,
-                // في حالة pending، نحفظ stake2 و odds2 كخطة مستهدفة، وعند التأمين الفعلي تصبح مؤكدة
                 stake2: calcData.stake2 || 0,
                 odds2: calcData.odds2 || 0,
-                targetOdds2: calcData.odds2 || 0,
-                targetPct: calcData.pct || 0,
-                totalStake: initialStatus === 'pending' ? calcData.stake1 : calcData.totalStake,
+                totalStake: isHedgedNow ? calcData.totalStake : calcData.stake1,
                 plannedTotalStake: calcData.totalStake || calcData.stake1,
                 payout: calcData.payout || (calcData.stake1 * calcData.odds1),
                 expectedProfit: calcData.netProfit || 0,
@@ -2327,13 +2800,11 @@
 
         document.getElementById('saveTab2SlipBtn').addEventListener('click', () => {
             const nameInput = document.getElementById('tab2SlipName');
-            // إذا كان المستخدم قد أدخل احتمالاً في المحاكي اليدوي، نستخدمه كخطة مبدئية أو نستخدم الخطة المستهدفة
             const sourceCalc = lastSimCalcTab2 ? { type: 'تغطية متأخرة', ...lastSimCalcTab2 } : lastCalcTab2;
             createSlip(sourceCalc, nameInput.value, 'pending');
             nameInput.value = '';
         });
 
-        // فتح/إغلاق تفاصيل القسيمة عند النقر
         window.toggleSlipExpand = (id) => {
             if (expandedSlipIds.has(id)) {
                 expandedSlipIds.delete(id);
@@ -2346,7 +2817,6 @@
             }
         };
 
-        // حساب فوري داخل القسيمة عند إدخال احتمال الرهان الثاني (O2) أو تعديل مبلغ الرهان الثاني (S2)
         window.onSlipLiveOddsInput = (id, mode) => {
             const p = appSettings.precision;
             const slip = savedSlips.find(s => s.id === id);
@@ -2364,7 +2834,6 @@
             }
 
             let s2Val = parseFloat(s2Input.value);
-            // إذا قام المستخدم بتغيير الاحتمال O2، نحسب تلقائياً مبلغ S2 الذي يساوي العائدين
             if (mode === 'odds' || isNaN(s2Val) || s2Val <= 0) {
                 s2Val = (slip.stake1 * slip.odds1) / o2Val;
                 s2Input.value = s2Val.toFixed(p);
@@ -2373,12 +2842,12 @@
             const totalStake = slip.stake1 + s2Val;
             const returnIf1Wins = slip.stake1 * slip.odds1;
             const returnIf2Wins = s2Val * o2Val;
-            const minReturn = Math.min(returnIf1Wins, returnIf2Wins);
-            const netProfit = minReturn - totalStake;
+            const effectiveReturn = Math.abs(returnIf1Wins - returnIf2Wins) < 0.2 ? returnIf1Wins : Math.min(returnIf1Wins, returnIf2Wins);
+            const netProfit = effectiveReturn - totalStake;
             const pct = (netProfit / totalStake) * 100;
             const sign = netProfit >= 0 ? '+' : '';
             const color = netProfit >= 0 ? 'var(--green-accent)' : 'var(--danger-accent)';
-            const badgeText = netProfit >= 0 ? '✅ رابح' : '❌ خاسر';
+            const badgeText = netProfit >= 0 ? '✅ تغطية رابحة' : '❌ تغطية بخسارة';
 
             previewEl.innerHTML = `
                 <span>${badgeText} عند O2=${o2Val.toFixed(2)}</span>
@@ -2386,8 +2855,7 @@
             `;
         };
 
-        // حفظ تحديثات الاحتمال الثاني داخل القسيمة أو تأمينها مباشرة
-        window.applySlipLiveHedge = (id, confirmHedgeNow) => {
+        window.applySlipLiveHedge = (id, actionMode) => {
             const p = appSettings.precision;
             const o2Input = document.getElementById(`slip-o2-${id}`);
             const s2Input = document.getElementById(`slip-s2-${id}`);
@@ -2404,16 +2872,27 @@
                 slip.odds2 = o2Val;
                 slip.stake2 = s2Val;
                 slip.plannedTotalStake = slip.stake1 + s2Val;
+
                 const ret1 = slip.stake1 * slip.odds1;
                 const ret2 = s2Val * o2Val;
-                slip.payout = Math.min(ret1, ret2);
+                slip.payout = Math.abs(ret1 - ret2) < 0.2 ? ret1 : Math.min(ret1, ret2);
                 slip.expectedProfit = slip.payout - slip.plannedTotalStake;
                 slip.pct = (slip.expectedProfit / slip.plannedTotalStake) * 100;
 
-                if (confirmHedgeNow) {
+                if (actionMode === 'settle_now') {
+                    slip.hedgePlayed = true;
+                    slip.totalStake = slip.plannedTotalStake;
+                    slip.realizedProfit = slip.expectedProfit;
+                    slip.status = slip.realizedProfit >= 0 ? 'won' : 'lost';
+                    slip.settledAt = getFormattedDateTime();
+                    const sign = slip.realizedProfit >= 0 ? '+' : '';
+                    const word = slip.realizedProfit >= 0 ? '✅ رابحة' : '❌ خاسرة';
+                    showToast(`${word}: أُغلقت القسيمة بصافي ${sign}${slip.realizedProfit.toFixed(p)}${cur()}`);
+                } else if (actionMode === 'hedge_active') {
+                    slip.hedgePlayed = true;
                     slip.status = 'hedged';
                     slip.totalStake = slip.plannedTotalStake;
-                    showToast(`🛡️ تم تأمين القسيمة بالرهان الثاني (${s2Val.toFixed(p)}${cur()} × ${o2Val.toFixed(2)})!`);
+                    showToast(`🛡️ تم تأمين القسيمة بالرهان 2 (${s2Val.toFixed(p)}${cur()} × ${o2Val.toFixed(2)})!`);
                 } else {
                     showToast('📊 تم تحديث حسابات التغطية المحتملة في القسيمة!');
                 }
@@ -2424,33 +2903,42 @@
             renderSlips();
         };
 
-        // تحديث حالة القسيمة وإغلاقها بمختلف السيناريوهات
         window.updateSlipStatus = (id, action) => {
             const p = appSettings.precision;
             savedSlips = savedSlips.map(slip => {
                 if (slip.id !== id) return slip;
 
-                if (action === 'won_hedged') {
-                    // قسيمة مؤمنة بالرهانين وانتهت
+                if (action === 'settle_hedged') {
                     const total = slip.stake1 + slip.stake2;
-                    const minRet = Math.min(slip.stake1 * slip.odds1, slip.stake2 * slip.odds2);
-                    slip.status = 'won';
+                    const ret1 = slip.stake1 * slip.odds1;
+                    const ret2 = slip.stake2 * slip.odds2;
+                    const finalReturn = Math.abs(ret1 - ret2) < 0.2 ? ret1 : Math.min(ret1, ret2);
+                    const netPnl = finalReturn - total;
+
+                    slip.hedgePlayed = true;
                     slip.totalStake = total;
-                    slip.realizedProfit = minRet - total;
-                    slip.pct = (slip.realizedProfit / total) * 100;
+                    slip.realizedProfit = netPnl;
+                    slip.pct = total > 0 ? (netPnl / total) * 100 : 0;
+                    slip.status = netPnl >= 0 ? 'won' : 'lost';
                     slip.settledAt = getFormattedDateTime();
-                    showToast(`✅ أُغلقت القسيمة بربح التغطية: +${slip.realizedProfit.toFixed(p)}${cur()}`);
+
+                    if (netPnl >= 0) {
+                        showToast(`✅ أُغلقت كقسيمة رابحة: +${netPnl.toFixed(p)}${cur()}`);
+                    } else {
+                        showToast(`❌ أُغلقت كقسيمة خاسرة: ${netPnl.toFixed(p)}${cur()}`);
+                    }
                 } else if (action === 'won_bet1_only') {
-                    // ربح الرهان الأول فقط دون لعب الرهان الثاني
-                    slip.status = 'won';
-                    slip.realizedProfit = (slip.stake1 * slip.odds1) - slip.stake1;
+                    const netPnl = (slip.stake1 * slip.odds1) - slip.stake1;
+                    slip.hedgePlayed = false;
+                    slip.realizedProfit = netPnl;
                     slip.totalStake = slip.stake1;
                     slip.stake2 = 0;
-                    slip.pct = (slip.realizedProfit / slip.stake1) * 100;
+                    slip.pct = (netPnl / slip.stake1) * 100;
+                    slip.status = netPnl >= 0 ? 'won' : 'lost';
                     slip.settledAt = getFormattedDateTime();
-                    showToast(`🎯 مبروك! ربح الرهان 1 كاملاً: +${slip.realizedProfit.toFixed(p)}${cur()}`);
+                    showToast(`🎯 ربح الرهان 1 كاملاً: +${netPnl.toFixed(p)}${cur()}`);
                 } else if (action === 'lost_early') {
-                    // خسر الرهان الأول مبكراً قبل التغطية
+                    slip.hedgePlayed = false;
                     slip.status = 'lost';
                     slip.realizedProfit = -slip.stake1;
                     slip.totalStake = slip.stake1;
@@ -2459,22 +2947,22 @@
                     slip.settledAt = getFormattedDateTime();
                     showToast(`❌ سُجلت خسارة الرهان الأول (-${slip.stake1.toFixed(p)}${cur()})`);
                 } else if (action === 'custom_cashout') {
-                    const userReturn = prompt('💵 أدخل إجمالي المبلغ الذي استلمته فعلياً (Cashout أو تسوية يدوية):', slip.stake1.toFixed(p));
+                    const invested = (slip.status === 'hedged' || slip.hedgePlayed) ? (slip.stake1 + slip.stake2) : slip.stake1;
+                    const userReturn = prompt(`💵 المدفوع في القسيمة هو ${invested.toFixed(p)}${cur()}.\nأدخل إجمالي المبلغ الذي عاد إليك فعلياً (0 إذا خسرت بالكامل):`, invested.toFixed(p));
                     if (userReturn === null) return slip;
                     const retNum = parseFloat(userReturn);
                     if (isNaN(retNum) || retNum < 0) {
                         showToast('رقم غير صالح!');
                         return slip;
                     }
-                    const invested = slip.status === 'hedged' ? (slip.stake1 + slip.stake2) : slip.stake1;
                     slip.totalStake = invested;
                     slip.realizedProfit = retNum - invested;
-                    slip.pct = (slip.realizedProfit / invested) * 100;
+                    slip.pct = invested > 0 ? (slip.realizedProfit / invested) * 100 : 0;
                     slip.status = slip.realizedProfit >= 0 ? 'won' : 'lost';
                     slip.settledAt = getFormattedDateTime();
-                    showToast(`💵 تم إغلاق القسيمة بصافي: ${slip.realizedProfit >= 0 ? '+' : ''}${slip.realizedProfit.toFixed(p)}${cur()}`);
+                    showToast(`💵 أُغلقت القسيمة بصافي: ${slip.realizedProfit >= 0 ? '+' : ''}${slip.realizedProfit.toFixed(p)}${cur()}`);
                 } else if (action === 'reopen_slip') {
-                    slip.status = slip.stake2 > 0 ? 'hedged' : 'pending';
+                    slip.status = slip.hedgePlayed && slip.stake2 > 0 ? 'hedged' : 'pending';
                     slip.realizedProfit = 0;
                     slip.settledAt = null;
                     showToast('🔄 تمت إعادة فتح القسيمة للتعديل');
@@ -2505,11 +2993,12 @@
         };
 
         const renderSlips = () => {
+            sanitizeAndAuditSlips();
+
             const p = appSettings.precision;
             const container = document.getElementById('slipsContainer');
             const searchQuery = (document.getElementById('searchSlipsInput').value || '').trim().toLowerCase();
 
-            // إحصائيات الفلاتر
             const cPending = savedSlips.filter(s => s.status === 'pending').length;
             const cHedged = savedSlips.filter(s => s.status === 'hedged').length;
             const cWon = savedSlips.filter(s => s.status === 'won').length;
@@ -2527,14 +3016,23 @@
             document.getElementById('fCountWon').textContent = cWon;
             document.getElementById('fCountLost').textContent = cLost;
 
-            // حساب المستثمر النشط والأرباح المحققة
             const activeInvested = savedSlips
                 .filter(s => s.status === 'pending' || s.status === 'hedged')
                 .reduce((acc, s) => acc + (s.status === 'pending' ? s.stake1 : (s.stake1 + s.stake2)), 0);
 
             const settledSlips = savedSlips.filter(s => s.status === 'won' || s.status === 'lost');
-            const realizedProfit = settledSlips.reduce((acc, s) => acc + (s.realizedProfit || 0), 0);
+            const grossWin = settledSlips
+                .filter(s => (s.realizedProfit || 0) > 0)
+                .reduce((acc, s) => acc + s.realizedProfit, 0);
+            const grossLoss = settledSlips
+                .filter(s => (s.realizedProfit || 0) < 0)
+                .reduce((acc, s) => acc + s.realizedProfit, 0);
+
+            const realizedProfit = grossWin + grossLoss;
             const totalSettledStake = settledSlips.reduce((acc, s) => acc + (s.totalStake || s.stake1 || 0), 0);
+
+            const hedgedSlips = savedSlips.filter(s => s.status === 'hedged');
+            const lockedHedgedPnl = hedgedSlips.reduce((acc, s) => acc + (s.expectedProfit || 0), 0);
 
             const roiPct = totalSettledStake > 0 ? (realizedProfit / totalSettledStake) * 100 : 0;
             const winRate = settledSlips.length > 0 ? (cWon / settledSlips.length) * 100 : 0;
@@ -2543,6 +3041,18 @@
             const profEl = document.getElementById('statRealizedProfit');
             profEl.textContent = `${realizedProfit >= 0 ? '+' : ''}${realizedProfit.toFixed(p)}${cur()}`;
             profEl.style.color = realizedProfit >= 0 ? 'var(--green-accent)' : 'var(--danger-accent)';
+
+            document.getElementById('statGrossWin').textContent = `أرباح: +${grossWin.toFixed(p)}${cur()}`;
+            document.getElementById('statGrossLoss').textContent = `خسائر: ${grossLoss.toFixed(p)}${cur()}`;
+
+            const lockedEl = document.getElementById('statLockedHedgedPnl');
+            if (hedgedSlips.length > 0) {
+                lockedEl.style.display = 'block';
+                lockedEl.textContent = `🛡️ صافي مؤمّن قيد الإغلاق (${hedgedSlips.length}): ${lockedHedgedPnl >= 0 ? '+' : ''}${lockedHedgedPnl.toFixed(p)}${cur()}`;
+            } else {
+                lockedEl.style.display = 'none';
+            }
+
             document.getElementById('statRoiAndWinRate').textContent = `ROI ${roiPct >= 0 ? '+' : ''}${roiPct.toFixed(1)}% | فوز ${winRate.toFixed(0)}%`;
 
             let filtered = currentSlipFilter === 'all' ? savedSlips : savedSlips.filter(s => s.status === currentSlipFilter);
@@ -2571,8 +3081,8 @@
 
                 const defaultO2 = slip.odds2 > 1 ? slip.odds2.toFixed(2) : '';
                 const defaultS2 = slip.stake2 > 0 ? slip.stake2.toFixed(p) : '';
+                const wasHedgePlayed = slip.hedgePlayed || slip.status === 'hedged' || (isSettled && slip.stake2 > 0 && slip.totalStake > slip.stake1 + 0.001);
 
-                // ملخص السطر الثاني المدمج في البطاقة قبل النقر عليها
                 let compactInfoRight = '';
                 if (slip.status === 'pending') {
                     compactInfoRight = `<span>رهان 1: <b>${slip.stake1.toFixed(p)}${cur()}</b> × ${slip.odds1.toFixed(2)}</span>
@@ -2585,9 +3095,25 @@
                                         <span style="color:var(--text-muted);">${slip.settledAt || slip.createdAt}</span>`;
                 }
 
+                let leg2HeaderHtml = '';
+                let leg2Class = 'target-leg';
+                if (wasHedgePlayed) {
+                    leg2HeaderHtml = `<div style="color:var(--green-accent); font-weight:800; margin-bottom:2px;">🛡️ الرهان 2 (تم الدخول)</div>`;
+                    leg2Class = 'played-leg';
+                } else if (isSettled) {
+                    leg2HeaderHtml = `<div style="color:var(--text-muted); font-weight:800; margin-bottom:2px;">🚫 الرهان 2 (لم يُلعب)</div>`;
+                } else {
+                    leg2HeaderHtml = `<div style="color:var(--amber-accent); font-weight:800; margin-bottom:2px;">⏳ الرهان 2 (المستهدف/التغطية)</div>`;
+                }
+
+                const hedgeSettleSign = slip.expectedProfit >= 0 ? '+' : '';
+                const hedgeSettleBtnCls = slip.expectedProfit >= 0 ? 'btn-win' : 'btn-loss';
+                const hedgeSettleBtnText = slip.expectedProfit >= 0
+                    ? `✅ إنهاء المباراة واعتماد الربح (${hedgeSettleSign}${slip.expectedProfit.toFixed(p)}${cur()})`
+                    : `❌ إنهاء المباراة واعتماد الخسارة (${slip.expectedProfit.toFixed(p)}${cur()})`;
+
                 return `
                     <div class="slip-ticket status-${slip.status} ${isExpanded ? 'expanded' : ''}" id="slip-card-${slip.id}">
-                        <!-- الرأس المدمج الأنيق: يظهر دائماً وعند النقر عليه يتوسع -->
                         <div class="slip-compact-header" onclick="toggleSlipExpand(${slip.id})">
                             <div class="slip-row-1">
                                 <div class="slip-title-wrap">
@@ -2606,7 +3132,6 @@
                             </div>
                         </div>
 
-                        <!-- التفاصيل والخيارات وحاسبة الاحتمال الثاني: تظهر فقط عند النقر على القسيمة -->
                         <div class="slip-expand-body">
                             <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); padding-top:8px;">
                                 <span>النوع: ${slip.type} | أُنشئت: ${slip.createdAt}</span>
@@ -2620,30 +3145,27 @@
                                     <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">عائد الرهان 1: ${(slip.stake1 * slip.odds1).toFixed(p)}${cur()}</div>
                                 </div>
 
-                                <div class="leg-box target-leg">
-                                    <div style="color:var(--amber-accent); font-weight:800; margin-bottom:2px;">
-                                        ${slip.status === 'hedged' ? '🛡️ الرهان 2 (تم الدخول)' : '⏳ الرهان 2 (المستهدف/التغطية)'}
-                                    </div>
+                                <div class="leg-box ${leg2Class}">
+                                    ${leg2HeaderHtml}
                                     <div style="font-weight:900; font-size:0.88rem; direction:ltr;">
-                                        ${slip.stake2 > 0 ? `${slip.stake2.toFixed(p)}${cur()} × ${slip.odds2.toFixed(2)}` : 'لم يُلعب بعد'}
+                                        ${slip.stake2 > 0 ? `${slip.stake2.toFixed(p)}${cur()} × ${slip.odds2.toFixed(2)}` : 'لم يُلعب'}
                                     </div>
                                     <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">
-                                        ${slip.stake2 > 0 ? `<span style="cursor:pointer; color:var(--accent-primary);" onclick="copyTextVal('${slip.stake2.toFixed(p)}')">📋 نسخ مبلغ S2</span>` : 'أدخل احتمال O2 بالأسفل'}
+                                        ${slip.stake2 > 0 ? `عائد 2: ${(slip.stake2 * slip.odds2).toFixed(p)}${cur()} | <span style="cursor:pointer; color:var(--accent-primary);" onclick="copyTextVal('${slip.stake2.toFixed(p)}')">📋 نسخ S2</span>` : 'أدخل احتمال O2 بالأسفل'}
                                     </div>
                                 </div>
                             </div>
 
                             ${!isSettled ? `
-                                <!-- محاكي وتحديث احتمال الرهان الثاني (O2) مباشرة داخل القسيمة -->
                                 <div class="slip-live-calc">
                                     <div class="slip-live-title">
                                         <span>⚡ إدخال وفحص احتمال الرهان 2 (O2) الفعلي:</span>
-                                        <span style="font-size:0.68rem; color:var(--text-muted);">تحديث لحظي</span>
+                                        <span style="font-size:0.68rem; color:var(--text-muted);">حساب فوري</span>
                                     </div>
                                     <div class="slip-live-grid">
                                         <div class="mini-input-group">
                                             <label>احتمال اللعبة 2 (O2) الآن</label>
-                                            <input type="number" id="slip-o2-${slip.id}" value="${defaultO2}" placeholder="مثلاً 1.90" step="0.05" inputmode="decimal"
+                                            <input type="number" id="slip-o2-${slip.id}" value="${defaultO2}" placeholder="مثلاً 2.00" step="0.05" inputmode="decimal"
                                                 oninput="onSlipLiveOddsInput(${slip.id}, 'odds')">
                                         </div>
                                         <div class="mini-input-group">
@@ -2658,18 +3180,20 @@
                                             ${displayProfit >= 0 ? '+' : ''}${displayProfit.toFixed(p)}${cur()} (${slip.pct.toFixed(1)}%)
                                         </span>
                                     </div>
-                                    <div class="grid-2">
-                                        <button type="button" class="slip-act-btn btn-hedge" onclick="applySlipLiveHedge(${slip.id}, true)">
-                                            🛡️ تم لعب الرهان 2 (تأمين القسيمة)
+                                    <div class="slip-actions-grid" style="margin-top:4px;">
+                                        <button type="button" class="slip-act-btn btn-win full-width" onclick="applySlipLiveHedge(${slip.id}, 'settle_now')">
+                                            ✅ تم لعب الرهان 2 واعتماد النتيجة في الأرباح فوراً
                                         </button>
-                                        <button type="button" class="slip-act-btn btn-purple" onclick="applySlipLiveHedge(${slip.id}, false)">
-                                            💾 تحديث الحساب فقط (دون لعب)
+                                        <button type="button" class="slip-act-btn btn-hedge" onclick="applySlipLiveHedge(${slip.id}, 'hedge_active')">
+                                            🛡️ تأمين وإبقاء المباراة جارية
+                                        </button>
+                                        <button type="button" class="slip-act-btn btn-purple" onclick="applySlipLiveHedge(${slip.id}, 'save_only')">
+                                            💾 تحديث الحساب فقط
                                         </button>
                                     </div>
                                 </div>
                             ` : ''}
 
-                            <!-- أزرار اتخاذ الإجراءات وإغلاق القسيمة -->
                             <div class="slip-actions-grid">
                                 ${slip.status === 'pending' ? `
                                     <button class="slip-act-btn btn-win" onclick="updateSlipStatus(${slip.id}, 'won_bet1_only')">
@@ -2681,14 +3205,14 @@
                                 ` : ''}
 
                                 ${slip.status === 'hedged' ? `
-                                    <button class="slip-act-btn btn-win full-width" onclick="updateSlipStatus(${slip.id}, 'won_hedged')">
-                                        ✅ إنهاء المباراة وتأكيد ربح التغطية (+${slip.expectedProfit.toFixed(p)}${cur()})
+                                    <button class="slip-act-btn ${hedgeSettleBtnCls} full-width" onclick="updateSlipStatus(${slip.id}, 'settle_hedged')">
+                                        ${hedgeSettleBtnText}
                                     </button>
                                     <button class="slip-act-btn" onclick="updateSlipStatus(${slip.id}, 'won_bet1_only')">
                                         🎯 احتساب ربح الرهان 1 فقط
                                     </button>
                                     <button class="slip-act-btn btn-loss" onclick="updateSlipStatus(${slip.id}, 'lost_early')">
-                                        ❌ احتساب خسارة الرهان 1
+                                        ❌ احتساب خسارة الرهان 1 فقط
                                     </button>
                                 ` : ''}
 
@@ -2769,7 +3293,6 @@
             renderSlips();
         });
 
-        // تصدير واستيراد البيانات
         document.getElementById('exportDataBtn').addEventListener('click', () => {
             const backup = {
                 slips: savedSlips,
