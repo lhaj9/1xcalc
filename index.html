@@ -1197,52 +1197,162 @@
             }
         }
 
-        /* ==================== تصميم تبويب القسائم الاحترافي العالمي ==================== */
+        /* ==================== تصميم لوحة المحفظة الاحترافية العالمية ==================== */
         .portfolio-hero {
             background: linear-gradient(145deg, var(--bg-card), var(--bg-input));
             border: 1px solid var(--border-color);
             border-radius: 18px;
             padding: 14px;
             margin-bottom: 12px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-lg);
         }
 
-        .portfolio-top {
+        .portfolio-header-badge {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            padding-bottom: 10px;
+            align-items: center;
             margin-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 1px solid var(--border-color);
         }
 
-        .pnl-main-label {
-            font-size: 0.75rem;
+        .portfolio-title {
+            font-size: 0.88rem;
+            font-weight: 900;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .portfolio-title i {
+            color: var(--accent-primary);
+        }
+
+        .portfolio-sub-badge {
+            background: var(--bg-elevated);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .portfolio-main-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            margin-bottom: 10px;
+        }
+
+        .pnl-center-block {
+            flex: 1;
+        }
+
+        .pnl-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .pnl-val-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .pnl-main-val {
+            font-size: 1.65rem;
+            font-weight: 950;
+            direction: ltr;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .pnl-chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .pnl-chip {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 7px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pnl-chip b {
+            direction: ltr;
+        }
+
+        .chip-win {
+            background: var(--green-bg);
+            color: var(--green-accent);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .chip-loss {
+            background: var(--danger-bg);
+            color: var(--danger-accent);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .pnl-hedged-note {
+            font-size: 0.72rem;
+            color: var(--blue-accent);
+            font-weight: 800;
+            margin-top: 6px;
+            background: var(--blue-bg);
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .portfolio-rates-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 95px;
+        }
+
+        .rate-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 6px 8px;
+            text-align: center;
+        }
+
+        .rate-label {
+            font-size: 0.65rem;
             color: var(--text-muted);
             font-weight: 700;
             margin-bottom: 2px;
         }
 
-        .pnl-main-val {
-            font-size: 1.5rem;
-            font-weight: 900;
+        .rate-val {
+            font-size: 0.88rem;
+            font-weight: 950;
             direction: ltr;
+            color: var(--accent-primary);
         }
 
-        .pnl-sub-breakdown {
-            display: flex;
-            gap: 10px;
-            font-size: 0.71rem;
-            font-weight: 800;
-            margin-top: 4px;
-            direction: ltr;
-        }
-
-        .roi-pill {
-            background: var(--bg-elevated);
-            padding: 6px 10px;
-            border-radius: 10px;
-            text-align: center;
+        .rate-val.rate-win {
+            color: var(--green-accent);
         }
 
         .stats-grid-4 {
@@ -1260,17 +1370,23 @@
         }
 
         .mini-stat-lbl {
-            font-size: 0.67rem;
+            font-size: 0.66rem;
             color: var(--text-muted);
             font-weight: 700;
             margin-bottom: 3px;
+            white-space: nowrap;
         }
 
         .mini-stat-val {
             font-size: 0.88rem;
-            font-weight: 900;
+            font-weight: 950;
             direction: ltr;
         }
+
+        .val-amber { color: var(--amber-accent); }
+        .val-blue  { color: var(--blue-accent); }
+        .val-green { color: var(--green-accent); }
+        .val-red   { color: var(--danger-accent); }
 
         .slips-toolbar {
             display: flex;
@@ -1331,17 +1447,189 @@
             font-size: 0.68rem;
         }
 
-        /* بطاقة القسيمة العالمية القابلة للتوسيع */
+        /* ==================== تصميم كروت القسائم وإدارتها ==================== */
         .slip-ticket {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-right: 5px solid var(--amber-accent);
-            border-radius: 15px;
-            margin-bottom: 10px;
+            border-radius: 16px;
+            margin-bottom: 12px;
             box-shadow: var(--shadow);
             overflow: hidden;
             transition: all 0.2s ease;
         }
+
+        .slip-ticket.status-pending {
+            border-right: 5px solid var(--amber-accent);
+        }
+
+        .slip-ticket.status-hedged {
+            border-right: 5px solid var(--blue-accent);
+        }
+
+        .slip-ticket.status-won {
+            border-right: 5px solid var(--green-accent);
+        }
+
+        .slip-ticket.status-lost {
+            border-right: 5px solid var(--danger-accent);
+        }
+
+        .slip-ticket.expanded {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* كتل الإجراءات المفتوحة المنظمة */
+        .slip-settle-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 13px;
+            padding: 11px 12px;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+
+        .slip-settle-card.card-hedged {
+            border-color: rgba(16, 185, 129, 0.35);
+            background: linear-gradient(180deg, var(--bg-card) 0%, rgba(16, 185, 129, 0.05) 100%);
+        }
+
+        .slip-settle-card.card-pending {
+            border-color: rgba(245, 158, 11, 0.35);
+            background: linear-gradient(180deg, var(--bg-card) 0%, rgba(245, 158, 11, 0.04) 100%);
+        }
+
+        .settle-card-title {
+            font-size: 0.78rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .settle-option-item {
+            margin-bottom: 8px;
+        }
+
+        .settle-option-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .settle-btn {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-weight: 900;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .settle-btn:active {
+            transform: scale(0.98);
+        }
+
+        .settle-btn.btn-primary-win {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .settle-btn.btn-outline-green {
+            background: var(--green-bg);
+            border: 1.5px solid var(--green-accent);
+            color: var(--green-accent);
+        }
+
+        .settle-btn.btn-outline-red {
+            background: var(--danger-bg);
+            border: 1.5px solid var(--danger-accent);
+            color: var(--danger-accent);
+        }
+
+        .settle-btn.btn-outline-blue {
+            background: var(--blue-bg);
+            border: 1.5px solid var(--blue-accent);
+            color: var(--blue-accent);
+        }
+
+        .settle-btn.btn-outline-muted {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .settle-btn-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+            padding-right: 4px;
+            line-height: 1.35;
+        }
+
+        /* بنر القسيمة المنتهية المحسومة */
+        .settled-final-badge {
+            padding: 11px 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.84rem;
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+
+        .settled-final-badge.final-won {
+            background: var(--green-bg);
+            border: 1.5px solid var(--green-accent);
+            color: var(--green-accent);
+        }
+
+        .settled-final-badge.final-lost {
+            background: var(--danger-bg);
+            border: 1.5px solid var(--danger-accent);
+            color: var(--danger-accent);
+        }
+
+        /* شريط الأدوات السفلي للقسيمة */
+        .slip-footer-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 8px;
+            margin-top: 8px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .tool-link-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: color 0.15s ease, background 0.15s ease;
+        }
+
+        .tool-link-btn:active {
+            background: var(--bg-elevated);
+        }
+
+        .tool-link-btn.btn-delete {
+            color: var(--danger-accent);
+        }
+
 
         .slip-ticket.status-pending {
             border-right-color: var(--amber-accent);
@@ -2330,20 +2618,55 @@
         <!-- ==================== التبويب الثالث: إدارة القسائم والصفقات ==================== -->
         <section id="tab3" class="tab-panel">
             <div class="portfolio-hero">
-                <div class="portfolio-top">
-                    <div>
-                        <div class="pnl-main-label">صافي الأرباح المحققة (Realized P&L)</div>
-                        <div class="pnl-main-val" id="statRealizedProfit" style="color: var(--green-accent);">+0.00$
+                <div class="portfolio-header-badge">
+                    <span class="portfolio-title"><i class="fa-solid fa-chart-pie"></i> لوحة أرباح المحفظة</span>
+                    <span class="portfolio-sub-badge" id="statTotalSlipsCount">إجمالي: 0 صفقات</span>
+                </div>
+
+                <div class="portfolio-main-card">
+                    <div class="pnl-center-block">
+                        <div class="pnl-label">صافي الأرباح المحققة (Realized P&L)</div>
+                        <div class="pnl-val-wrap">
+                            <span class="pnl-main-val" id="statRealizedProfit" dir="ltr">+0.00$</span>
                         </div>
-                        <div class="pnl-sub-breakdown">
-                            <span id="statGrossWin" style="color: var(--green-accent);">أرباح: +0.00$</span>
-                            <span style="color: var(--border-color);">|</span>
-                            <span id="statGrossLoss" style="color: var(--danger-accent);">خسائر: 0.00$</span>
+                        <div class="pnl-chips-row">
+                            <span class="pnl-chip chip-win" id="statGrossWin"><i class="fa-solid fa-arrow-trend-up"></i> أرباح: <b dir="ltr">+0.00$</b></span>
+                            <span class="pnl-chip chip-loss" id="statGrossLoss"><i class="fa-solid fa-arrow-trend-down"></i> خسائر: <b dir="ltr">0.00$</b></span>
                         </div>
-                        <div id="statLockedHedgedPnl"
-                            style="font-size: 0.7rem; color: var(--blue-accent); font-weight: 800; margin-top: 3px; display: none;">
+                        <div id="statLockedHedgedPnl" class="pnl-hedged-note" style="display: none;"></div>
+                    </div>
+
+                    <div class="portfolio-rates-grid">
+                        <div class="rate-card">
+                            <div class="rate-label">العائد (ROI)</div>
+                            <div class="rate-val" id="statRoiVal" dir="ltr">0.0%</div>
+                        </div>
+                        <div class="rate-card">
+                            <div class="rate-label">نسبة الفوز</div>
+                            <div class="rate-val rate-win" id="statWinRateVal" dir="ltr">0%</div>
                         </div>
                     </div>
+                </div>
+
+                <div class="stats-grid-4">
+                    <div class="mini-stat">
+                        <div class="mini-stat-lbl">⏳ قيد اللعب</div>
+                        <div class="mini-stat-val val-amber" id="statPendingCount" dir="ltr">0</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-lbl">💵 رأس مال نشط</div>
+                        <div class="mini-stat-val val-blue" id="statActiveInvested" dir="ltr">0.00$</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-lbl">✅ رابحة</div>
+                        <div class="mini-stat-val val-green" id="statWonCount" dir="ltr">0</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-lbl">❌ خاسرة</div>
+                        <div class="mini-stat-val val-red" id="statLostCount" dir="ltr">0</div>
+                    </div>
+                </div>
+            </div>
                     <div class="roi-pill">
                         <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 700;">العائد ROI / النجاح
                         </div>
@@ -4027,6 +4350,9 @@
             const elPillBadge = document.getElementById('pillSlipsBadge');
             if (elPillBadge) elPillBadge.textContent = activeCount;
 
+            const totalSlipsCountEl = document.getElementById('statTotalSlipsCount');
+            if (totalSlipsCountEl) totalSlipsCountEl.textContent = `إجمالي: ${savedSlips.length} صفقات`;
+
             document.getElementById('statPendingCount').textContent = activeCount;
             document.getElementById('statWonCount').textContent = cWon;
             document.getElementById('statLostCount').textContent = cLost;
@@ -4063,18 +4389,21 @@
             profEl.textContent = `${realizedProfit >= 0 ? '+' : ''}${realizedProfit.toFixed(p)}${cur()}`;
             profEl.style.color = realizedProfit >= 0 ? 'var(--green-accent)' : 'var(--danger-accent)';
 
-            document.getElementById('statGrossWin').textContent = `أرباح: +${grossWin.toFixed(p)}${cur()}`;
-            document.getElementById('statGrossLoss').textContent = `خسائر: ${grossLoss.toFixed(p)}${cur()}`;
+            document.getElementById('statGrossWin').innerHTML = `<i class="fa-solid fa-arrow-trend-up"></i> أرباح: <b dir="ltr">+${grossWin.toFixed(p)}${cur()}</b>`;
+            document.getElementById('statGrossLoss').innerHTML = `<i class="fa-solid fa-arrow-trend-down"></i> خسائر: <b dir="ltr">${grossLoss.toFixed(p)}${cur()}</b>`;
 
             const lockedEl = document.getElementById('statLockedHedgedPnl');
             if (hedgedSlips.length > 0) {
-                lockedEl.style.display = 'block';
-                lockedEl.textContent = `🛡️ صافي مؤمّن قيد الإغلاق (${hedgedSlips.length}): ${lockedHedgedPnl >= 0 ? '+' : ''}${lockedHedgedPnl.toFixed(p)}${cur()}`;
+                lockedEl.style.display = 'inline-flex';
+                lockedEl.innerHTML = `<i class="fa-solid fa-shield-halved"></i> صافي مؤمّن قيد الإغلاق (${hedgedSlips.length}): <b dir="ltr">${lockedHedgedPnl >= 0 ? '+' : ''}${lockedHedgedPnl.toFixed(p)}${cur()}</b>`;
             } else {
                 lockedEl.style.display = 'none';
             }
 
-            document.getElementById('statRoiAndWinRate').textContent = `ROI ${roiPct >= 0 ? '+' : ''}${roiPct.toFixed(1)}% | فوز ${winRate.toFixed(0)}%`;
+            const roiEl = document.getElementById('statRoiVal');
+            if (roiEl) roiEl.textContent = `${roiPct >= 0 ? '+' : ''}${roiPct.toFixed(1)}%`;
+            const winEl = document.getElementById('statWinRateVal');
+            if (winEl) winEl.textContent = `${winRate.toFixed(0)}%`;
 
             let filtered = currentSlipFilter === 'all' ? savedSlips : savedSlips.filter(s => s.status === currentSlipFilter);
             if (searchQuery) {
@@ -4082,15 +4411,20 @@
             }
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="card" style="text-align:center; padding:30px 15px; color:var(--text-muted);">لا توجد قسائم مطابقة في هذا القسم حالياً.</div>`;
+                container.innerHTML = `<div class="card" style="text-align:center; padding:32px 15px; color:var(--text-muted);">
+                    <div style="font-size:2rem; margin-bottom:6px;">🎟️</div>
+                    <div style="font-weight:800; font-size:0.95rem; margin-bottom:4px;">لا توجد قسائم مطابقة</div>
+                    <div style="font-size:0.75rem;">اختر تصفية أخرى أو أضف قسيمة جديدة من التبويب الأول أو الثاني</div>
+                </div>`;
+                updateMenuStats();
                 return;
             }
 
             const statusMeta = {
-                pending: { text: '⏳ بانتظار التغطية (الرهان 1 فقط)', cls: 'tag-pending', dot: 'dot-pending' },
-                hedged: { text: '🛡️ مؤمّنة (تم دخول الرهانين)', cls: 'tag-hedged', dot: 'dot-hedged' },
-                won: { text: '✅ قسيمة رابحة', cls: 'tag-won', dot: 'dot-won' },
-                lost: { text: '❌ قسيمة خاسرة', cls: 'tag-lost', dot: 'dot-lost' }
+                pending: { text: '⏳ بانتظار التغطية', cls: 'tag-pending', dot: 'dot-pending' },
+                hedged: { text: '🛡️ مؤمّنة (ربح مضمون)', cls: 'tag-hedged', dot: 'dot-hedged' },
+                won: { text: '✅ رابحة ومحسومة', cls: 'tag-won', dot: 'dot-won' },
+                lost: { text: '❌ خاسرة ومحسومة', cls: 'tag-lost', dot: 'dot-lost' }
             };
 
             container.innerHTML = filtered.map(slip => {
@@ -4104,37 +4438,34 @@
                 const defaultS2 = slip.stake2 > 0 ? slip.stake2.toFixed(p) : '';
                 const wasHedgePlayed = slip.hedgePlayed || slip.status === 'hedged' || (isSettled && slip.stake2 > 0 && slip.totalStake > slip.stake1 + 0.001);
 
-                let compactInfoRight = '';
+                // السطر المضغوط في رأس القسيمة
+                let compactSummary = '';
                 if (slip.status === 'pending') {
-                    compactInfoRight = `<span>رهان 1: <b>${slip.stake1.toFixed(p)}${cur()}</b> × ${slip.odds1.toFixed(2)}</span>
-                                        <span style="color:var(--amber-accent);">⬅️ الهدف O2: <b>${slip.odds2 > 1 ? slip.odds2.toFixed(2) : 'مفتوح'}</b></span>`;
+                    compactSummary = `<span>رهان 1: <b>${slip.stake1.toFixed(p)}${cur()}</b> @ ${slip.odds1.toFixed(2)}</span>
+                                      <span style="color:var(--amber-accent);">⇋ انتظر O2: <b>${slip.odds2 > 1 ? slip.odds2.toFixed(2) : 'مفتوح'}</b></span>`;
                 } else if (slip.status === 'hedged') {
-                    compactInfoRight = `<span>مؤمّن بمجموع: <b>${(slip.stake1 + slip.stake2).toFixed(p)}${cur()}</b></span>
-                                        <span style="color:var(--blue-accent);">O1: ${slip.odds1.toFixed(2)} | O2: ${slip.odds2.toFixed(2)}</span>`;
+                    compactSummary = `<span>المجموع: <b>${(slip.stake1 + slip.stake2).toFixed(p)}${cur()}</b></span>
+                                      <span style="color:var(--blue-accent);">O1: ${slip.odds1.toFixed(2)} ⇋ O2: ${slip.odds2.toFixed(2)}</span>`;
                 } else {
-                    compactInfoRight = `<span>المدفوع: <b>${(slip.totalStake || slip.stake1).toFixed(p)}${cur()}</b></span>
-                                        <span style="color:var(--text-muted);">${slip.settledAt || slip.createdAt}</span>`;
+                    compactSummary = `<span>المدفوع: <b>${(slip.totalStake || slip.stake1).toFixed(p)}${cur()}</b></span>
+                                      <span style="color:var(--text-muted); font-size:0.72rem;">أُغلقت: ${slip.settledAt || slip.createdAt}</span>`;
                 }
 
-                let leg2HeaderHtml = '';
+                // كارت الرهان الثاني في وضع التوسيع
+                let leg2Header = '';
                 let leg2Class = 'target-leg';
                 if (wasHedgePlayed) {
-                    leg2HeaderHtml = `<div style="color:var(--green-accent); font-weight:800; margin-bottom:2px;">🛡️ الرهان 2 (تم الدخول)</div>`;
+                    leg2Header = `<div style="color:var(--green-accent); font-weight:800; margin-bottom:2px;"><i class="fa-solid fa-shield-halved"></i> الرهان 2 (تم الدخول والتأمين)</div>`;
                     leg2Class = 'played-leg';
                 } else if (isSettled) {
-                    leg2HeaderHtml = `<div style="color:var(--text-muted); font-weight:800; margin-bottom:2px;">🚫 الرهان 2 (لم يُلعب)</div>`;
+                    leg2Header = `<div style="color:var(--text-muted); font-weight:800; margin-bottom:2px;">🚫 الرهان 2 (لم يُلعب)</div>`;
                 } else {
-                    leg2HeaderHtml = `<div style="color:var(--amber-accent); font-weight:800; margin-bottom:2px;">⏳ الرهان 2 (المستهدف/التغطية)</div>`;
+                    leg2Header = `<div style="color:var(--amber-accent); font-weight:800; margin-bottom:2px;"><i class="fa-solid fa-hourglass-half"></i> الرهان 2 (المستهدف للتغطية)</div>`;
                 }
-
-                const hedgeSettleSign = slip.expectedProfit >= 0 ? '+' : '';
-                const hedgeSettleBtnCls = slip.expectedProfit >= 0 ? 'btn-win' : 'btn-loss';
-                const hedgeSettleBtnText = slip.expectedProfit >= 0
-                    ? `✅ إنهاء المباراة واعتماد الربح (${hedgeSettleSign}${slip.expectedProfit.toFixed(p)}${cur()})`
-                    : `❌ إنهاء المباراة واعتماد الخسارة (${slip.expectedProfit.toFixed(p)}${cur()})`;
 
                 return `
                     <div class="slip-ticket status-${slip.status} ${isExpanded ? 'expanded' : ''}" id="slip-card-${slip.id}">
+                        <!-- رأس القسيمة المضغوط -->
                         <div class="slip-compact-header" onclick="toggleSlipExpand(${slip.id})">
                             <div class="slip-row-1">
                                 <div class="slip-title-wrap">
@@ -4145,119 +4476,170 @@
                             </div>
 
                             <div class="slip-row-2">
-                                <div class="compact-bet-pill">${compactInfoRight}</div>
+                                <div class="compact-bet-pill">${compactSummary}</div>
                                 <div class="compact-pnl-badge" style="color:${profitColor};">
-                                    <span>${displayProfit >= 0 ? '+' : ''}${displayProfit.toFixed(p)}${cur()}</span>
+                                    <span dir="ltr">${displayProfit >= 0 ? '+' : ''}${displayProfit.toFixed(p)}${cur()}</span>
                                     <span class="expand-chevron">▼</span>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- تفاصيل وخيارات القسيمة المفتوحة -->
                         <div class="slip-expand-body">
                             <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--text-muted); padding-top:8px;">
-                                <span>النوع: ${slip.type} | أُنشئت: ${slip.createdAt}</span>
-                                ${slip.settledAt ? `<span>أُغلقت: ${slip.settledAt}</span>` : ''}
+                                <span>النوع: ${slip.type} | تاريخ الإنشاء: ${slip.createdAt}</span>
+                                ${slip.settledAt ? `<span>تاريخ الإغلاق: ${slip.settledAt}</span>` : ''}
                             </div>
 
+                            <!-- 1. تفاصيل الرهانين الأول والثاني -->
                             <div class="slip-legs">
                                 <div class="leg-box active-leg">
-                                    <div style="color:var(--blue-accent); font-weight:800; margin-bottom:2px;">✅ الرهان 1 (تم الدخول)</div>
-                                    <div style="font-weight:900; font-size:0.88rem; direction:ltr;">${slip.stake1.toFixed(p)}${cur()} × ${slip.odds1.toFixed(2)}</div>
-                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">عائد الرهان 1: ${(slip.stake1 * slip.odds1).toFixed(p)}${cur()}</div>
+                                    <div style="color:var(--blue-accent); font-weight:800; margin-bottom:2px;">
+                                        <i class="fa-solid fa-circle-check"></i> الرهان 1 (الأساسي)
+                                    </div>
+                                    <div style="font-weight:900; font-size:0.88rem; direction:ltr;">
+                                        ${slip.stake1.toFixed(p)}${cur()} × ${slip.odds1.toFixed(2)}
+                                    </div>
+                                    <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">
+                                        عائد الرهان 1: ${(slip.stake1 * slip.odds1).toFixed(p)}${cur()}
+                                    </div>
                                 </div>
 
                                 <div class="leg-box ${leg2Class}">
-                                    ${leg2HeaderHtml}
+                                    ${leg2Header}
                                     <div style="font-weight:900; font-size:0.88rem; direction:ltr;">
-                                        ${slip.stake2 > 0 ? `${slip.stake2.toFixed(p)}${cur()} × ${slip.odds2.toFixed(2)}` : 'لم يُلعب'}
+                                        ${slip.stake2 > 0 ? `${slip.stake2.toFixed(p)}${cur()} × ${slip.odds2.toFixed(2)}` : 'لم يُلعب بعد'}
                                     </div>
                                     <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">
-                                        ${slip.stake2 > 0 ? `عائد 2: ${(slip.stake2 * slip.odds2).toFixed(p)}${cur()} | <span style="cursor:pointer; color:var(--accent-primary);" onclick="copyTextVal('${slip.stake2.toFixed(p)}')">📋 نسخ S2</span>` : 'أدخل احتمال O2 بالأسفل'}
+                                        ${slip.stake2 > 0 
+                                            ? `العائد: ${(slip.stake2 * slip.odds2).toFixed(p)}${cur()} | <span style="cursor:pointer; color:var(--accent-primary); font-weight:bold;" onclick="copyTextVal('${slip.stake2.toFixed(p)}')">📋 نسخ S2</span>` 
+                                            : 'بانتظار إدخال احتمال O2 بالأسفل'}
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- 2. محاكي وفاحص احتمال التغطية أثناء المباشر (يظهر لجميع القسائم النشطة) -->
                             ${!isSettled ? `
                                 <div class="slip-live-calc">
                                     <div class="slip-live-title">
-                                        <span>⚡ إدخال وفحص احتمال الرهان 2 (O2) الفعلي:</span>
-                                        <span style="font-size:0.68rem; color:var(--text-muted);">حساب فوري</span>
+                                        <span><i class="fa-solid fa-bolt"></i> تحديث وفحص احتمال الرهان 2 (Live O2):</span>
+                                        <span style="font-size:0.68rem; color:var(--text-muted);">حساب وتحديث فوري</span>
                                     </div>
                                     <div class="slip-live-grid">
                                         <div class="mini-input-group">
-                                            <label>احتمال اللعبة 2 (O2) الآن</label>
-                                            <input type="number" id="slip-o2-${slip.id}" value="${defaultO2}" placeholder="مثلاً 2.00" step="0.05" inputmode="decimal"
+                                            <label>احتمال الرهان 2 (O2) الآن في المباراة</label>
+                                            <input type="number" id="slip-o2-${slip.id}" value="${defaultO2}" placeholder="مثلاً 2.10" step="0.05" inputmode="decimal"
                                                 oninput="onSlipLiveOddsInput(${slip.id}, 'odds')">
                                         </div>
                                         <div class="mini-input-group">
-                                            <label>مبلغ الدخول (S2) المطلوب</label>
+                                            <label>المبلغ المطلوب للدخول (S2)</label>
                                             <input type="number" id="slip-s2-${slip.id}" value="${defaultS2}" placeholder="يحسب تلقائياً" step="any" inputmode="decimal"
                                                 oninput="onSlipLiveOddsInput(${slip.id}, 'stake')">
                                         </div>
                                     </div>
                                     <div class="slip-live-preview" id="slip-preview-${slip.id}">
                                         <span>النتيجة المتوقعة بهذا الاحتمال:</span>
-                                        <span style="color:${profitColor}; direction:ltr;">
+                                        <span style="color:${profitColor}; direction:ltr; font-weight:900;">
                                             ${displayProfit >= 0 ? '+' : ''}${displayProfit.toFixed(p)}${cur()} (${slip.pct.toFixed(1)}%)
                                         </span>
                                     </div>
-                                    <div class="slip-actions-grid" style="margin-top:4px;">
-                                        <button type="button" class="slip-act-btn btn-win full-width" onclick="applySlipLiveHedge(${slip.id}, 'settle_now')">
-                                            ✅ تم لعب الرهان 2 واعتماد النتيجة في الأرباح فوراً
+                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:5px;">
+                                        <button type="button" class="settle-btn btn-outline-blue" onclick="applySlipLiveHedge(${slip.id}, 'hedge_active')">
+                                            <i class="fa-solid fa-shield-halved"></i> تأمين ودخول الرهان 2
                                         </button>
-                                        <button type="button" class="slip-act-btn btn-hedge" onclick="applySlipLiveHedge(${slip.id}, 'hedge_active')">
-                                            🛡️ تأمين وإبقاء المباراة جارية
+                                        <button type="button" class="settle-btn btn-primary-win" onclick="applySlipLiveHedge(${slip.id}, 'settle_now')">
+                                            <i class="fa-solid fa-check-double"></i> اعتماد وإغلاق بربح فوراً
                                         </button>
-                                        <button type="button" class="slip-act-btn btn-purple" onclick="applySlipLiveHedge(${slip.id}, 'save_only')">
-                                            💾 تحديث الحساب فقط
-                                        </button>
+                                    </div>
+                                    <div style="font-size:0.67rem; color:var(--text-muted); margin-top:5px; text-align:center;">
+                                        💡 زر "تأمين ودخول الرهان 2" يحفظ الأرقام ويبقي المباراة جارية، وزر "اعتماد وإغلاق" يرحّل الربح ويغلقها فوراً
                                     </div>
                                 </div>
                             ` : ''}
 
-                            <div class="slip-actions-grid">
-                                ${slip.status === 'pending' ? `
-                                    <button class="slip-act-btn btn-win" onclick="updateSlipStatus(${slip.id}, 'won_bet1_only')">
-                                        🎯 ربح الرهان 1 فقط (دون تغطية)
-                                    </button>
-                                    <button class="slip-act-btn btn-loss" onclick="updateSlipStatus(${slip.id}, 'lost_early')">
-                                        ❌ خسر الرهان 1 مبكراً
-                                    </button>
-                                ` : ''}
+                            <!-- 3. صندوق سيناريوهات إنهاء وإغلاق القسيمة الشامل (يظهر لجميع القسائم النشطة) -->
+                            ${!isSettled ? `
+                                <div class="slip-settle-card ${slip.status === 'hedged' ? 'card-hedged' : 'card-pending'}">
+                                    <div class="settle-card-title">
+                                        <span><i class="fa-solid fa-flag-checkered"></i> خيارات إنهاء وإغلاق القسيمة:</span>
+                                        <span style="font-size:0.7rem; color:var(--text-muted); font-weight:800;">
+                                            ${slip.status === 'hedged' ? '🛡️ مؤمّنة بالرهانين' : '⏳ بانتظار التغطية'}
+                                        </span>
+                                    </div>
 
-                                ${slip.status === 'hedged' ? `
-                                    <button class="slip-act-btn ${hedgeSettleBtnCls} full-width" onclick="updateSlipStatus(${slip.id}, 'settle_hedged')">
-                                        ${hedgeSettleBtnText}
-                                    </button>
-                                    <button class="slip-act-btn" onclick="updateSlipStatus(${slip.id}, 'won_bet1_only')">
-                                        🎯 احتساب ربح الرهان 1 فقط
-                                    </button>
-                                    <button class="slip-act-btn btn-loss" onclick="updateSlipStatus(${slip.id}, 'lost_early')">
-                                        ❌ احتساب خسارة الرهان 1 فقط
-                                    </button>
-                                ` : ''}
+                                    <!-- خيار 1: إنهاء المباراة واعتماد الربح المضمون بالرهانين -->
+                                    <div class="settle-option-item">
+                                        <button type="button" class="settle-btn ${slip.expectedProfit >= 0 ? 'btn-primary-win' : 'btn-outline-red'}" onclick="updateSlipStatus(${slip.id}, 'settle_hedged')">
+                                            <i class="fa-solid fa-trophy"></i> إنهاء المباراة واعتماد الربح المضمون (${slip.expectedProfit >= 0 ? '+' : ''}${slip.expectedProfit.toFixed(p)}${cur()})
+                                        </button>
+                                        <div class="settle-btn-desc">
+                                            انتهت المباراة! اضغط هنا لترحيل صافي ربح الرهانين المضمون إلى محفظتك وإغلاق القسيمة.
+                                        </div>
+                                    </div>
 
-                                ${!isSettled ? `
-                                    <button class="slip-act-btn" onclick="updateSlipStatus(${slip.id}, 'custom_cashout')">
-                                        💵 إغلاق يدوي / Cashout
-                                    </button>
-                                ` : `
-                                    <button class="slip-act-btn" onclick="updateSlipStatus(${slip.id}, 'reopen_slip')">
-                                        🔄 إعادة فتح القسيمة
-                                    </button>
-                                `}
+                                    <!-- خيار 2: فوز الرهان 1 فقط (دون تغطية) -->
+                                    <div class="settle-option-item" style="margin-top:8px;">
+                                        <button type="button" class="settle-btn btn-outline-green" onclick="updateSlipStatus(${slip.id}, 'won_bet1_only')">
+                                            <i class="fa-solid fa-circle-check"></i> إغلاق القسيمة على فوز الرهان 1 فقط (+${((slip.stake1 * slip.odds1) - slip.stake1).toFixed(p)}${cur()})
+                                        </button>
+                                        <div class="settle-btn-desc">
+                                            في حال انتهت المباراة بفوز رهانك الأول كاملاً دون الحاجة للرهان الثاني (احتساب عائد الرهان 1 كاملاً).
+                                        </div>
+                                    </div>
 
-                                <button class="slip-act-btn" onclick="updateSlipStatus(${slip.id}, 'rename_slip')">
-                                    ✏️ تعديل الاسم
+                                    <!-- خيار 3: خسارة الرهان 1 مبكراً -->
+                                    <div class="settle-option-item" style="margin-top:8px;">
+                                        <button type="button" class="settle-btn btn-outline-red" onclick="updateSlipStatus(${slip.id}, 'lost_early')">
+                                            <i class="fa-solid fa-circle-xmark"></i> احتساب خسارة الرهان 1 فقط (-${slip.stake1.toFixed(p)}${cur()})
+                                        </button>
+                                        <div class="settle-btn-desc">
+                                            في حال خسر الرهان الأول مبكراً قبل التمكن من التغطية (تسجيل خسارة مبلغ الرهان 1 فقط).
+                                        </div>
+                                    </div>
+
+                                    <!-- خيار 4: تسوية كاش آوت يدوي -->
+                                    <div class="settle-option-item" style="margin-top:8px; padding-top:6px; border-top:1px dashed var(--border-color);">
+                                        <button type="button" class="settle-btn btn-outline-muted" onclick="updateSlipStatus(${slip.id}, 'custom_cashout')">
+                                            <i class="fa-solid fa-money-bill-wave"></i> تسوية كاش آوت يدوي (Cashout)
+                                        </button>
+                                        <div class="settle-btn-desc">
+                                            في حال قمت بعمل كاش آوت مبكر في تطبيق المراهنات واسترددت جزءاً من المال فعلياً.
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <!-- 4. في حال كانت القسيمة محسومة ومغلقة مسبقاً -->
+                            ${isSettled ? `
+                                <div class="settled-final-badge ${slip.status === 'won' ? 'final-won' : 'final-lost'}">
+                                    <div>
+                                        ${slip.status === 'won' 
+                                            ? `🏆 تم إغلاق القسيمة بنجاح كرابحة: صافي الربح المحقق +${slip.realizedProfit.toFixed(p)}${cur()} (${slip.pct.toFixed(1)}%)` 
+                                            : `❌ تم إغلاق القسيمة كخاسرة: صافي الخسارة ${slip.realizedProfit.toFixed(p)}${cur()}`}
+                                    </div>
+                                    <div style="font-size:0.7rem; opacity:0.85; margin-top:3px;">
+                                        تاريخ الحسم: ${slip.settledAt || slip.createdAt}
+                                    </div>
+                                </div>
+                                <button type="button" class="settle-btn btn-outline-muted" onclick="updateSlipStatus(${slip.id}, 'reopen_slip')" style="margin-bottom:8px;">
+                                    <i class="fa-solid fa-rotate-left"></i> إعادة فتح القسيمة للتعديل أو استئناف اللعب
                                 </button>
-                                <button class="slip-act-btn" onclick="deleteSlip(${slip.id})" style="color:var(--danger-accent);">
-                                    🗑️ حذف القسيمة
+                            ` : ''}
+
+                            <!-- 4. شريط أدوات إدارة القسيمة (تعديل الاسم وحذف) -->
+                            <div class="slip-footer-tools">
+                                <button type="button" class="tool-link-btn" onclick="updateSlipStatus(${slip.id}, 'rename_slip')">
+                                    <i class="fa-solid fa-pen-to-square"></i> تعديل الاسم
+                                </button>
+                                <button type="button" class="tool-link-btn btn-delete" onclick="deleteSlip(${slip.id})">
+                                    <i class="fa-solid fa-trash-can"></i> حذف القسيمة
                                 </button>
                             </div>
                         </div>
                     </div>
                 `;
             }).join('');
+
             updateMenuStats();
         };
 
