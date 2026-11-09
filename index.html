@@ -1570,6 +1570,563 @@
             color: var(--accent-primary);
         }
 
+        /* ==================== 1XBET CALCULATOR MODE SWITCHER ==================== */
+        .calc-mode-switch-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-bottom: 13px;
+        }
+
+        .calc-mode-btn {
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            border-radius: 13px;
+            padding: 10px 10px;
+            font-size: 0.81rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+            color: var(--text-muted);
+            box-shadow: var(--shadow);
+            user-select: none;
+        }
+
+        .calc-mode-btn:active {
+            transform: scale(0.96);
+        }
+
+        .calc-mode-btn.mode-blue.active {
+            background: linear-gradient(135deg, #1055a4 0%, #1e70e9 100%);
+            color: #ffffff;
+            border-color: #1055a4;
+            box-shadow: 0 4px 15px rgba(16, 85, 164, 0.35);
+        }
+
+        .calc-mode-btn.mode-green.active {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: #ffffff;
+            border-color: #059669;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+        }
+
+        /* ==================== 1XBET LIVE MATCHES & EVENTS HUB ==================== */
+        .matches-header-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 11px 13px;
+            margin-bottom: 11px;
+            box-shadow: var(--shadow);
+        }
+
+        .matches-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 9px;
+        }
+
+        .matches-title-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .matches-title {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -0.2px;
+        }
+
+        .match-refresh-btn {
+            background: var(--accent-bg);
+            border: 1px solid rgba(16, 85, 164, 0.2);
+            color: var(--accent-primary);
+            border-radius: 9px;
+            padding: 5px 10px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .match-refresh-btn:active {
+            transform: scale(0.93);
+            background: var(--accent-primary);
+            color: #fff;
+        }
+
+        .match-search-wrap {
+            position: relative;
+            width: 100%;
+        }
+
+        .match-search-icon {
+            position: absolute;
+            right: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
+        .match-search-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 11px;
+            padding: 8px 32px 8px 28px;
+            font-size: 0.78rem;
+            color: var(--text-main);
+            font-weight: 700;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .match-search-input:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .match-search-clear {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 3px 6px;
+        }
+
+        /* شريط الفلاتر الزمنية */
+        .home-pills-scroller {
+            display: flex;
+            gap: 7px;
+            overflow-x: auto;
+            padding-bottom: 7px;
+            margin-bottom: 10px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .home-pills-scroller::-webkit-scrollbar {
+            display: none;
+        }
+
+        .home-pill {
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+            white-space: nowrap;
+        }
+
+        .home-pill.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-primary);
+            box-shadow: 0 3px 12px rgba(16, 85, 164, 0.35);
+        }
+
+        .home-pill.pill-live {
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+
+        .home-pill.pill-live.active {
+            background: var(--danger-accent);
+            border-color: var(--danger-accent);
+            color: #ffffff;
+            box-shadow: 0 3px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .live-badge-mini {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger-accent);
+            font-size: 0.62rem;
+            font-weight: 900;
+            padding: 1px 5px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .home-pill.pill-live.active .live-badge-mini {
+            background: #ffffff;
+            color: var(--danger-accent);
+        }
+
+        /* شريط الدوريات الكبرى */
+        .leagues-scroller {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 7px;
+            margin-bottom: 11px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .leagues-scroller::-webkit-scrollbar {
+            display: none;
+        }
+
+        .league-pill {
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 11px;
+            border-radius: 12px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+            box-shadow: var(--shadow);
+        }
+
+        .league-pill:active {
+            transform: scale(0.95);
+        }
+
+        .league-pill.active {
+            background: var(--bg-elevated);
+            color: var(--text-main);
+            border-color: var(--accent-primary);
+            font-weight: 900;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .custom-date-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 6px 11px;
+            margin-bottom: 12px;
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            font-weight: 800;
+        }
+
+        .custom-date-picker {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            outline: none;
+        }
+
+        /* بطاقات المباريات المباشرة والجدول */
+        .match-loading-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 35px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .match-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px auto;
+        }
+
+        .live-section-banner {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.04));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            font-size: 0.78rem;
+            font-weight: 900;
+            color: var(--danger-accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .day-group-header {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 11px;
+            padding: 7px 11px;
+            margin-top: 13px;
+            margin-bottom: 8px;
+            font-size: 0.77rem;
+            font-weight: 900;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .match-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 11px 12px;
+            margin-bottom: 9px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .match-card:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .match-card.is-live {
+            border-right: 5px solid var(--danger-accent);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.04) 0%, var(--bg-card) 100%);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.12);
+        }
+
+        .match-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+        .league-tag {
+            color: var(--accent-primary);
+            background: var(--accent-bg);
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .match-status-badge {
+            padding: 3px 8px;
+            border-radius: 7px;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.68rem;
+            direction: ltr;
+        }
+
+        .status-live {
+            background: var(--danger-bg);
+            color: var(--danger-accent);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+        }
+
+        .status-pre {
+            background: var(--blue-bg);
+            color: var(--blue-accent);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .status-post {
+            background: var(--bg-input);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .live-dot-pulse {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--danger-accent);
+            display: inline-block;
+            animation: livePulse 1.3s infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
+        }
+
+        .match-card-body {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 0;
+        }
+
+        .team-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 4px;
+        }
+
+        .team-crest {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .team-name-label {
+            font-size: 0.77rem;
+            font-weight: 800;
+            line-height: 1.25;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            color: var(--text-main);
+        }
+
+        .score-center-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 65px;
+        }
+
+        .live-score-val {
+            font-size: 1.35rem;
+            font-weight: 950;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            direction: ltr;
+            line-height: 1;
+        }
+
+        .match-card.is-live .live-score-val {
+            color: var(--danger-accent);
+        }
+
+        .vs-text {
+            font-size: 0.88rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .match-minute-label {
+            font-size: 0.67rem;
+            color: var(--danger-accent);
+            font-weight: 800;
+            margin-top: 3px;
+            direction: ltr;
+        }
+
+        .kickoff-label {
+            font-size: 0.68rem;
+            color: var(--accent-primary);
+            font-weight: 800;
+            margin-top: 3px;
+            direction: ltr;
+        }
+
+        .match-card-footer {
+            margin-top: 9px;
+            padding-top: 7px;
+            border-top: 1px dashed var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        .match-venue {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 140px;
+            font-weight: 700;
+        }
+
+        .match-action-tools {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-match-calc {
+            background: linear-gradient(135deg, #1055a4 0%, #1e70e9 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 7px rgba(16, 85, 164, 0.3);
+        }
+
+        .btn-match-calc:active {
+            transform: scale(0.94);
+        }
+
+        .btn-match-copy {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 8px;
+            width: 27px;
+            height: 27px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.15s ease;
+        }
+
+        .btn-match-copy:active {
+            transform: scale(0.9);
+            color: var(--accent-primary);
+        }
+
+
+
         /* كتل الإجراءات المفتوحة المنظمة */
         .slip-settle-card {
             background: var(--bg-card);
@@ -2440,8 +2997,133 @@
         
 
         <!-- ==================== التبويب الأول: التغطية الثنائية الآنية ==================== -->
-        <section id="tab1" class="tab-panel active">
-            <div class="card">
+        
+        <!-- ==================== التبويب الأول: مركز المباريات والأحداث المباشرة (1XBET Style Live & Matches Hub) ==================== -->
+        <section id="tabHome" class="tab-panel active">
+            <!-- شريط حالة المباريات والبحث السريع -->
+            <div class="matches-header-card">
+                <div class="matches-header-top">
+                    <div class="matches-title-box">
+                        <span class="live-dot-pulse" id="homeLivePulse" style="display: none;"></span>
+                        <span class="matches-title" id="homeMatchesTitle">⚽ مركز مباريات الدوريات الكبرى</span>
+                    </div>
+                    <button type="button" class="match-refresh-btn" id="refreshMatchesBtn" title="تحديث المباريات والنتائج">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span>تحديث فوري</span>
+                    </button>
+                </div>
+                
+                <!-- شريط البحث السريع في المباريات -->
+                <div class="match-search-wrap">
+                    <i class="fa-solid fa-magnifying-glass match-search-icon"></i>
+                    <input type="text" id="matchSearchInput" class="match-search-input" placeholder="ابحث باسم الفريق أو النادي (مثلاً: ريال مدريد، أرسنال)...">
+                    <button type="button" class="match-search-clear" id="matchSearchClearBtn" style="display: none;">✕</button>
+                </div>
+            </div>
+
+            <!-- شريط الفلاتر الزمنية السريعة (1xBet Style Period Pills) -->
+            <div class="home-pills-scroller" id="periodPillsBar">
+                <button type="button" class="home-pill active" data-period="recent">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>الأهم والأقرب</span>
+                </button>
+                <button type="button" class="home-pill pill-live" data-period="live" id="homeLiveFilterBtn">
+                    <span class="live-badge-mini">LIVE</span>
+                    <span>مباشر الآن (<b id="liveMatchesCountBadge">0</b>)</span>
+                </button>
+                <button type="button" class="home-pill" data-period="today">
+                    <i class="fa-solid fa-calendar-day"></i>
+                    <span>مباريات اليوم</span>
+                </button>
+                <button type="button" class="home-pill" data-period="this_week">
+                    <i class="fa-solid fa-calendar-week"></i>
+                    <span>الأسبوع الحالي</span>
+                </button>
+                <button type="button" class="home-pill" data-period="next_week">
+                    <i class="fa-solid fa-forward"></i>
+                    <span>الأسبوع القادم</span>
+                </button>
+                <button type="button" class="home-pill" data-period="last_week">
+                    <i class="fa-solid fa-backward"></i>
+                    <span>النتائج المنتهية</span>
+                </button>
+            </div>
+
+            <!-- شريط الدوريات الكبرى مع الأعلام والشعارات (1xBet Leagues Bar) -->
+            <div class="leagues-scroller" id="leaguesNav">
+                <button type="button" class="league-pill active" data-league="all">
+                    <span>⭐</span>
+                    <span>كل الدوريات الكبرى</span>
+                </button>
+                <button type="button" class="league-pill" data-league="uefa.champions">
+                    <span>🏆</span>
+                    <span>دوري الأبطال</span>
+                </button>
+                <button type="button" class="league-pill" data-league="eng.1">
+                    <span>🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+                    <span>الدوري الإنجليزي</span>
+                </button>
+                <button type="button" class="league-pill" data-league="esp.1">
+                    <span>🇪🇸</span>
+                    <span>الدوري الإسباني</span>
+                </button>
+                <button type="button" class="league-pill" data-league="ita.1">
+                    <span>🇮🇹</span>
+                    <span>الدوري الإيطالي</span>
+                </button>
+                <button type="button" class="league-pill" data-league="ger.1">
+                    <span>🇩🇪</span>
+                    <span>الدوري الألماني</span>
+                </button>
+                <button type="button" class="league-pill" data-league="fra.1">
+                    <span>🇫🇷</span>
+                    <span>الدوري الفرنسي</span>
+                </button>
+                <button type="button" class="league-pill" data-league="uefa.europa">
+                    <span>🌍</span>
+                    <span>الدوري الأوروبي</span>
+                </button>
+                <button type="button" class="league-pill" data-league="sau.1">
+                    <span>🇸🇦</span>
+                    <span>دوري روشن</span>
+                </button>
+            </div>
+
+            <!-- منتقي التاريخ المخصص السريع -->
+            <div class="custom-date-bar">
+                <span><i class="fa-regular fa-calendar"></i> أو اختر يوماً بعينه:</span>
+                <input type="date" id="matchCustomDateInput" class="custom-date-picker">
+            </div>
+
+            <!-- حاوية عرض المباريات الذكية -->
+            <div id="homeMatchesContainer">
+                <div class="match-loading-card">
+                    <div class="match-spinner"></div>
+                    <div style="font-weight: 800; font-size: 0.88rem;">جاري جلب وفحص جدول المباريات المباشرة...</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">تحديث مباشر من سيرفرات الرياضة العالمية</div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- ==================== التبويب الثاني: حاسبة الصفقات والتغطية (1XBET Style Calculator Hub) ==================== -->
+        <section id="tabCalc" class="tab-panel">
+            <!-- أزرار التبديل العلوية الاحترافية بين التغطية الآنية والمتأخرة -->
+            <div class="calc-mode-switch-bar">
+                <button type="button" class="calc-mode-btn mode-blue active" id="btnModeArbitrage" data-calc-pane="paneArbitrage">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <span>التغطية الآنية (Arbitrage)</span>
+                </button>
+                <button type="button" class="calc-mode-btn mode-green" id="btnModeDelayed" data-calc-pane="paneDelayed">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>المتأخرة والمباشر (Live)</span>
+                </button>
+            </div>
+
+            <!-- لوح التغطية الآنية الثنائية -->
+            <div id="paneArbitrage" class="calc-pane active">
+                <div class="card">
                 <div class="card-header">
                     <label for="capital" class="field-label">رأس المال الإجمالي (مجموع الرهانين)</label>
                     <button type="button" class="small-action-btn" id="resetTab1Btn">تصفير ↺</button>
@@ -2516,11 +3198,11 @@
                     <div id="historyList1"></div>
                 </div>
             </div>
-        </section>
+            </div>
 
-        <!-- ==================== التبويب الثاني: التغطية المتأخرة ==================== -->
-        <section id="tab2" class="tab-panel">
-            <div class="card">
+            <!-- لوح التغطية المتأخرة والمحاكي -->
+            <div id="paneDelayed" class="calc-pane" style="display: none;">
+                <div class="card">
                 <div class="mode-switch">
                     <button type="button" class="mode-btn active" data-mode="stake1">إدخال مبلغ الرهان 1 فقط</button>
                     <button type="button" class="mode-btn" data-mode="totalCap">تحديد رأس المال الكلي للرهانين</button>
@@ -2704,9 +3386,10 @@
                     <div id="historyList2"></div>
                 </div>
             </div>
+            </div>
         </section>
 
-        <!-- ==================== التبويب الثالث: إدارة القسائم والصفقات ==================== -->
+
         <section id="tab3" class="tab-panel">
             <div class="portfolio-hero">
                 <div class="portfolio-header-badge">
@@ -2914,18 +3597,18 @@
 
     <!-- ==================== شريط التنقل السفلي الثابت (1XBET BOTTOM NAVIGATION BAR) ==================== -->
     <nav class="bottom-nav-bar" id="bottomNavBar">
-        <button type="button" class="bottom-nav-item active" data-tab="tab1" title="الرئيسية (التغطية الآنية)">
+        <button type="button" class="bottom-nav-item active" data-tab="tabHome" title="الرئيسية (مركز المباريات والأحداث)">
             <div class="nav-icon-wrap">
-                <i class="fa-solid fa-fire"></i>
+                <i class="fa-solid fa-futbol"></i>
             </div>
             <span class="nav-label">الرئيسية</span>
         </button>
 
-        <button type="button" class="bottom-nav-item" data-tab="tab2" title="المتأخرة والمباشر">
+        <button type="button" class="bottom-nav-item" data-tab="tabCalc" title="حاسبة الصفقات">
             <div class="nav-icon-wrap">
-                <i class="fa-solid fa-bolt"></i>
+                <i class="fa-solid fa-calculator"></i>
             </div>
-            <span class="nav-label">المتأخرة</span>
+            <span class="nav-label">الحاسبة</span>
         </button>
 
         <button type="button" class="bottom-nav-item item-betslip" data-tab="tab3" title="إدارة القسائم والصفقات">
@@ -3528,7 +4211,7 @@
         };
 
         // ==================== نظام التنقل الشامل (Tabs & Navigation System) ====================
-        const availableTabs = ['tab1', 'tab2', 'tab3', 'tab4', 'tabMenu'];
+        const availableTabs = ['tabHome', 'tabCalc', 'tab3', 'tab4', 'tabMenu'];
 
         const switchTab = (tabId) => {
             if (!availableTabs.includes(tabId)) return;
@@ -3566,7 +4249,13 @@
             }
 
             // 5. استدعاء ريندر التبويب المحدد
-            if (tabId === 'tab3') {
+            if (tabId === 'tabHome') {
+                if (loadedMatchesEvents.length === 0) {
+                    loadMatches();
+                }
+            } else if (tabId === 'tabCalc') {
+                // تفعيل التحديث للحسابات
+            } else if (tabId === 'tab3') {
                 renderSlips();
             } else if (tabId === 'tab4') {
                 renderFullHistory();
@@ -3623,7 +4312,7 @@
 
             if (Math.abs(diffX) >= 55 && Math.abs(diffY) <= 50 && duration <= 600) {
                 const currentPanel = document.querySelector('.tab-panel.active');
-                const currentTabId = currentPanel ? currentPanel.id : 'tab1';
+                const currentTabId = currentPanel ? currentPanel.id : 'tabHome';
                 const currentIndex = availableTabs.indexOf(currentTabId);
                 if (currentIndex === -1) return;
 
@@ -3739,7 +4428,8 @@
                     ratio1Input.value = item.ratio1;
                     ratio2Input.value = item.ratio2;
                     updateTab1();
-                    switchTab('tab1');
+                    switchTab('tabCalc');
+                    switchCalcPane('paneArbitrage');
                     showToast('تم تحميل بيانات العملية في حاسبة التغطية الآنية');
                 }
             } else if (source === 't2') {
@@ -3750,7 +4440,8 @@
                     t2TargetPctInput.value = item.pct;
                     syncPctChips(item.pct);
                     updateTab2();
-                    switchTab('tab2');
+                    switchTab('tabCalc');
+                    switchCalcPane('paneDelayed');
                     showToast('تم تحميل بيانات العملية في حاسبة التغطية المتأخرة');
                 }
             }
@@ -4958,7 +5649,493 @@
         renderFullHistory();
         updateMenuStats();
         updateInstallUI();
-    </script>
+    
+
+        // ==================== إدارة أزرار الحاسبة العلوية (Calculator Pane Switching) ====================
+        window.switchCalcPane = (paneId) => {
+            document.querySelectorAll('.calc-pane').forEach(p => p.style.display = 'none');
+            const target = document.getElementById(paneId);
+            if (target) target.style.display = 'block';
+
+            document.querySelectorAll('.calc-mode-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.calcPane === paneId);
+            });
+
+            if (paneId === 'paneArbitrage') {
+                updateTab1();
+            } else {
+                updateTab2();
+            }
+        };
+
+        document.querySelectorAll('.calc-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                switchCalcPane(btn.dataset.calcPane);
+            });
+        });
+
+        // ==================== مركز مباريات الدوريات الكبرى والأحداث المباشرة (1XBET Style) ====================
+        const MAJOR_LEAGUES = [
+            { code: 'all', name: 'كل الدوريات الكبرى', flag: '⭐' },
+            { code: 'uefa.champions', name: 'دوري أبطال أوروبا', flag: '🏆' },
+            { code: 'eng.1', name: 'الدوري الإنجليزي الممتاز', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+            { code: 'esp.1', name: 'الدوري الإسباني (La Liga)', flag: '🇪🇸' },
+            { code: 'ita.1', name: 'الدوري الإيطالي (Serie A)', flag: '🇮🇹' },
+            { code: 'ger.1', name: 'الدوري الألماني (Bundesliga)', flag: '🇩🇪' },
+            { code: 'fra.1', name: 'الدوري الفرنسي (Ligue 1)', flag: '🇫🇷' },
+            { code: 'uefa.europa', name: 'الدوري الأوروبي', flag: '🌍' },
+            { code: 'sau.1', name: 'دوري روشن السعودي', flag: '🇸🇦' }
+        ];
+
+        let currentLeague = 'all';
+        let currentPeriod = 'recent';
+        let customPickedDate = null;
+        let loadedMatchesEvents = [];
+        let matchResponseCache = new Map();
+
+        const toESPNDate = (d) => {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}${m}${day}`;
+        };
+
+        const getMonday = (d) => {
+            const date = new Date(d);
+            const day = date.getDay();
+            const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+            date.setDate(diff);
+            date.setHours(0, 0, 0, 0);
+            return date;
+        };
+
+        const getDaysArray = (startDate, count) => {
+            const list = [];
+            for (let i = 0; i < count; i++) {
+                const day = new Date(startDate);
+                day.setDate(startDate.getDate() + i);
+                list.push(day);
+            }
+            return list;
+        };
+
+        const resolveTargetDates = () => {
+            const now = new Date();
+
+            if (customPickedDate) {
+                return [customPickedDate];
+            }
+
+            if (currentPeriod === 'live' || currentPeriod === 'today') {
+                return [now];
+            }
+
+            if (currentPeriod === 'recent') {
+                const dMinus2 = new Date(now); dMinus2.setDate(now.getDate() - 2);
+                const dMinus1 = new Date(now); dMinus1.setDate(now.getDate() - 1);
+                const dPlus1 = new Date(now); dPlus1.setDate(now.getDate() + 1);
+                return [dMinus2, dMinus1, now, dPlus1];
+            }
+
+            if (currentPeriod === 'this_week') {
+                const monday = getMonday(now);
+                return getDaysArray(monday, 7);
+            }
+
+            if (currentPeriod === 'next_week') {
+                const nextMonday = getMonday(now);
+                nextMonday.setDate(nextMonday.getDate() + 7);
+                return getDaysArray(nextMonday, 7);
+            }
+
+            if (currentPeriod === 'last_week') {
+                const lastMonday = getMonday(now);
+                lastMonday.setDate(lastMonday.getDate() - 7);
+                return getDaysArray(lastMonday, 7);
+            }
+
+            return [now];
+        };
+
+        const fetchSingleDayLeague = async (leagueCode, dateObj) => {
+            const dateStr = toESPNDate(dateObj);
+            const cacheKey = `${leagueCode}_${dateStr}`;
+
+            if (matchResponseCache.has(cacheKey)) {
+                return matchResponseCache.get(cacheKey);
+            }
+
+            try {
+                const url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${leagueCode}/scoreboard?dates=${dateStr}`;
+                const res = await fetch(url);
+                if (!res.ok) return [];
+
+                const data = await res.json();
+                const leagueMeta = MAJOR_LEAGUES.find(l => l.code === leagueCode) || { name: 'كرة قدم', flag: '⚽' };
+                const events = (data.events || []).map(ev => ({
+                    ...ev,
+                    leagueCode,
+                    leagueMeta
+                }));
+
+                matchResponseCache.set(cacheKey, events);
+                return events;
+            } catch (err) {
+                return [];
+            }
+        };
+
+        const loadMatches = async (forceRefresh = false) => {
+            const container = document.getElementById('homeMatchesContainer');
+            if (!container) return;
+
+            if (forceRefresh) {
+                matchResponseCache.clear();
+            }
+
+            container.innerHTML = `
+                <div class="match-loading-card">
+                    <div class="match-spinner"></div>
+                    <div style="font-weight: 800; font-size: 0.88rem;">جاري جلب وفحص جدول المباريات المباشرة...</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">تحديث مباشر لجميع الدوريات الكبرى</div>
+                </div>
+            `;
+
+            const targetDates = resolveTargetDates();
+            const targetLeagues = currentLeague === 'all'
+                ? MAJOR_LEAGUES.filter(l => l.code !== 'all').map(l => l.code)
+                : [currentLeague];
+
+            const tasks = [];
+            targetLeagues.forEach(lCode => {
+                targetDates.forEach(dObj => {
+                    tasks.push(fetchSingleDayLeague(lCode, dObj));
+                });
+            });
+
+            try {
+                const results = await Promise.all(tasks);
+                const allEvents = results.flat();
+
+                const uniqueMap = new Map();
+                allEvents.forEach(ev => {
+                    if (!uniqueMap.has(ev.id)) uniqueMap.set(ev.id, ev);
+                });
+
+                // فرز ذكي عالمي: المباشر أولاً، ثم القادمة الأقرب، ثم المنتهية
+                const rawEvents = Array.from(uniqueMap.values());
+                const stateOrder = { 'in': 1, 'pre': 2, 'post': 3 };
+
+                loadedMatchesEvents = rawEvents.sort((a, b) => {
+                    const orderA = stateOrder[a.status?.type?.state] || 4;
+                    const orderB = stateOrder[b.status?.type?.state] || 4;
+
+                    if (orderA !== orderB) {
+                        return orderA - orderB;
+                    }
+
+                    if (orderA === 1) {
+                        return new Date(b.date) - new Date(a.date);
+                    } else if (orderA === 2) {
+                        return new Date(a.date) - new Date(b.date);
+                    } else {
+                        return new Date(b.date) - new Date(a.date);
+                    }
+                });
+
+                // تحديث عداد المباريات المباشرة
+                const liveCount = loadedMatchesEvents.filter(ev => ev.status?.type?.state === 'in').length;
+                const liveBadge = document.getElementById('liveMatchesCountBadge');
+                const livePulse = document.getElementById('homeLivePulse');
+                if (liveBadge) liveBadge.textContent = liveCount;
+                if (livePulse) livePulse.style.display = liveCount > 0 ? 'inline-block' : 'none';
+
+                renderMatchesList(loadedMatchesEvents);
+            } catch (e) {
+                container.innerHTML = `
+                    <div class="match-loading-card">
+                        <div style="font-size:1.5rem; margin-bottom:6px;">⚠️</div>
+                        <div style="font-weight:800;">تعذر جلب بيانات المباريات</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin:6px 0 10px 0;">يرجى التأكد من اتصال الإنترنت ثم المحاولة ثانية</div>
+                        <button type="button" class="match-refresh-btn" onclick="loadMatches(true)" style="padding:7px 16px;">
+                            <i class="fa-solid fa-rotate"></i> إعادة المحاولة الآن
+                        </button>
+                    </div>
+                `;
+            }
+        };
+
+        const formatMatchTime = (iso) => {
+            try {
+                return new Date(iso).toLocaleTimeString('ar-MA', { hour: '2-digit', minute: '2-digit' });
+            } catch {
+                return '';
+            }
+        };
+
+        const renderMatchesList = (events) => {
+            const container = document.getElementById('homeMatchesContainer');
+            if (!container) return;
+
+            // فلترة بالبحث إن وُجد نص
+            const query = (document.getElementById('matchSearchInput')?.value || '').trim().toLowerCase();
+            let filtered = events;
+            if (query) {
+                filtered = events.filter(ev => {
+                    const title = (ev.name || '').toLowerCase();
+                    const comp = ev.competitions?.[0];
+                    const home = comp?.competitors?.[0]?.team?.displayName?.toLowerCase() || '';
+                    const away = comp?.competitors?.[1]?.team?.displayName?.toLowerCase() || '';
+                    return title.includes(query) || home.includes(query) || away.includes(query);
+                });
+            }
+
+            // فلترة المباشر إن كان الخيار هو مباشر
+            if (currentPeriod === 'live') {
+                filtered = filtered.filter(ev => ev.status?.type?.state === 'in');
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="match-loading-card">
+                        <div style="font-size:1.6rem; margin-bottom:6px;">⚽</div>
+                        <div style="font-weight:800; font-size:0.88rem;">لا توجد مباريات مطابقة للفلتر المحدد</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
+                            ${query ? 'جرب البحث باسم فريق آخر أو مسح حقل البحث' : 'جرب اختيار خيار زمني آخر مثل "الأسبوع الحالي" أو دوري مختلف'}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // تقسيم المباريات: المباشرة أولاً ثم المباريات المجمعة بالأيام
+            const liveMatches = filtered.filter(ev => ev.status?.type?.state === 'in');
+            const otherMatches = filtered.filter(ev => ev.status?.type?.state !== 'in');
+
+            let html = '';
+
+            // 1. كتلة المباريات المباشرة الحية الجارية الآن
+            if (liveMatches.length > 0) {
+                html += `
+                    <div class="live-section-banner">
+                        <div style="display:flex; align-items:center; gap:7px;">
+                            <span class="live-dot-pulse"></span>
+                            <span>مباريات جارية الآن مباشرة</span>
+                        </div>
+                        <span style="direction:ltr;">${liveMatches.length} Live</span>
+                    </div>
+                `;
+
+                liveMatches.forEach(ev => {
+                    html += buildMatchCardHTML(ev);
+                });
+            }
+
+            // 2. تجميع باقي المباريات بحسب الأيام
+            if (otherMatches.length > 0) {
+                const dayGroups = {};
+                otherMatches.forEach(ev => {
+                    const d = new Date(ev.date);
+                    const dayKey = d.toLocaleDateString('ar-MA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    if (!dayGroups[dayKey]) dayGroups[dayKey] = [];
+                    dayGroups[dayKey].push(ev);
+                });
+
+                for (const [dayTitle, matches] of Object.entries(dayGroups)) {
+                    html += `
+                        <div class="day-group-header">
+                            <span>📅 ${dayTitle}</span>
+                            <span style="font-size:0.69rem; color:var(--text-muted);">${matches.length} مباريات</span>
+                        </div>
+                    `;
+
+                    matches.forEach(ev => {
+                        html += buildMatchCardHTML(ev);
+                    });
+                }
+            }
+
+            container.innerHTML = html;
+        };
+
+        const buildMatchCardHTML = (ev) => {
+            const comp = ev.competitions?.[0] || {};
+            const competitors = comp.competitors || [];
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+
+            const state = ev.status?.type?.state; // 'pre', 'in', 'post'
+            const isLive = state === 'in';
+            const statusDetail = ev.status?.type?.detail || '';
+
+            let badgeHtml = '';
+            if (isLive) {
+                badgeHtml = `<span class="match-status-badge status-live"><span class="live-dot-pulse"></span> مباشر ${statusDetail}</span>`;
+            } else if (state === 'post') {
+                badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-check"></i> انتهت (${statusDetail})</span>`;
+            } else {
+                badgeHtml = `<span class="match-status-badge status-pre"><i class="fa-regular fa-clock"></i> ${formatMatchTime(ev.date)}</span>`;
+            }
+
+            const homeLogo = home.team?.logo || 'https://cdn-icons-png.flaticon.com/512/10037/10037390.png';
+            const awayLogo = away.team?.logo || 'https://cdn-icons-png.flaticon.com/512/10037/10037255.png';
+            const homeName = home.team?.displayName || 'الفريق 1';
+            const awayName = away.team?.displayName || 'الفريق 2';
+            const matchTitle = `${homeName} ضد ${awayName}`;
+            const venueName = comp.venue?.fullName || '';
+
+            let scoreCenter = '';
+            if (isLive) {
+                scoreCenter = `
+                    <div class="score-center-box">
+                        <span class="live-score-val">${home.score || 0} - ${away.score || 0}</span>
+                        <span class="match-minute-label">${statusDetail}</span>
+                    </div>
+                `;
+            } else if (state === 'post') {
+                scoreCenter = `
+                    <div class="score-center-box">
+                        <span class="live-score-val">${home.score || 0} - ${away.score || 0}</span>
+                        <span style="font-size:0.68rem; color:var(--text-muted); font-weight:800; margin-top:2px;">FT</span>
+                    </div>
+                `;
+            } else {
+                scoreCenter = `
+                    <div class="score-center-box">
+                        <span class="vs-text">VS</span>
+                        <span class="kickoff-label">${formatMatchTime(ev.date)}</span>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="match-card ${isLive ? 'is-live' : ''}">
+                    <div class="match-card-top">
+                        <span class="league-tag">${ev.leagueMeta?.flag || '⚽'} ${ev.leagueMeta?.name || 'دوري'}</span>
+                        ${badgeHtml}
+                    </div>
+
+                    <div class="match-card-body">
+                        <div class="team-box">
+                            <img src="${homeLogo}" alt="${homeName}" class="team-crest" loading="lazy">
+                            <span class="team-name-label">${homeName}</span>
+                        </div>
+
+                        ${scoreCenter}
+
+                        <div class="team-box">
+                            <img src="${awayLogo}" alt="${awayName}" class="team-crest" loading="lazy">
+                            <span class="team-name-label">${awayName}</span>
+                        </div>
+                    </div>
+
+                    <div class="match-card-footer">
+                        <span class="match-venue">${venueName ? '🏟️ ' + venueName : ''}</span>
+                        <div class="match-action-tools">
+                            <button type="button" class="btn-match-calc" onclick="transferMatchToCalc('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}')">
+                                <i class="fa-solid fa-calculator"></i>
+                                <span>حساب الصفقة ⚡</span>
+                            </button>
+                            <button type="button" class="btn-match-copy" onclick="copyMatchTitle('${matchTitle.replace(/'/g, "\\'")}')" title="نسخ اسم المباراة">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        // نقل المباراة مباشرة إلى الحاسبة وتعبئة حقول القسيمة
+        window.transferMatchToCalc = (matchTitle, preferredMode = 'delayed') => {
+            switchTab('tabCalc');
+            if (preferredMode === 'arbitrage') {
+                switchCalcPane('paneArbitrage');
+            } else {
+                switchCalcPane('paneDelayed');
+            }
+
+            const t1Input = document.getElementById('tab1SlipName');
+            const t2Input = document.getElementById('tab2SlipName');
+            if (t1Input) t1Input.value = matchTitle;
+            if (t2Input) t2Input.value = matchTitle;
+
+            showToast(`⚡ تم نقل [${matchTitle}] إلى الحاسبة!`);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.copyMatchTitle = (matchTitle) => {
+            navigator.clipboard.writeText(matchTitle).then(() => {
+                showToast(`📋 تم نسخ: ${matchTitle}`);
+            });
+        };
+
+        // ربط أزرار فلاتر الدوريات
+        document.querySelectorAll('.league-pill').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.league-pill').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLeague = btn.dataset.league;
+                loadMatches(false);
+            });
+        });
+
+        // ربط أزرار الفلاتر الزمنية
+        document.querySelectorAll('.home-pill').forEach(pill => {
+            pill.addEventListener('click', () => {
+                document.querySelectorAll('.home-pill').forEach(p => p.classList.remove('active'));
+                pill.classList.add('active');
+                const datePicker = document.getElementById('matchCustomDateInput');
+                if (datePicker) datePicker.value = '';
+                customPickedDate = null;
+                currentPeriod = pill.dataset.period;
+                loadMatches(false);
+            });
+        });
+
+        // ربط اختيار التاريخ المخصص
+        const matchDatePicker = document.getElementById('matchCustomDateInput');
+        if (matchDatePicker) {
+            matchDatePicker.addEventListener('change', (e) => {
+                if (!e.target.value) return;
+                document.querySelectorAll('.home-pill').forEach(p => p.classList.remove('active'));
+                const parts = e.target.value.split('-');
+                customPickedDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                loadMatches(false);
+            });
+        }
+
+        // ربط زر التحديث الفوري للمباريات
+        const refreshBtn = document.getElementById('refreshMatchesBtn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => {
+                loadMatches(true);
+                showToast('🔄 جاري تحديث النتائج والمباريات...');
+            });
+        }
+
+        // ربط البحث السريع المباشر في المباريات
+        const searchInput = document.getElementById('matchSearchInput');
+        const clearSearchBtn = document.getElementById('matchSearchClearBtn');
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                if (clearSearchBtn) {
+                    clearSearchBtn.style.display = searchInput.value ? 'inline-block' : 'none';
+                }
+                renderMatchesList(loadedMatchesEvents);
+            });
+        }
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', () => {
+                if (searchInput) searchInput.value = '';
+                clearSearchBtn.style.display = 'none';
+                renderMatchesList(loadedMatchesEvents);
+            });
+        }
+
+        // تشغيل جلب المباريات تلقائياً عند أول فتح للتطبيق
+        loadMatches(false);
+
+</script>
 </body>
 
 </html>
