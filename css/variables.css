@@ -1,0 +1,167 @@
+/* ==================== 1XCALC PRO DESIGN TOKENS & VARIABLES ==================== */
+        :root[data-theme="light"] {
+            --bg-main: #f4f6fa;
+            --bg-card: #ffffff;
+            --bg-input: #f8fafc;
+            --bg-elevated: #eef2f8;
+            --text-main: #0e1726;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-primary: #1055a4; /* أزرق 1xBet الملكي */
+            --accent-hover: #0c4383;
+            --accent-bg: rgba(16, 85, 164, 0.08);
+            --blue-accent: #166fe5;
+            --blue-bg: rgba(22, 111, 229, 0.08);
+            --green-accent: #00b649; /* أخضر الشعار الزمردي النابض */
+            --green-bg: rgba(0, 182, 73, 0.09);
+            --purple-accent: #681cfb; /* بنفسجي الشعار الكهربائي الحيوي */
+            --purple-bg: rgba(104, 28, 251, 0.08);
+            --amber-accent: #f59e0b; /* ذهبي الشعار الدافئ */
+            --amber-bg: rgba(245, 158, 11, 0.09);
+            --danger-accent: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.08);
+            --shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+            --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.08);
+            --bottom-nav-bg: #ffffff;
+            --bottom-nav-border: #e2e8f0;
+            --betslip-fab-bg: linear-gradient(135deg, #681cfb 0%, #1055a4 50%, #00b649 100%);
+            --odds-card-bg: #f8fafc;
+            --odds-card-border: #e2e8f0;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-main: #090e19; /* كحلي ليلي عميق متناسق مع خلفية الشعار */
+            --bg-card: #121a28;
+            --bg-input: #182236;
+            --bg-elevated: #202d46;
+            --text-main: #f4f7fc;
+            --text-muted: #8e9db2;
+            --border-color: #222f46;
+            --accent-primary: #2575fc;
+            --accent-hover: #1c66e5;
+            --accent-bg: rgba(37, 117, 252, 0.14);
+            --blue-accent: #3b82f6;
+            --blue-bg: rgba(59, 130, 246, 0.14);
+            --green-accent: #00d053; /* أخضر زمردي ساطع في الوضع المظلم */
+            --green-bg: rgba(0, 208, 83, 0.14);
+            --purple-accent: #7c3aed; /* بنفسجي كهربائي مشرق */
+            --purple-bg: rgba(124, 58, 237, 0.16);
+            --amber-accent: #fbbf24; /* ذهبي مشرق */
+            --amber-bg: rgba(251, 191, 36, 0.14);
+            --danger-accent: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.14);
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 14px 35px rgba(0, 0, 0, 0.55);
+            --bottom-nav-bg: #0f1624;
+            --bottom-nav-border: #1a2538;
+            --betslip-fab-bg: linear-gradient(135deg, #681cfb 0%, #2575fc 50%, #00d053 100%);
+            --odds-card-bg: #151e2f;
+            --odds-card-border: #223049;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            direction: rtl;
+            min-height: 100vh;
+            padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px));
+            transition: background-color 0.2s ease, color 0.2s ease;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-wrapper {
+            width: 100%;
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 10px 12px;
+        }
+
+        /* بانر التثبيت */
+        .install-banner {
+            display: none;
+            background: linear-gradient(135deg, var(--accent-primary), #4338ca);
+            color: #fff;
+            border-radius: 15px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .install-banner.show {
+            display: flex;
+        }
+
+        .install-banner-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .install-banner-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .install-banner-text h4 {
+            font-size: 0.88rem;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .install-banner-text p {
+            font-size: 0.72rem;
+            opacity: 0.9;
+        }
+
+        .install-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .banner-install-btn {
+            background: #fff;
+            color: #4338ca;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 9px;
+            font-size: 0.78rem;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .banner-close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+

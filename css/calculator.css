@@ -1,0 +1,581 @@
+/* ==================== CALCULATOR ENGINE & HISTORY STYLES ==================== */
+        /* ==================== تبويب السجل الشامل (TAB 4) ==================== */
+        .history-filter-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+        }
+
+        .history-filter-btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .history-filter-btn.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-primary);
+        }
+
+        .history-item-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 9px;
+            box-shadow: var(--shadow);
+            transition: transform 0.15s ease, border-color 0.2s ease;
+        }
+
+        .history-item-card:active {
+            transform: scale(0.99);
+        }
+
+        /* البطاقات العامة */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 13px;
+            margin-bottom: 11px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .field-label {
+            font-size: 0.83rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .small-action-btn {
+            background: var(--bg-elevated);
+            border: none;
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .input-box {
+            width: 100%;
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 11px;
+            padding: 10px 12px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            text-align: center;
+            direction: ltr;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-box:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+        }
+
+        .ratio-card {
+            background: var(--bg-input);
+            border: 2px solid var(--border-color);
+            border-radius: 13px;
+            padding: 9px;
+            text-align: center;
+        }
+
+        .ratio-card.blue-box {
+            border-color: rgba(59, 130, 246, 0.45);
+            background: var(--blue-bg);
+        }
+
+        .ratio-card.green-box {
+            border-color: rgba(16, 185, 129, 0.45);
+            background: var(--green-bg);
+        }
+
+        .ratio-card.amber-box {
+            border-color: rgba(245, 158, 11, 0.45);
+            background: var(--amber-bg);
+        }
+
+        .ratio-card.purple-box {
+            border-color: rgba(168, 85, 247, 0.45);
+            background: var(--purple-bg);
+        }
+
+        .ratio-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 0.8rem;
+        }
+
+        .logo-sm {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .ratio-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 9px;
+            padding: 9px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-align: center;
+            direction: ltr;
+            outline: none;
+        }
+
+        .ratio-input:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .status-banner {
+            border-radius: 13px;
+            padding: 11px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.94rem;
+            margin-bottom: 11px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            direction: ltr;
+        }
+
+        .status-banner.positive {
+            background: var(--green-bg);
+            border-color: var(--green-accent);
+            color: var(--green-accent);
+        }
+
+        .status-banner.negative {
+            background: var(--danger-bg);
+            border-color: var(--danger-accent);
+            color: var(--danger-accent);
+        }
+
+        .result-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 11px 9px;
+            text-align: center;
+        }
+
+        .result-card.blue-res {
+            border-color: var(--blue-accent);
+        }
+
+        .result-card.green-res {
+            border-color: var(--green-accent);
+        }
+
+        .result-card.amber-res {
+            border-color: var(--amber-accent);
+        }
+
+        .res-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 0.77rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stake-value {
+            font-size: 1.35rem;
+            font-weight: 900;
+            direction: ltr;
+            margin: 4px 0;
+        }
+
+        .blue-res .stake-value {
+            color: var(--blue-accent);
+        }
+
+        .green-res .stake-value {
+            color: var(--green-accent);
+        }
+
+        .amber-res .stake-value {
+            color: var(--amber-accent);
+        }
+
+        .return-badge {
+            background: var(--bg-input);
+            border-radius: 7px;
+            padding: 5px 6px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .copy-btn {
+            margin-top: 7px;
+            width: 100%;
+            background: var(--bg-elevated);
+            border: none;
+            color: var(--text-main);
+            padding: 6px;
+            border-radius: 7px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.97);
+        }
+
+        .strikethrough {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .mode-switch {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--bg-input);
+            padding: 3px;
+            border-radius: 10px;
+            margin-bottom: 11px;
+            border: 1px solid var(--border-color);
+        }
+
+        .mode-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 7px 4px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .mode-btn.active {
+            background: var(--bg-card);
+            color: var(--text-main);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .chips-row {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            margin-top: 6px;
+            scrollbar-width: none;
+        }
+
+        .chips-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .pct-chip {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 7px 11px;
+            border-radius: 9px;
+            font-size: 0.79rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            direction: ltr;
+        }
+
+        .pct-chip.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #fff;
+        }
+
+        /* محاكي وفاحص الاحتمال الفعلي للخيار الثاني */
+        .simulator-card {
+            background: linear-gradient(180deg, var(--purple-bg), var(--bg-card));
+            border: 1.5px solid var(--purple-accent);
+            border-radius: 16px;
+            padding: 13px;
+            margin-bottom: 11px;
+            box-shadow: var(--shadow);
+        }
+
+        .sim-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 9px;
+        }
+
+        .sim-title {
+            font-size: 0.86rem;
+            font-weight: 900;
+            color: var(--purple-accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sim-badge {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: var(--bg-input);
+            color: var(--text-muted);
+        }
+
+        .sim-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .stepper-btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 40px;
+            height: 42px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .sim-results-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px;
+            display: none;
+        }
+
+        .sim-results-box.active {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .sim-verdict {
+            text-align: center;
+            padding: 7px 10px;
+            border-radius: 9px;
+            font-weight: 900;
+            font-size: 0.88rem;
+            margin-bottom: 8px;
+            direction: ltr;
+        }
+
+        .sim-verdict.win {
+            background: var(--green-bg);
+            color: var(--green-accent);
+            border: 1px solid var(--green-accent);
+        }
+
+        .sim-verdict.loss {
+            background: var(--danger-bg);
+            color: var(--danger-accent);
+            border: 1px solid var(--danger-accent);
+        }
+
+        .sim-compare-note {
+            font-size: 0.76rem;
+            text-align: center;
+            color: var(--text-muted);
+            padding: 6px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            margin-top: 7px;
+            font-weight: 700;
+        }
+
+        .summary-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-top: 10px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            font-size: 0.83rem;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .summary-val {
+            font-weight: 900;
+            direction: ltr;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+
+        .plan-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.77rem;
+            text-align: center;
+        }
+
+        .plan-table th {
+            background: var(--bg-input);
+            color: var(--text-muted);
+            padding: 8px 4px;
+            font-weight: 800;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .plan-table td {
+            padding: 9px 4px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            direction: ltr;
+        }
+
+        .plan-table tr.clickable-row {
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .plan-table tr.clickable-row:hover,
+        .plan-table tr.selected-row {
+            background: var(--accent-bg);
+        }
+
+        .save-slip-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .slip-name-input {
+            flex: 1 1 160px;
+            min-width: 0;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 10px;
+            padding: 9px 11px;
+            font-size: 0.83rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .save-slip-btn {
+            flex: 0 1 auto;
+            max-width: 100%;
+            background: var(--accent-primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 9px 13px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.35;
+        }
+
+        /* على الشاشات الضيقة يصبح زر إنشاء القسيمة بعرض كامل أسفل حقل الاسم */
+        @media (max-width: 420px) {
+            .save-slip-btn {
+                flex: 1 1 100%;
+                width: 100%;
+            }
+        }
+
+
+        /* ==================== 1XBET CALCULATOR MODE SWITCHER ==================== */
+        .calc-mode-switch-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-bottom: 13px;
+        }
+
+        .calc-mode-btn {
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            border-radius: 13px;
+            padding: 10px 10px;
+            font-size: 0.81rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+            color: var(--text-muted);
+            box-shadow: var(--shadow);
+            user-select: none;
+        }
+
+        .calc-mode-btn:active {
+            transform: scale(0.96);
+        }
+
+        .calc-mode-btn.mode-blue.active {
+            background: linear-gradient(135deg, #1055a4 0%, #1e70e9 100%);
+            color: #ffffff;
+            border-color: #1055a4;
+            box-shadow: 0 4px 15px rgba(16, 85, 164, 0.35);
+        }
+
+        .calc-mode-btn.mode-green.active {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: #ffffff;
+            border-color: #059669;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
+        }
+

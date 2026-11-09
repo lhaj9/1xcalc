@@ -1,0 +1,837 @@
+/* ==================== 1XBET LIVE MATCHES & TOURNAMENTS HUB ==================== */
+        /* ==================== 1XBET LIVE MATCHES & EVENTS HUB ==================== */
+        .matches-header-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 11px 13px;
+            margin-bottom: 11px;
+            box-shadow: var(--shadow);
+        }
+
+        .matches-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 9px;
+        }
+
+        .matches-title-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .matches-title {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -0.2px;
+        }
+
+        .match-refresh-btn {
+            background: var(--accent-bg);
+            border: 1px solid rgba(16, 85, 164, 0.2);
+            color: var(--accent-primary);
+            border-radius: 9px;
+            padding: 5px 10px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .match-refresh-btn:active {
+            transform: scale(0.93);
+            background: var(--accent-primary);
+            color: #fff;
+        }
+
+        .match-search-wrap {
+            position: relative;
+            width: 100%;
+        }
+
+        .match-search-icon {
+            position: absolute;
+            right: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
+        .match-search-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 11px;
+            padding: 8px 32px 8px 28px;
+            font-size: 0.78rem;
+            color: var(--text-main);
+            font-weight: 700;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .match-search-input:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .match-search-clear {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 3px 6px;
+        }
+
+        /* شريط الفلاتر الزمنية */
+        .home-pills-scroller {
+            display: flex;
+            gap: 7px;
+            overflow-x: auto;
+            padding-bottom: 7px;
+            margin-bottom: 10px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .home-pills-scroller::-webkit-scrollbar {
+            display: none;
+        }
+
+        .home-pill {
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+            white-space: nowrap;
+        }
+
+        .home-pill.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-primary);
+            box-shadow: 0 3px 12px rgba(16, 85, 164, 0.35);
+        }
+
+        .home-pill.pill-live {
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+
+        .home-pill.pill-live.active {
+            background: var(--danger-accent);
+            border-color: var(--danger-accent);
+            color: #ffffff;
+            box-shadow: 0 3px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .live-badge-mini {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger-accent);
+            font-size: 0.62rem;
+            font-weight: 900;
+            padding: 1px 5px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .home-pill.pill-live.active .live-badge-mini {
+            background: #ffffff;
+            color: var(--danger-accent);
+        }
+
+        /* شريط الدوريات الكبرى */
+        .leagues-scroller {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 7px;
+            margin-bottom: 11px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .leagues-scroller::-webkit-scrollbar {
+            display: none;
+        }
+
+        .league-pill {
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 11px;
+            border-radius: 12px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.18s ease;
+            white-space: nowrap;
+            box-shadow: var(--shadow);
+        }
+
+        .league-pill:active {
+            transform: scale(0.95);
+        }
+
+        .league-pill.active {
+            background: var(--bg-elevated);
+            color: var(--text-main);
+            border-color: var(--accent-primary);
+            font-weight: 900;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .custom-date-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 6px 11px;
+            margin-bottom: 12px;
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            font-weight: 800;
+        }
+
+        .custom-date-picker {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            outline: none;
+        }
+
+        /* بطاقات المباريات المباشرة والجدول */
+        .match-loading-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 35px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .match-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px auto;
+        }
+
+        .live-section-banner {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.04));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            font-size: 0.78rem;
+            font-weight: 900;
+            color: var(--danger-accent);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .day-group-header {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 11px;
+            padding: 7px 11px;
+            margin-top: 13px;
+            margin-bottom: 8px;
+            font-size: 0.77rem;
+            font-weight: 900;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .match-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 11px 12px;
+            margin-bottom: 9px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .match-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .match-card.is-live {
+            border-right: 5px solid var(--danger-accent);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.04) 0%, var(--bg-card) 100%);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.12);
+        }
+
+        .match-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+        .league-tag {
+            color: var(--accent-primary);
+            background: var(--accent-bg);
+            padding: 2px 8px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .match-status-badge {
+            padding: 3px 8px;
+            border-radius: 7px;
+            font-weight: 900;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.68rem;
+            direction: ltr;
+        }
+
+        .status-live {
+            background: var(--danger-bg);
+            color: var(--danger-accent);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+        }
+
+        .status-pre {
+            background: var(--blue-bg);
+            color: var(--blue-accent);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .status-post {
+            background: var(--bg-input);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .live-dot-pulse {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--danger-accent);
+            display: inline-block;
+            animation: livePulse 1.3s infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.5; }
+        }
+
+        /* أيقونات وشعارات الدوريات وأعلام الدول الرسمية */
+        .league-pill-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.25));
+            border-radius: 4px;
+        }
+
+        .league-pill-flag {
+            width: 17px;
+            height: 12px;
+            object-fit: cover;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .league-card-mini-logo {
+            width: 17px;
+            height: 17px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .league-card-flag {
+            width: 15px;
+            height: 11px;
+            object-fit: cover;
+            border-radius: 2px;
+            vertical-align: middle;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+        }
+
+        .league-tag {
+            color: var(--accent-primary);
+            background: var(--accent-bg);
+            padding: 3px 9px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        /* تنسيق نتائج ومباريات الفرق بدون أي التباس في RTL */
+        .match-card-body {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 0;
+        }
+
+        .team-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 4px;
+            padding: 4px 6px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .team-box.is-winner .team-name-label {
+            font-weight: 950;
+            color: var(--text-main);
+        }
+
+        .team-box.is-loser {
+            opacity: 0.65;
+        }
+
+        .team-crest {
+            width: 38px;
+            height: 38px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .winner-tag {
+            background: var(--green-bg);
+            color: var(--green-accent);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            font-size: 0.62rem;
+            font-weight: 900;
+            padding: 1px 6px;
+            border-radius: 6px;
+            margin-top: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* صندوق النتيجة المزدوج المتسق تماماً مع اتجاه الفرق في RTL */
+        .score-center-strip {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 82px;
+        }
+
+        .score-dual-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .team-score-num {
+            font-size: 1.45rem;
+            font-weight: 950;
+            line-height: 1;
+            color: var(--text-muted);
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .team-score-num.digit-winner {
+            color: var(--green-accent);
+            transform: scale(1.08);
+        }
+
+        .team-score-num.digit-live {
+            color: var(--danger-accent);
+            transform: scale(1.05);
+        }
+
+        .team-score-num.digit-loser {
+            color: var(--text-muted);
+            opacity: 0.65;
+        }
+
+        .score-sep {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            opacity: 0.45;
+            line-height: 1;
+        }
+
+        .status-sub-label {
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .status-sub-label.live-label {
+            color: var(--danger-accent);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .vs-text {
+            font-size: 0.92rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .kickoff-label {
+            font-size: 0.7rem;
+            color: var(--accent-primary);
+            font-weight: 800;
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .match-card-footer {
+            margin-top: 9px;
+            padding-top: 7px;
+            border-top: 1px dashed var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        .match-venue {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 140px;
+            font-weight: 700;
+        }
+
+        .match-action-tools {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-match-calc {
+            background: linear-gradient(135deg, #1055a4 0%, #1e70e9 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 7px rgba(16, 85, 164, 0.3);
+        }
+
+        .btn-match-calc:active {
+            transform: scale(0.94);
+        }
+
+        .btn-match-copy {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 8px;
+            width: 27px;
+            height: 27px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.15s ease;
+        }
+
+        .btn-match-copy:active {
+            transform: scale(0.9);
+            color: var(--accent-primary);
+        }
+
+        .btn-match-stats {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--accent-primary);
+            border-radius: 8px;
+            padding: 5px 9px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-match-stats:hover {
+            background: var(--accent-bg);
+            border-color: var(--accent-primary);
+        }
+
+        .btn-match-stats:active {
+            transform: scale(0.94);
+        }
+
+
+        /* ==================== نظام التصفية والتحكم الزمني الاحترافي (1XBET LIVE & PRE-MATCH SWITCHER) ==================== */
+        .matches-status-switch {
+            display: flex;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 4px;
+            margin-bottom: 9px;
+            gap: 4px;
+            box-shadow: var(--shadow);
+        }
+
+        .status-switch-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 10px;
+            border-radius: 11px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.77rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .status-switch-btn.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+        }
+
+        .status-switch-btn.btn-live.active {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
+        }
+
+        .status-count-badge {
+            background: rgba(255, 255, 255, 0.22);
+            color: #ffffff;
+            padding: 1px 6px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 900;
+        }
+
+        /* شريط التبديل بين الرياضات العالمية */
+        .sports-switch-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 9px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .sports-switch-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sport-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+
+        .sport-chip.active {
+            background: var(--accent-bg);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* شريط الفلاتر السريعة بالأزرار الأفقية (Time Chips) */
+        .time-chips-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            margin-bottom: 9px;
+            scrollbar-width: none;
+        }
+
+        .time-chips-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .time-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .time-chip.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-primary);
+            box-shadow: 0 2px 7px rgba(99, 102, 241, 0.28);
+        }
+
+        .time-chip.chip-select-period {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--accent-primary);
+        }
+
+        .time-chip.chip-select-period.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-primary);
+        }
+
+        /* شريط البطولات مع عداد المباريات وأيقونة النجمة المفضلة */
+        .tournaments-selector-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            margin-bottom: 11px;
+            scrollbar-width: none;
+        }
+
+        .tournaments-selector-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tournament-item-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.73rem;
+            font-weight: 800;
+            cursor: pointer;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .tournament-item-pill.active {
+            background: var(--accent-bg);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .tournament-match-badge {
+            background: var(--bg-input);
+            color: var(--text-muted);
+            padding: 1px 6px;
+            border-radius: 999px;
+            font-size: 0.65rem;
+            font-weight: 900;
+        }
+
+        .tournament-item-pill.active .tournament-match-badge {
+            background: var(--accent-primary);
+            color: #ffffff;
+        }
+
+        .tournament-fav-star {
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            padding: 2px;
+            cursor: pointer;
+            transition: transform 0.15s ease, color 0.15s ease;
+        }
+
+        .tournament-fav-star.is-fav {
+            color: #f59e0b;
+        }
+
+        .tournament-fav-star:hover {
+            transform: scale(1.25);
+        }
+

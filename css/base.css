@@ -1,0 +1,660 @@
+/* ==================== APP SHELL, NAVIGATION & SPLASH SCREEN ==================== */
+        /* ==================== 1XBET APP HEADER ==================== */
+        .app-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 2px 10px 2px;
+        }
+
+        .brand-area {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            direction: ltr !important;
+            unicode-bidi: isolate;
+        }
+
+        .brand-app-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            object-fit: contain;
+            box-shadow: 0 3px 10px rgba(104, 28, 251, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .brand-1xbet {
+            display: inline-flex;
+            align-items: center;
+            direction: ltr !important;
+            unicode-bidi: isolate;
+            font-size: 1.55rem;
+            font-weight: 950;
+            font-style: italic;
+            letter-spacing: -0.5px;
+            line-height: 1;
+            user-select: none;
+        }
+
+        .brand-1xbet .logo-1x {
+            color: var(--accent-primary);
+        }
+
+        .brand-1xbet .logo-bet {
+            color: var(--green-accent);
+        }
+
+        .brand-pro-tag {
+            background: linear-gradient(135deg, var(--accent-primary), var(--blue-accent));
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(16, 85, 164, 0.3);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.05rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+        }
+
+        .icon-btn:active {
+            transform: scale(0.92);
+        }
+
+        .icon-btn.help-btn {
+            background: var(--accent-bg);
+            border-color: rgba(16, 85, 164, 0.25);
+            color: var(--accent-primary);
+        }
+
+        /* ==================== 1XBET QUICK ACTION BUTTONS ==================== */
+        .quick-action-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-bottom: 12px;
+        }
+
+        .action-btn-blue {
+            background: linear-gradient(135deg, #1055a4 0%, #1e70e9 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            box-shadow: 0 3px 12px rgba(16, 85, 164, 0.28);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .action-btn-green {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            box-shadow: 0 3px 12px rgba(16, 185, 129, 0.28);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .action-btn-blue:active, .action-btn-green:active {
+            transform: scale(0.96);
+        }
+
+        /* ==================== 1XBET CATEGORY PILLS (SCROLLABLE) ==================== */
+        .category-pills-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 2px 2px 10px 2px;
+            margin-bottom: 10px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+        }
+
+        .category-pills-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-pill {
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 0.77rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: var(--shadow);
+        }
+
+        .cat-pill:active {
+            transform: scale(0.95);
+        }
+
+        .cat-pill.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-primary);
+            box-shadow: 0 4px 12px rgba(16, 85, 164, 0.35);
+        }
+
+        .cat-pill.active i {
+            color: #ffffff;
+        }
+
+        .pill-badge {
+            background: var(--amber-accent);
+            color: #000;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 1px 6px;
+            border-radius: 10px;
+            min-width: 17px;
+            text-align: center;
+        }
+
+        .tab-panel {
+            display: none !important;
+            animation: fadeInSlide 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tab-panel.active {
+            display: block !important;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== 1XBET BOTTOM NAVIGATION BAR ==================== */
+        .bottom-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 62px;
+            background: var(--bottom-nav-bg);
+            border-top: 1px solid var(--bottom-nav-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 950;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        .bottom-nav-item {
+            background: transparent;
+            border: none;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 100%;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.15s ease, transform 0.1s ease;
+            position: relative;
+            padding: 4px 0;
+            user-select: none;
+        }
+
+        .bottom-nav-item:active {
+            transform: scale(0.92);
+        }
+
+        .bottom-nav-item.active {
+            color: var(--accent-primary);
+        }
+
+        .nav-icon-wrap {
+            font-size: 1.18rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 22px;
+            transition: transform 0.15s ease;
+        }
+
+        .bottom-nav-item.active .nav-icon-wrap {
+            transform: translateY(-2px);
+        }
+
+        .nav-label {
+            font-size: 0.67rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.2px;
+        }
+
+        /* زر القسائم البارز في المنتصف (1XBET BET SLIP FAB) */
+        .bottom-nav-item.item-betslip {
+            position: relative;
+            overflow: visible;
+        }
+
+        .betslip-fab {
+            width: 53px;
+            height: 53px;
+            border-radius: 50%;
+            background: var(--betslip-fab-bg);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -24px;
+            box-shadow: 0 6px 18px rgba(16, 85, 164, 0.45);
+            border: 4px solid var(--bottom-nav-bg);
+            position: relative;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+        }
+
+        .bottom-nav-item:active .betslip-fab {
+            transform: scale(0.9);
+        }
+
+        .bottom-nav-item.active .betslip-fab {
+            box-shadow: 0 8px 22px rgba(16, 85, 164, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .betslip-fab-icon {
+            font-size: 1.35rem;
+            color: #ffffff;
+        }
+
+        .betslip-label {
+            margin-top: 1px;
+        }
+
+        .betslip-badge {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            background: var(--amber-accent);
+            color: #000;
+            font-size: 0.66rem;
+            font-weight: 900;
+            min-width: 19px;
+            height: 19px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid var(--bottom-nav-bg);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        }
+
+
+        /* ==================== تبويب القائمة (TAB MENU) ==================== */
+        .menu-theme-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 15px;
+            cursor: pointer;
+            transition: transform 0.15s ease, border-color 0.2s ease;
+        }
+
+        .menu-theme-card:active {
+            transform: scale(0.98);
+        }
+
+        .menu-theme-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-theme-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: var(--accent-bg);
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .menu-theme-title {
+            font-size: 0.94rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        .menu-theme-desc {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle-switch {
+            width: 46px;
+            height: 26px;
+            border-radius: 13px;
+            background: var(--border-color);
+            position: relative;
+            transition: background 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        :root[data-theme="dark"] .theme-toggle-switch {
+            background: var(--accent-primary);
+        }
+
+        .theme-toggle-knob {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+        }
+
+        :root[data-theme="dark"] .theme-toggle-knob {
+            transform: translateX(-20px);
+        }
+
+        .menu-portfolio-card {
+            padding: 13px 14px;
+        }
+
+        .menu-stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            text-align: center;
+            background: var(--bg-input);
+            padding: 10px 8px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-top: 8px;
+        }
+
+        .menu-list-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 11px;
+            box-shadow: var(--shadow);
+        }
+
+        .menu-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 14px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .menu-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-list-item:active {
+            background: var(--bg-elevated);
+        }
+
+        .menu-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-item-ico {
+            font-size: 1.15rem;
+            color: var(--accent-primary);
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .menu-item-sub {
+            font-size: 0.71rem;
+            color: var(--text-muted);
+        }
+
+        .menu-arrow {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+
+        /* ==================== شاشة البداية الرياضية الأنيقة (1XCALC SPLASH SCREEN) ==================== */
+        .splash-screen-overlay {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999999;
+            background: linear-gradient(180deg, #070c17 0%, #0d1627 50%, #080d1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            user-select: none;
+            transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.45s ease;
+        }
+
+        .splash-screen-overlay.splash-fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .splash-content-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+            padding: 24px;
+        }
+
+        .splash-ball-wrapper {
+            position: relative;
+            width: 65px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2px;
+        }
+
+        .splash-football {
+            font-size: 2.8rem;
+            color: #ffffff;
+            filter: drop-shadow(0 4px 16px rgba(104, 28, 251, 0.5));
+            animation: footballBounce 1.15s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+        }
+
+        .splash-ball-shadow {
+            width: 38px;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            filter: blur(2.5px);
+            margin-top: 6px;
+            animation: shadowPulse 1.15s cubic-bezier(0.28, 0.84, 0.42, 1) infinite;
+        }
+
+        @keyframes footballBounce {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-24px) rotate(180deg);
+            }
+        }
+
+        @keyframes shadowPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(0.5);
+                opacity: 0.2;
+            }
+        }
+
+        .splash-brand-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 2.2rem;
+            font-weight: 950;
+            font-style: italic;
+            letter-spacing: -0.5px;
+            line-height: 1;
+            direction: ltr !important;
+            unicode-bidi: isolate;
+        }
+
+        .splash-logo-1x {
+            color: #2575fc;
+        }
+
+        .splash-logo-calc {
+            color: #00d053;
+        }
+
+        .splash-pro-badge {
+            background: linear-gradient(135deg, #681cfb 0%, #2575fc 100%);
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 7px;
+            font-style: normal;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 10px rgba(104, 28, 251, 0.4);
+        }
+
+        .splash-loading-status {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #8e9db2;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 4px;
+        }
+
+        .splash-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #00d053;
+            animation: livePulse 1s infinite;
+        }
+
+        .splash-progress-track {
+            width: 175px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2px;
+            position: relative;
+        }
+
+        .splash-progress-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #681cfb 0%, #2575fc 50%, #00d053 100%);
+            border-radius: 10px;
+            animation: progressFill 1.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes progressFill {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .splash-author-signature {
+            font-size: 0.82rem;
+            font-weight: 900;
+            color: #fbbf24;
+            letter-spacing: 1.5px;
+            margin-top: 18px;
+            padding: 6px 16px;
+            background: rgba(251, 191, 36, 0.08);
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            border-radius: 20px;
+            text-transform: uppercase;
+            box-shadow: 0 3px 12px rgba(251, 191, 36, 0.12);
+        }
+

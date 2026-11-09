@@ -1,0 +1,7 @@
+/* ==================== 1XCALC PRO MASTER STYLESHEET ==================== */
+@import url('./variables.css');
+@import url('./base.css');
+@import url('./calculator.css');
+@import url('./slips.css');
+@import url('./matches.css');
+@import url('./modals.css');
