@@ -1,0 +1,27 @@
+{
+    "name": "مدير وحاسبة الصفقات الرياضية",
+    "short_name": "1xCalc",
+    "description": "حاسبة التغطية الثنائية والتغطية المتأخرة وإدارة القسائم",
+    "start_url": "./index.html",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#121214",
+    "theme_color": "#121214",
+    "dir": "rtl",
+    "lang": "ar",
+    "icons": [
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/10037/10037390.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/10037/10037390.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
