@@ -1979,12 +1979,58 @@
             50% { transform: scale(1.4); opacity: 0.5; }
         }
 
+        /* أيقونات وشعارات الدوريات وأعلام الدول الرسمية */
+        .league-pill-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.25));
+            border-radius: 4px;
+        }
+
+        .league-pill-flag {
+            width: 17px;
+            height: 12px;
+            object-fit: cover;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .league-card-mini-logo {
+            width: 17px;
+            height: 17px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .league-card-flag {
+            width: 15px;
+            height: 11px;
+            object-fit: cover;
+            border-radius: 2px;
+            vertical-align: middle;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+        }
+
+        .league-tag {
+            color: var(--accent-primary);
+            background: var(--accent-bg);
+            padding: 3px 9px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
+
+        /* تنسيق نتائج ومباريات الفرق بدون أي التباس في RTL */
         .match-card-body {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            gap: 8px;
-            padding: 3px 0;
+            gap: 10px;
+            padding: 4px 0;
         }
 
         .team-box {
@@ -1993,71 +2039,121 @@
             align-items: center;
             text-align: center;
             gap: 4px;
+            padding: 4px 6px;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .team-box.is-winner .team-name-label {
+            font-weight: 950;
+            color: var(--text-main);
+        }
+
+        .team-box.is-loser {
+            opacity: 0.65;
         }
 
         .team-crest {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             object-fit: contain;
-            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
-            background: rgba(255, 255, 255, 0.05);
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
             border-radius: 50%;
             padding: 2px;
         }
 
-        .team-name-label {
-            font-size: 0.77rem;
-            font-weight: 800;
-            line-height: 1.25;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            color: var(--text-main);
+        .winner-tag {
+            background: var(--green-bg);
+            color: var(--green-accent);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            font-size: 0.62rem;
+            font-weight: 900;
+            padding: 1px 6px;
+            border-radius: 6px;
+            margin-top: 2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
         }
 
-        .score-center-box {
+        /* صندوق النتيجة المزدوج المتسق تماماً مع اتجاه الفرق في RTL */
+        .score-center-strip {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 65px;
+            min-width: 82px;
         }
 
-        .live-score-val {
-            font-size: 1.35rem;
+        .score-dual-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .team-score-num {
+            font-size: 1.45rem;
             font-weight: 950;
-            letter-spacing: 2px;
-            color: var(--text-main);
-            direction: ltr;
+            line-height: 1;
+            color: var(--text-muted);
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .team-score-num.digit-winner {
+            color: var(--green-accent);
+            transform: scale(1.08);
+        }
+
+        .team-score-num.digit-live {
+            color: var(--danger-accent);
+            transform: scale(1.05);
+        }
+
+        .team-score-num.digit-loser {
+            color: var(--text-muted);
+            opacity: 0.65;
+        }
+
+        .score-sep {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            opacity: 0.45;
             line-height: 1;
         }
 
-        .match-card.is-live .live-score-val {
+        .status-sub-label {
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+        }
+
+        .status-sub-label.live-label {
             color: var(--danger-accent);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .vs-text {
-            font-size: 0.88rem;
+            font-size: 0.92rem;
             font-weight: 900;
             color: var(--text-muted);
             letter-spacing: 1px;
         }
 
-        .match-minute-label {
-            font-size: 0.67rem;
-            color: var(--danger-accent);
-            font-weight: 800;
-            margin-top: 3px;
-            direction: ltr;
-        }
-
         .kickoff-label {
-            font-size: 0.68rem;
+            font-size: 0.7rem;
             color: var(--accent-primary);
             font-weight: 800;
             margin-top: 3px;
-            direction: ltr;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .match-card-footer {
@@ -3049,42 +3145,48 @@
                 </button>
             </div>
 
-            <!-- شريط الدوريات الكبرى مع الأعلام والشعارات (1xBet Leagues Bar) -->
+            <!-- شريط الدوريات الكبرى مع الشعارات الرسمية وأعلام الدول (1xBet Official Logos) -->
             <div class="leagues-scroller" id="leaguesNav">
                 <button type="button" class="league-pill active" data-league="all">
-                    <span>⭐</span>
+                    <span class="league-all-icon">⭐</span>
                     <span>كل الدوريات الكبرى</span>
                 </button>
                 <button type="button" class="league-pill" data-league="uefa.champions">
-                    <span>🏆</span>
+                    <img src="https://a.espncdn.com/i/leaguelogos/soccer/500/2.png" class="league-pill-icon" alt="دوري أبطال أوروبا">
                     <span>دوري الأبطال</span>
                 </button>
                 <button type="button" class="league-pill" data-league="eng.1">
-                    <span>🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+                    <img src="https://a.espncdn.com/i/leaguelogos/soccer/500/23.png" class="league-pill-icon" alt="الدوري الإنجليزي">
+                    <img src="https://flagcdn.com/w40/gb-eng.png" class="league-pill-flag" alt="إنجلترا">
                     <span>الدوري الإنجليزي</span>
                 </button>
                 <button type="button" class="league-pill" data-league="esp.1">
-                    <span>🇪🇸</span>
+                    <img src="https://a.espncdn.com/i/leaguelogos/soccer/500/15.png" class="league-pill-icon" alt="الدوري الإسباني">
+                    <img src="https://flagcdn.com/w40/es.png" class="league-pill-flag" alt="إسبانيا">
                     <span>الدوري الإسباني</span>
                 </button>
                 <button type="button" class="league-pill" data-league="ita.1">
-                    <span>🇮🇹</span>
+                    <img src="https://a.espncdn.com/i/leaguelogos/soccer/500/12.png" class="league-pill-icon" alt="الدوري الإيطالي">
+                    <img src="https://flagcdn.com/w40/it.png" class="league-pill-flag" alt="إيطاليا">
                     <span>الدوري الإيطالي</span>
                 </button>
                 <button type="button" class="league-pill" data-league="ger.1">
-                    <span>🇩🇪</span>
+                    <img src="https://a.espncdn.com/i/leaguelogos/soccer/500/10.png" class="league-pill-icon" alt="الدوري الألماني">
+                    <img src="https://flagcdn.com/w40/de.png" class="league-pill-flag" alt="ألمانيا">
                     <span>الدوري الألماني</span>
                 </button>
                 <button type="button" class="league-pill" data-league="fra.1">
-                    <span>🇫🇷</span>
+                    <img src="https://a.espncdn.com/i/leaguelogos/soccer/500/9.png" class="league-pill-icon" alt="الدوري الفرنسي">
+                    <img src="https://flagcdn.com/w40/fr.png" class="league-pill-flag" alt="فرنسا">
                     <span>الدوري الفرنسي</span>
                 </button>
                 <button type="button" class="league-pill" data-league="uefa.europa">
-                    <span>🌍</span>
+                    <img src="https://a.espncdn.com/i/leaguelogos/soccer/500/2310.png" class="league-pill-icon" alt="الدوري الأوروبي">
                     <span>الدوري الأوروبي</span>
                 </button>
-                <button type="button" class="league-pill" data-league="sau.1">
-                    <span>🇸🇦</span>
+                <button type="button" class="league-pill" data-league="ksa.1">
+                    <img src="https://a.espncdn.com/i/leaguelogos/soccer/500/2488.png" class="league-pill-icon" alt="دوري روشن">
+                    <img src="https://flagcdn.com/w40/sa.png" class="league-pill-flag" alt="السعودية">
                     <span>دوري روشن</span>
                 </button>
             </div>
@@ -5676,15 +5778,69 @@
 
         // ==================== مركز مباريات الدوريات الكبرى والأحداث المباشرة (1XBET Style) ====================
         const MAJOR_LEAGUES = [
-            { code: 'all', name: 'كل الدوريات الكبرى', flag: '⭐' },
-            { code: 'uefa.champions', name: 'دوري أبطال أوروبا', flag: '🏆' },
-            { code: 'eng.1', name: 'الدوري الإنجليزي الممتاز', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
-            { code: 'esp.1', name: 'الدوري الإسباني (La Liga)', flag: '🇪🇸' },
-            { code: 'ita.1', name: 'الدوري الإيطالي (Serie A)', flag: '🇮🇹' },
-            { code: 'ger.1', name: 'الدوري الألماني (Bundesliga)', flag: '🇩🇪' },
-            { code: 'fra.1', name: 'الدوري الفرنسي (Ligue 1)', flag: '🇫🇷' },
-            { code: 'uefa.europa', name: 'الدوري الأوروبي', flag: '🌍' },
-            { code: 'sau.1', name: 'دوري روشن السعودي', flag: '🇸🇦' }
+            {
+                code: 'all',
+                name: 'كل الدوريات الكبرى',
+                shortName: 'الكل',
+                logo: 'https://cdn-icons-png.flaticon.com/512/10037/10037390.png',
+                flagImg: ''
+            },
+            {
+                code: 'uefa.champions',
+                name: 'دوري أبطال أوروبا',
+                shortName: 'دوري الأبطال',
+                logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2.png',
+                flagImg: 'https://flagcdn.com/w40/eu.png'
+            },
+            {
+                code: 'eng.1',
+                name: 'الدوري الإنجليزي الممتاز',
+                shortName: 'البريميرليغ',
+                logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png',
+                flagImg: 'https://flagcdn.com/w40/gb-eng.png'
+            },
+            {
+                code: 'esp.1',
+                name: 'الدوري الإسباني (LaLiga)',
+                shortName: 'لا ليغا',
+                logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png',
+                flagImg: 'https://flagcdn.com/w40/es.png'
+            },
+            {
+                code: 'ita.1',
+                name: 'الدوري الإيطالي (Serie A)',
+                shortName: 'سيريا A',
+                logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/12.png',
+                flagImg: 'https://flagcdn.com/w40/it.png'
+            },
+            {
+                code: 'ger.1',
+                name: 'الدوري الألماني (Bundesliga)',
+                shortName: 'البوندسليغا',
+                logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/10.png',
+                flagImg: 'https://flagcdn.com/w40/de.png'
+            },
+            {
+                code: 'fra.1',
+                name: 'الدوري الفرنسي (Ligue 1)',
+                shortName: 'ليغ 1',
+                logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/9.png',
+                flagImg: 'https://flagcdn.com/w40/fr.png'
+            },
+            {
+                code: 'uefa.europa',
+                name: 'الدوري الأوروبي (Europa League)',
+                shortName: 'اليوروبا ليغ',
+                logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2310.png',
+                flagImg: 'https://flagcdn.com/w40/eu.png'
+            },
+            {
+                code: 'ksa.1',
+                name: 'دوري روشن السعودي',
+                shortName: 'دوري روشن',
+                logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2488.png',
+                flagImg: 'https://flagcdn.com/w40/sa.png'
+            }
         ];
 
         let currentLeague = 'all';
@@ -5966,66 +6122,97 @@
 
             const state = ev.status?.type?.state; // 'pre', 'in', 'post'
             const isLive = state === 'in';
+            const isFinished = state === 'post';
             const statusDetail = ev.status?.type?.detail || '';
+
+            const homeScore = parseInt(home.score, 10);
+            const awayScore = parseInt(away.score, 10);
+            const hasScores = !isNaN(homeScore) && !isNaN(awayScore);
+
+            const homeWon = isFinished && hasScores && (homeScore > awayScore);
+            const awayWon = isFinished && hasScores && (awayScore > homeScore);
+            const isDraw = isFinished && hasScores && (homeScore === awayScore);
 
             let badgeHtml = '';
             if (isLive) {
                 badgeHtml = `<span class="match-status-badge status-live"><span class="live-dot-pulse"></span> مباشر ${statusDetail}</span>`;
-            } else if (state === 'post') {
-                badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-check"></i> انتهت (${statusDetail})</span>`;
+            } else if (isFinished) {
+                badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-check-double"></i> انتهت (${statusDetail})</span>`;
             } else {
                 badgeHtml = `<span class="match-status-badge status-pre"><i class="fa-regular fa-clock"></i> ${formatMatchTime(ev.date)}</span>`;
             }
 
             const homeLogo = home.team?.logo || 'https://cdn-icons-png.flaticon.com/512/10037/10037390.png';
             const awayLogo = away.team?.logo || 'https://cdn-icons-png.flaticon.com/512/10037/10037255.png';
-            const homeName = home.team?.displayName || 'الفريق 1';
-            const awayName = away.team?.displayName || 'الفريق 2';
+            const homeName = home.team?.displayName || 'صاحب الأرض';
+            const awayName = away.team?.displayName || 'الضيف';
             const matchTitle = `${homeName} ضد ${awayName}`;
             const venueName = comp.venue?.fullName || '';
 
+            // تصميم النتيجة المتناسق 100% مع اتجاه الفريقين في RTL:
+            // الفريق المضيف home على اليمين ورقمه على اليمين
+            // الفريق الضيف away على اليسار ورقمه على اليسار
             let scoreCenter = '';
-            if (isLive) {
+            if (hasScores || isLive || isFinished) {
                 scoreCenter = `
-                    <div class="score-center-box">
-                        <span class="live-score-val">${home.score || 0} - ${away.score || 0}</span>
-                        <span class="match-minute-label">${statusDetail}</span>
-                    </div>
-                `;
-            } else if (state === 'post') {
-                scoreCenter = `
-                    <div class="score-center-box">
-                        <span class="live-score-val">${home.score || 0} - ${away.score || 0}</span>
-                        <span style="font-size:0.68rem; color:var(--text-muted); font-weight:800; margin-top:2px;">FT</span>
+                    <div class="score-center-strip">
+                        <div class="score-dual-row">
+                            <span class="team-score-num ${isLive ? 'digit-live' : (homeWon ? 'digit-winner' : (awayWon ? 'digit-loser' : ''))}">
+                                ${isNaN(homeScore) ? 0 : homeScore}
+                            </span>
+                            <span class="score-sep">:</span>
+                            <span class="team-score-num ${isLive ? 'digit-live' : (awayWon ? 'digit-winner' : (homeWon ? 'digit-loser' : ''))}">
+                                ${isNaN(awayScore) ? 0 : awayScore}
+                            </span>
+                        </div>
+                        <span class="status-sub-label ${isLive ? 'live-label' : ''}">
+                            ${isLive ? `<span class="live-dot-pulse"></span> ${statusDetail}` : (statusDetail || 'FT')}
+                        </span>
                     </div>
                 `;
             } else {
                 scoreCenter = `
-                    <div class="score-center-box">
+                    <div class="score-center-strip">
                         <span class="vs-text">VS</span>
-                        <span class="kickoff-label">${formatMatchTime(ev.date)}</span>
+                        <span class="kickoff-label"><i class="fa-regular fa-clock"></i> ${formatMatchTime(ev.date)}</span>
                     </div>
                 `;
             }
 
+            // شعار الدوري الرسمي وعلم الدولة بجودة عالية
+            const leagueLogoImg = ev.leagueMeta?.logo 
+                ? `<img src="${ev.leagueMeta.logo}" class="league-card-mini-logo" alt="">` 
+                : '';
+            const leagueFlagImg = ev.leagueMeta?.flagImg 
+                ? `<img src="${ev.leagueMeta.flagImg}" class="league-card-flag" alt="">` 
+                : '';
+
             return `
                 <div class="match-card ${isLive ? 'is-live' : ''}">
                     <div class="match-card-top">
-                        <span class="league-tag">${ev.leagueMeta?.flag || '⚽'} ${ev.leagueMeta?.name || 'دوري'}</span>
+                        <span class="league-tag">
+                            ${leagueLogoImg}
+                            ${leagueFlagImg}
+                            <span>${ev.leagueMeta?.name || 'كرة قدم'}</span>
+                        </span>
                         ${badgeHtml}
                     </div>
 
                     <div class="match-card-body">
-                        <div class="team-box">
+                        <!-- الفريق المضيف (الأيمن في RTL) -->
+                        <div class="team-box ${homeWon ? 'is-winner' : (awayWon ? 'is-loser' : '')}">
                             <img src="${homeLogo}" alt="${homeName}" class="team-crest" loading="lazy">
                             <span class="team-name-label">${homeName}</span>
+                            ${homeWon ? '<span class="winner-tag">فائز ✓</span>' : ''}
                         </div>
 
                         ${scoreCenter}
 
-                        <div class="team-box">
+                        <!-- الفريق الضيف (الأيسر في RTL) -->
+                        <div class="team-box ${awayWon ? 'is-winner' : (homeWon ? 'is-loser' : '')}">
                             <img src="${awayLogo}" alt="${awayName}" class="team-crest" loading="lazy">
                             <span class="team-name-label">${awayName}</span>
+                            ${awayWon ? '<span class="winner-tag">فائز ✓</span>' : ''}
                         </div>
                     </div>
 
