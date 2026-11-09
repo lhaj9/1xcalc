@@ -730,12 +730,14 @@
 
         .save-slip-bar {
             display: flex;
+            flex-wrap: wrap;
             gap: 8px;
             margin-top: 10px;
         }
 
         .slip-name-input {
-            flex: 1;
+            flex: 1 1 160px;
+            min-width: 0;
             background: var(--bg-input);
             border: 1px solid var(--border-color);
             color: var(--text-main);
@@ -747,6 +749,8 @@
         }
 
         .save-slip-btn {
+            flex: 0 1 auto;
+            max-width: 100%;
             background: var(--accent-primary);
             color: #fff;
             border: none;
@@ -755,7 +759,17 @@
             font-size: 0.8rem;
             font-weight: 800;
             cursor: pointer;
-            white-space: nowrap;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.35;
+        }
+
+        /* على الشاشات الضيقة يصبح زر إنشاء القسيمة بعرض كامل أسفل حقل الاسم */
+        @media (max-width: 420px) {
+            .save-slip-btn {
+                flex: 1 1 100%;
+                width: 100%;
+            }
         }
 
         /* ==================== تصميم تبويب القسائم الاحترافي العالمي ==================== */
