@@ -1,65 +1,82 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" data-theme="dark">
+<html lang="ar" dir="rtl" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0f1015" id="metaThemeColor">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#f4f6fa" id="metaThemeColor">
 
     <!-- إعدادات PWA وتطبيق الآيفون -->
     <link rel="manifest" href="./manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="حاسبة الصفقات">
+    <meta name="apple-mobile-web-app-title" content="1XCALC">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/10037/10037390.png">
 
-    <title>إدارة وحاسبة الصفقات الرياضية الاحترافية</title>
-    <style>
-        :root[data-theme="dark"] {
-            --bg-main: #0f1015;
-            --bg-card: #181a20;
-            --bg-input: #22252e;
-            --bg-elevated: #2b2f3a;
-            --text-main: #f4f4f6;
-            --text-muted: #9ca3af;
-            --border-color: #2e323d;
-            --accent-primary: #6366f1;
-            --accent-bg: rgba(99, 102, 241, 0.14);
-            --blue-accent: #3b82f6;
-            --blue-bg: rgba(59, 130, 246, 0.12);
-            --green-accent: #10b981;
-            --green-bg: rgba(16, 185, 129, 0.12);
-            --amber-accent: #f59e0b;
-            --amber-bg: rgba(245, 158, 11, 0.12);
-            --danger-accent: #ef4444;
-            --danger-bg: rgba(239, 68, 68, 0.12);
-            --purple-accent: #a855f7;
-            --purple-bg: rgba(168, 85, 247, 0.12);
-            --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-        }
+    <!-- أيقونات سحابية من الإنترنت (Font Awesome 6.5) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
+    <title>1XCALC | إدارة وحاسبة الصفقات الرياضية الاحترافية</title>
+    <style>
         :root[data-theme="light"] {
-            --bg-main: #f1f5f9;
+            --bg-main: #f4f6fa;
             --bg-card: #ffffff;
             --bg-input: #f8fafc;
-            --bg-elevated: #e2e8f0;
-            --text-main: #0f172a;
+            --bg-elevated: #edf2f7;
+            --text-main: #0e1726;
             --text-muted: #64748b;
-            --border-color: #cbd5e1;
-            --accent-primary: #4f46e5;
-            --accent-bg: rgba(79, 70, 229, 0.1);
-            --blue-accent: #2563eb;
-            --blue-bg: rgba(37, 99, 235, 0.08);
-            --green-accent: #059669;
-            --green-bg: rgba(5, 150, 105, 0.08);
-            --amber-accent: #d97706;
-            --amber-bg: rgba(217, 119, 6, 0.1);
-            --danger-accent: #dc2626;
-            --danger-bg: rgba(220, 38, 38, 0.08);
-            --purple-accent: #9333ea;
-            --purple-bg: rgba(147, 51, 234, 0.08);
-            --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+            --border-color: #e2e8f0;
+            --accent-primary: #1055a4; /* أزرق 1xBet الأساسي */
+            --accent-hover: #0c4383;
+            --accent-bg: rgba(16, 85, 164, 0.08);
+            --blue-accent: #166fe5;
+            --blue-bg: rgba(22, 111, 229, 0.08);
+            --green-accent: #10b981; /* أخضر 1xBet الرياضي */
+            --green-bg: rgba(16, 185, 129, 0.09);
+            --amber-accent: #f59e0b;
+            --amber-bg: rgba(245, 158, 11, 0.09);
+            --danger-accent: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.08);
+            --purple-accent: #8b5cf6;
+            --purple-bg: rgba(139, 92, 246, 0.08);
+            --shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+            --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.08);
+            --bottom-nav-bg: #ffffff;
+            --bottom-nav-border: #e2e8f0;
+            --betslip-fab-bg: linear-gradient(135deg, #1d6fe9 0%, #0d4b9b 100%);
+            --odds-card-bg: #f8fafc;
+            --odds-card-border: #e2e8f0;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-main: #0c111a; /* كحلي داكن رياضي 1xBet */
+            --bg-card: #151d2a;
+            --bg-input: #1b2536;
+            --bg-elevated: #232f44;
+            --text-main: #f3f6fa;
+            --text-muted: #8b99ad;
+            --border-color: #243044;
+            --accent-primary: #2176ff;
+            --accent-hover: #1965e0;
+            --accent-bg: rgba(33, 118, 255, 0.14);
+            --blue-accent: #3b82f6;
+            --blue-bg: rgba(59, 130, 246, 0.14);
+            --green-accent: #10b981;
+            --green-bg: rgba(16, 185, 129, 0.14);
+            --amber-accent: #f59e0b;
+            --amber-bg: rgba(245, 158, 11, 0.14);
+            --danger-accent: #ef4444;
+            --danger-bg: rgba(239, 68, 68, 0.14);
+            --purple-accent: #a855f7;
+            --purple-bg: rgba(168, 85, 247, 0.14);
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.45);
+            --bottom-nav-bg: #121824;
+            --bottom-nav-border: #1e283b;
+            --betslip-fab-bg: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            --odds-card-bg: #1a2334;
+            --odds-card-border: #243147;
         }
 
         * {
@@ -75,8 +92,10 @@
             color: var(--text-main);
             direction: rtl;
             min-height: 100vh;
-            padding-bottom: 45px;
+            padding-bottom: calc(75px + env(safe-area-inset-bottom, 0px));
             transition: background-color 0.2s ease, color 0.2s ease;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
         }
 
         .app-wrapper {
@@ -166,25 +185,54 @@
             justify-content: center;
         }
 
-        /* الهيدر */
+        /* ==================== 1XBET APP HEADER ==================== */
         .app-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 6px 2px 12px 2px;
+            padding: 8px 2px 10px 2px;
         }
 
-        .app-title {
-            font-size: 1.12rem;
-            font-weight: 900;
+        .brand-area {
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
+        .brand-1xbet {
+            display: flex;
+            align-items: center;
+            font-size: 1.55rem;
+            font-weight: 950;
+            font-style: italic;
+            letter-spacing: -0.5px;
+            line-height: 1;
+            user-select: none;
+        }
+
+        .brand-1xbet .logo-1x {
+            color: var(--accent-primary);
+        }
+
+        .brand-1xbet .logo-bet {
+            color: var(--green-accent);
+        }
+
+        .brand-pro-tag {
+            background: linear-gradient(135deg, var(--accent-primary), var(--blue-accent));
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(16, 85, 164, 0.3);
+        }
+
         .header-actions {
             display: flex;
-            gap: 7px;
+            gap: 6px;
+            align-items: center;
         }
 
         .icon-btn {
@@ -193,13 +241,14 @@
             color: var(--text-main);
             width: 38px;
             height: 38px;
-            border-radius: 11px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 1.02rem;
-            transition: transform 0.15s ease, border-color 0.2s ease;
+            font-size: 1.05rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
         }
 
         .icon-btn:active {
@@ -208,74 +257,446 @@
 
         .icon-btn.help-btn {
             background: var(--accent-bg);
-            border-color: rgba(99, 102, 241, 0.4);
+            border-color: rgba(16, 85, 164, 0.25);
             color: var(--accent-primary);
-            font-weight: 900;
         }
 
-        /* شريط التبويبات */
-        .tabs-bar {
+        /* ==================== 1XBET QUICK ACTION BUTTONS ==================== */
+        .quick-action-bar {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            background: var(--bg-card);
-            padding: 4px;
-            border-radius: 14px;
-            border: 1px solid var(--border-color);
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
             margin-bottom: 12px;
-            gap: 4px;
         }
 
-        .tab-btn {
-            background: transparent;
+        .action-btn-blue {
+            background: linear-gradient(135deg, #1055a4 0%, #1e70e9 100%);
+            color: #ffffff;
             border: none;
-            color: var(--text-muted);
-            padding: 9px 4px;
-            font-size: 0.81rem;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.82rem;
             font-weight: 800;
-            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 7px;
+            box-shadow: 0 3px 12px rgba(16, 85, 164, 0.28);
+            transition: transform 0.15s ease, opacity 0.15s ease;
         }
 
-        .tab-btn.active {
+        .action-btn-green {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            box-shadow: 0 3px 12px rgba(16, 185, 129, 0.28);
+            transition: transform 0.15s ease, opacity 0.15s ease;
+        }
+
+        .action-btn-blue:active, .action-btn-green:active {
+            transform: scale(0.96);
+        }
+
+        /* ==================== 1XBET CATEGORY PILLS (SCROLLABLE) ==================== */
+        .category-pills-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 2px 2px 10px 2px;
+            margin-bottom: 10px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+        }
+
+        .category-pills-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-pill {
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 0.77rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: var(--shadow);
+        }
+
+        .cat-pill:active {
+            transform: scale(0.95);
+        }
+
+        .cat-pill.active {
             background: var(--accent-primary);
             color: #ffffff;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+            border-color: var(--accent-primary);
+            box-shadow: 0 4px 12px rgba(16, 85, 164, 0.35);
         }
 
-        .tab-badge {
+        .cat-pill.active i {
+            color: #ffffff;
+        }
+
+        .pill-badge {
             background: var(--amber-accent);
             color: #000;
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             font-weight: 900;
             padding: 1px 6px;
-            border-radius: 8px;
-            min-width: 18px;
+            border-radius: 10px;
+            min-width: 17px;
+            text-align: center;
         }
 
         .tab-panel {
             display: none;
-            animation: fadeIn 0.2s ease;
+            animation: fadeInSlide 0.24s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .tab-panel.active {
             display: block;
         }
 
-        @keyframes fadeIn {
+        @keyframes fadeInSlide {
             from {
                 opacity: 0;
-                transform: translateY(3px);
+                transform: translateY(6px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* ==================== 1XBET BOTTOM NAVIGATION BAR ==================== */
+        .bottom-nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 62px;
+            background: var(--bottom-nav-bg);
+            border-top: 1px solid var(--bottom-nav-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 950;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        .bottom-nav-item {
+            background: transparent;
+            border: none;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 100%;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.15s ease, transform 0.1s ease;
+            position: relative;
+            padding: 4px 0;
+            user-select: none;
+        }
+
+        .bottom-nav-item:active {
+            transform: scale(0.92);
+        }
+
+        .bottom-nav-item.active {
+            color: var(--accent-primary);
+        }
+
+        .nav-icon-wrap {
+            font-size: 1.18rem;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 22px;
+            transition: transform 0.15s ease;
+        }
+
+        .bottom-nav-item.active .nav-icon-wrap {
+            transform: translateY(-2px);
+        }
+
+        .nav-label {
+            font-size: 0.67rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.2px;
+        }
+
+        /* زر القسائم البارز في المنتصف (1XBET BET SLIP FAB) */
+        .bottom-nav-item.item-betslip {
+            position: relative;
+            overflow: visible;
+        }
+
+        .betslip-fab {
+            width: 53px;
+            height: 53px;
+            border-radius: 50%;
+            background: var(--betslip-fab-bg);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: -24px;
+            box-shadow: 0 6px 18px rgba(16, 85, 164, 0.45);
+            border: 4px solid var(--bottom-nav-bg);
+            position: relative;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+        }
+
+        .bottom-nav-item:active .betslip-fab {
+            transform: scale(0.9);
+        }
+
+        .bottom-nav-item.active .betslip-fab {
+            box-shadow: 0 8px 22px rgba(16, 85, 164, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .betslip-fab-icon {
+            font-size: 1.35rem;
+            color: #ffffff;
+        }
+
+        .betslip-label {
+            margin-top: 1px;
+        }
+
+        .betslip-badge {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            background: var(--amber-accent);
+            color: #000;
+            font-size: 0.66rem;
+            font-weight: 900;
+            min-width: 19px;
+            height: 19px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border: 2px solid var(--bottom-nav-bg);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        }
+
+        /* ==================== تبويب القائمة (TAB MENU) ==================== */
+        .menu-theme-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 15px;
+            cursor: pointer;
+            transition: transform 0.15s ease, border-color 0.2s ease;
+        }
+
+        .menu-theme-card:active {
+            transform: scale(0.98);
+        }
+
+        .menu-theme-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-theme-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 13px;
+            background: var(--accent-bg);
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .menu-theme-title {
+            font-size: 0.94rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 2px;
+        }
+
+        .menu-theme-desc {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle-switch {
+            width: 46px;
+            height: 26px;
+            border-radius: 13px;
+            background: var(--border-color);
+            position: relative;
+            transition: background 0.25s ease;
+            flex-shrink: 0;
+        }
+
+        :root[data-theme="dark"] .theme-toggle-switch {
+            background: var(--accent-primary);
+        }
+
+        .theme-toggle-knob {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+        }
+
+        :root[data-theme="dark"] .theme-toggle-knob {
+            transform: translateX(-20px);
+        }
+
+        .menu-portfolio-card {
+            padding: 13px 14px;
+        }
+
+        .menu-stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            text-align: center;
+            background: var(--bg-input);
+            padding: 10px 8px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-top: 8px;
+        }
+
+        .menu-list-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 11px;
+            box-shadow: var(--shadow);
+        }
+
+        .menu-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 14px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .menu-list-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-list-item:active {
+            background: var(--bg-elevated);
+        }
+
+        .menu-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-item-ico {
+            font-size: 1.15rem;
+            color: var(--accent-primary);
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .menu-item-sub {
+            font-size: 0.71rem;
+            color: var(--text-muted);
+        }
+
+        .menu-arrow {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* ==================== تبويب السجل الشامل (TAB 4) ==================== */
+        .history-filter-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+        }
+
+        .history-filter-btn {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .history-filter-btn.active {
+            background: var(--accent-primary);
+            color: #ffffff;
+            border-color: var(--accent-primary);
+        }
+
+        .history-item-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 12px;
+            margin-bottom: 9px;
+            box-shadow: var(--shadow);
+            transition: transform 0.15s ease, border-color 0.2s ease;
+        }
+
+        .history-item-card:active {
+            transform: scale(0.99);
         }
 
         /* البطاقات العامة */
@@ -1612,23 +2033,61 @@
             </div>
         </div>
 
-        <!-- الهيدر العلوي مع زر علامة الاستفهام (دليل الاستخدام) بجانب زر الوضع المظلم -->
+        <!-- هيدر تطبيق 1XCALC المستوحى من 1xBet -->
         <header class="app-header">
-            <div class="app-title">⚡ مدير وحاسبة الصفقات</div>
+            <div class="brand-area">
+                <div class="brand-1xbet">
+                    <span class="logo-1x">1X</span><span class="logo-bet">CALC</span>
+                </div>
+                <span class="brand-pro-tag">PRO</span>
+            </div>
             <div class="header-actions">
-                <button class="icon-btn help-btn" id="openHelpBtn" title="دليل وطريقة عمل التطبيق">❓</button>
-                <button class="icon-btn" id="themeQuickBtn" title="تبديل المظهر">🌙</button>
-                <button class="icon-btn" id="openSettingsBtn" title="الإعدادات">⚙️</button>
+                <button class="icon-btn" id="themeQuickBtn" title="تبديل المظهر">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="icon-btn help-btn" id="openHelpBtn" title="دليل وطريقة عمل التطبيق">
+                    <i class="fa-solid fa-circle-question"></i>
+                </button>
+                <button class="icon-btn" id="openSettingsBtn" title="الإعدادات">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
             </div>
         </header>
 
-        <!-- شريط التبويبات -->
-        <nav class="tabs-bar">
-            <button class="tab-btn active" data-tab="tab1">التغطية الثنائية</button>
-            <button class="tab-btn" data-tab="tab2">التغطية المتأخرة ⏱️</button>
-            <button class="tab-btn" data-tab="tab3">
+        <!-- زران تفاعليان علويان مثل Log In & Registration في 1xBet للوصول المباشر -->
+        <div class="quick-action-bar">
+            <button type="button" class="action-btn-blue tab-trigger active" data-target-tab="tab1">
+                <i class="fa-solid fa-fire"></i>
+                <span>التغطية الآنية (Arbitrage)</span>
+            </button>
+            <button type="button" class="action-btn-green tab-trigger" data-target-tab="tab2">
+                <i class="fa-solid fa-bolt"></i>
+                <span>المتأخرة والمباشر (Live)</span>
+            </button>
+        </div>
+
+        <!-- شريط التبويبات الدائرية الأفقية القابلة للتمرير (Horizontal Scrollable Pills) -->
+        <nav class="category-pills-bar" id="categoryPillsBar">
+            <button type="button" class="cat-pill active" data-tab="tab1">
+                <i class="fa-solid fa-fire"></i>
+                <span>الآنية</span>
+            </button>
+            <button type="button" class="cat-pill" data-tab="tab2">
+                <i class="fa-solid fa-bolt"></i>
+                <span>المتأخرة</span>
+            </button>
+            <button type="button" class="cat-pill" data-tab="tab3">
+                <i class="fa-solid fa-ticket"></i>
                 <span>القسائم</span>
-                <span class="tab-badge" id="slipsBadge">0</span>
+                <span class="pill-badge" id="pillSlipsBadge">0</span>
+            </button>
+            <button type="button" class="cat-pill" data-tab="tab4">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>السجل</span>
+            </button>
+            <button type="button" class="cat-pill" data-tab="tabMenu">
+                <i class="fa-solid fa-table-cells-large"></i>
+                <span>القائمة</span>
             </button>
         </nav>
 
@@ -1970,7 +2429,173 @@
 
             <div id="slipsContainer"></div>
         </section>
+
+        <!-- ==================== التبويب الرابع: السجل والعمليات (1XBET Style History) ==================== -->
+        <section id="tab4" class="tab-panel">
+            <div class="card">
+                <div class="card-header">
+                    <span class="field-label">📜 سجل العمليات والحسابات</span>
+                    <button type="button" class="small-action-btn" id="clearAllHistoryTab4Btn" style="color: var(--danger-accent);">
+                        مسح السجل 🗑️
+                    </button>
+                </div>
+                <div class="history-filter-bar">
+                    <button type="button" class="history-filter-btn active" data-hfilter="all">جميع العمليات</button>
+                    <button type="button" class="history-filter-btn" data-hfilter="t1">التغطية الآنية</button>
+                    <button type="button" class="history-filter-btn" data-hfilter="t2">المتأخرة والمحاكي</button>
+                </div>
+                <div id="fullHistoryContainer"></div>
+            </div>
+        </section>
+
+        <!-- ==================== التبويب الخامس: القائمة ولوحة التحكم (1XBET Style Menu) ==================== -->
+        <section id="tabMenu" class="tab-panel">
+            <!-- كارت المظهر السريع مع زر سويتش فوري -->
+            <div class="card menu-theme-card" id="menuThemeToggleBtn">
+                <div class="menu-theme-info">
+                    <div class="menu-theme-icon" id="menuThemeIcon">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <div>
+                        <div class="menu-theme-title">مظهر التطبيق</div>
+                        <div class="menu-theme-desc" id="menuThemeDesc">الوضع الفاتح نشط (انقر للتبديل)</div>
+                    </div>
+                </div>
+                <div class="theme-toggle-switch">
+                    <span class="theme-toggle-knob"></span>
+                </div>
+            </div>
+
+            <!-- بطاقة ملخص أداء المحفظة -->
+            <div class="card menu-portfolio-card">
+                <div class="card-header">
+                    <span class="field-label">📊 أداء المحفظة والصفقات</span>
+                    <button type="button" class="small-action-btn" id="menuGoToSlipsBtn">عرض القسائم 🎟️</button>
+                </div>
+                <div class="menu-stats-row">
+                    <div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">صافي الربح</div>
+                        <div style="font-size: 1.15rem; font-weight: 900; color: var(--green-accent);" id="menuStatPnl">+0.00$</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">ROI / النجاح</div>
+                        <div style="font-size: 0.88rem; font-weight: 900; color: var(--accent-primary); direction: ltr; margin-top: 3px;" id="menuStatRoi">0% | 0%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">قيد اللعب</div>
+                        <div style="font-size: 1.15rem; font-weight: 900; color: var(--amber-accent);" id="menuStatActive">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قائمة الخيارات والأدوات -->
+            <div class="menu-list-card">
+                <div class="menu-list-item" id="menuOpenSettingsItem">
+                    <div class="menu-item-left">
+                        <i class="fa-solid fa-sliders menu-item-ico"></i>
+                        <div>
+                            <div class="menu-item-title">إعدادات الحساب والعملة</div>
+                            <div class="menu-item-sub">تغيير رمز العملة، الفواصل العشرية، رأس المال</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-left menu-arrow"></i>
+                </div>
+
+                <div class="menu-list-item" id="menuOpenHelpItem">
+                    <div class="menu-item-left">
+                        <i class="fa-solid fa-book-open menu-item-ico"></i>
+                        <div>
+                            <div class="menu-item-title">دليل وطريقة العمل</div>
+                            <div class="menu-item-sub">شرح استراتيجيات التغطية والمحاكي بالكامل</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-left menu-arrow"></i>
+                </div>
+
+                <div class="menu-list-item" id="menuExportItem">
+                    <div class="menu-item-left">
+                        <i class="fa-solid fa-file-export menu-item-ico"></i>
+                        <div>
+                            <div class="menu-item-title">تصدير نسخة احتياطية (JSON)</div>
+                            <div class="menu-item-sub">حفظ جميع صفقاتك وسجلاتك في ملف خارجي</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-download menu-arrow"></i>
+                </div>
+
+                <div class="menu-list-item" id="menuImportItem">
+                    <div class="menu-item-left">
+                        <i class="fa-solid fa-file-import menu-item-ico"></i>
+                        <div>
+                            <div class="menu-item-title">استعادة نسخة احتياطية</div>
+                            <div class="menu-item-sub">استيراد بياناتك المحفوظة سابقاً من ملف</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-upload menu-arrow"></i>
+                </div>
+
+                <div class="menu-list-item" id="menuInstallItem">
+                    <div class="menu-item-left">
+                        <i class="fa-solid fa-mobile-screen-button menu-item-ico"></i>
+                        <div>
+                            <div class="menu-item-title">تثبيت التطبيق على الشاشة الرئيسية (PWA)</div>
+                            <div class="menu-item-sub">تطبيق سريع بملء الشاشة وبدون إنترنت</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-arrow-down-to-bracket menu-arrow"></i>
+                </div>
+            </div>
+
+            <!-- أزرار الإجراءات وإدارة البيانات -->
+            <div class="card">
+                <button type="button" class="danger-btn" id="menuClearHistoryBtn" style="margin-bottom: 8px;">
+                    🗑️ مسح سجلات الحسابات السريعة
+                </button>
+                <button type="button" class="danger-btn" id="menuClearSlipsBtn">
+                    ⚠️ مسح جميع القسائم والصفقات المحفوظة
+                </button>
+            </div>
+        </section>
     </div>
+
+    <!-- ==================== شريط التنقل السفلي الثابت (1XBET BOTTOM NAVIGATION BAR) ==================== -->
+    <nav class="bottom-nav-bar" id="bottomNavBar">
+        <button type="button" class="bottom-nav-item active" data-tab="tab1" title="الرئيسية (التغطية الآنية)">
+            <div class="nav-icon-wrap">
+                <i class="fa-solid fa-fire"></i>
+            </div>
+            <span class="nav-label">الرئيسية</span>
+        </button>
+
+        <button type="button" class="bottom-nav-item" data-tab="tab2" title="المتأخرة والمباشر">
+            <div class="nav-icon-wrap">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <span class="nav-label">المتأخرة</span>
+        </button>
+
+        <button type="button" class="bottom-nav-item item-betslip" data-tab="tab3" title="إدارة القسائم والصفقات">
+            <div class="betslip-fab" id="betslipFab">
+                <i class="fa-solid fa-ticket betslip-fab-icon"></i>
+                <span class="betslip-badge" id="bottomSlipsBadge">0</span>
+            </div>
+            <span class="nav-label betslip-label">القسائم</span>
+        </button>
+
+        <button type="button" class="bottom-nav-item" data-tab="tab4" title="السجل والعمليات">
+            <div class="nav-icon-wrap">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <span class="nav-label">السجل</span>
+        </button>
+
+        <button type="button" class="bottom-nav-item" data-tab="tabMenu" title="القائمة ولوحة التحكم">
+            <div class="nav-icon-wrap">
+                <i class="fa-solid fa-table-cells-large"></i>
+            </div>
+            <span class="nav-label">القائمة</span>
+        </button>
+    </nav>
 
     <!-- ==================== نافذة دليل وطريقة عمل الموقع (README.md Viewer) ==================== -->
     <div class="modal-overlay" id="helpGuideModal">
@@ -2010,16 +2635,6 @@
             <div class="card-header" style="margin-bottom: 14px;">
                 <h3>⚙️ إعدادات التطبيق والبيانات</h3>
                 <button class="icon-btn" id="closeSettingsBtn" style="width: 32px; height: 32px;">✕</button>
-            </div>
-
-            <div class="setting-row">
-                <span class="field-label" style="color: var(--text-main);">مظهر الواجهة</span>
-                <div class="setting-control">
-                    <select id="themeSelect">
-                        <option value="dark">الوضع المظلم (Dark)</option>
-                        <option value="light">الوضع الفاتح (Light)</option>
-                    </select>
-                </div>
             </div>
 
             <div class="setting-row">
@@ -2447,7 +3062,7 @@
 
         // ==================== الإعدادات والذاكرة المحلية ====================
         let appSettings = {
-            theme: localStorage.getItem('arb_theme') || 'dark',
+            theme: localStorage.getItem('arb_theme') || 'light',
             currency: localStorage.getItem('arb_currency') || '$',
             defaultCapital: localStorage.getItem('arb_def_capital') || '1000',
             precision: parseInt(localStorage.getItem('arb_precision') || '2', 10)
@@ -2459,6 +3074,7 @@
 
         let currentTab2Mode = 'stake1';
         let currentSlipFilter = 'all';
+        let currentHistoryFilter = 'all';
         let expandedSlipIds = new Set();
         let timerT1 = null;
         let timerT2 = null;
@@ -2522,22 +3138,285 @@
 
         const applySettings = () => {
             htmlEl.setAttribute('data-theme', appSettings.theme);
-            document.getElementById('metaThemeColor').setAttribute('content', appSettings.theme === 'dark' ? '#0f1015' : '#f1f5f9');
-            document.getElementById('themeQuickBtn').textContent = appSettings.theme === 'dark' ? '🌙' : '☀️';
-            document.getElementById('themeSelect').value = appSettings.theme;
-            document.getElementById('currencySelect').value = appSettings.currency;
-            document.getElementById('defaultCapitalInput').value = appSettings.defaultCapital;
-            document.getElementById('precisionSelect').value = appSettings.precision.toString();
+            const metaColor = appSettings.theme === 'dark' ? '#0c111a' : '#f4f6fa';
+            const metaEl = document.getElementById('metaThemeColor');
+            if (metaEl) metaEl.setAttribute('content', metaColor);
+
+            // زر الهيدر السريع للثيم
+            const themeQuickBtn = document.getElementById('themeQuickBtn');
+            if (themeQuickBtn) {
+                themeQuickBtn.innerHTML = appSettings.theme === 'dark'
+                    ? '<i class="fa-solid fa-sun" style="color: #f59e0b;"></i>'
+                    : '<i class="fa-solid fa-moon" style="color: #1055a4;"></i>';
+                themeQuickBtn.title = appSettings.theme === 'dark' ? 'التبديل إلى الوضع الفاتح' : 'التبديل إلى الوضع المظلم';
+            }
+
+            // بطاقة الثيم في تبويب القائمة (tabMenu)
+            const menuThemeIcon = document.getElementById('menuThemeIcon');
+            const menuThemeDesc = document.getElementById('menuThemeDesc');
+            if (menuThemeIcon) {
+                menuThemeIcon.innerHTML = appSettings.theme === 'dark'
+                    ? '<i class="fa-solid fa-moon" style="color: #60a5fa;"></i>'
+                    : '<i class="fa-solid fa-sun" style="color: #f59e0b;"></i>';
+            }
+            if (menuThemeDesc) {
+                menuThemeDesc.textContent = appSettings.theme === 'dark'
+                    ? 'الوضع الداكن نشط (انقر للتبديل للفاتح)'
+                    : 'الوضع الفاتح نشط (انقر للتبديل للداكن)';
+            }
+
+            const curEl = document.getElementById('currencySelect');
+            if (curEl) curEl.value = appSettings.currency;
+            const defCapEl = document.getElementById('defaultCapitalInput');
+            if (defCapEl) defCapEl.value = appSettings.defaultCapital;
+            const precEl = document.getElementById('precisionSelect');
+            if (precEl) precEl.value = appSettings.precision.toString();
         };
 
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-                btn.classList.add('active');
-                document.getElementById(btn.dataset.tab).classList.add('active');
+        // ==================== نظام التنقل الشامل (Tabs & Navigation System) ====================
+        const availableTabs = ['tab1', 'tab2', 'tab3', 'tab4', 'tabMenu'];
+
+        const switchTab = (tabId) => {
+            if (!availableTabs.includes(tabId)) return;
+
+            // 1. تفعيل اللوح المستهدف
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            const targetPanel = document.getElementById(tabId);
+            if (targetPanel) targetPanel.classList.add('active');
+
+            // 2. تحديث الشريط السفلي 1xBet
+            document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
             });
+
+            // 3. تحديث شريط الحبوب العلوي
+            document.querySelectorAll('.cat-pill').forEach(pill => {
+                const isActive = pill.dataset.tab === tabId;
+                pill.classList.toggle('active', isActive);
+                if (isActive) {
+                    pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+            });
+
+            // 4. تحديث الأزرار العلوية السريعة
+            document.querySelectorAll('.tab-trigger').forEach(trg => {
+                trg.classList.toggle('active', trg.dataset.targetTab === tabId);
+            });
+
+            // 5. استدعاء ريندر التبويب المحدد
+            if (tabId === 'tab3') {
+                renderSlips();
+            } else if (tabId === 'tab4') {
+                renderFullHistory();
+            } else if (tabId === 'tabMenu') {
+                updateMenuStats();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // ربط أزرار الشريط السفلي
+        document.querySelectorAll('.bottom-nav-item').forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.dataset.tab));
         });
+
+        // ربط حبوب الفلترة العلوية
+        document.querySelectorAll('.cat-pill').forEach(pill => {
+            pill.addEventListener('click', () => switchTab(pill.dataset.tab));
+        });
+
+        // ربط الأزرار السريعة بالأعلى (Arbitrage / Delayed)
+        document.querySelectorAll('.tab-trigger').forEach(trg => {
+            trg.addEventListener('click', () => switchTab(trg.dataset.targetTab));
+        });
+
+        // ==================== السحب للتمرير بين التبويبات (Touch Swipe Navigation) ====================
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchStartTime = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            if (e.target.closest('.modal-overlay.open') ||
+                e.target.closest('input') ||
+                e.target.closest('select') ||
+                e.target.closest('.table-wrapper') ||
+                e.target.closest('.category-pills-bar') ||
+                e.target.closest('.chips-row') ||
+                e.target.closest('.filter-bar')) {
+                return;
+            }
+            const t = e.touches[0];
+            touchStartX = t.clientX;
+            touchStartY = t.clientY;
+            touchStartTime = Date.now();
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            if (!touchStartTime) return;
+            const t = e.changedTouches[0];
+            const diffX = t.clientX - touchStartX;
+            const diffY = t.clientY - touchStartY;
+            const duration = Date.now() - touchStartTime;
+            touchStartTime = 0;
+
+            if (Math.abs(diffX) >= 55 && Math.abs(diffY) <= 50 && duration <= 600) {
+                const currentPanel = document.querySelector('.tab-panel.active');
+                const currentTabId = currentPanel ? currentPanel.id : 'tab1';
+                const currentIndex = availableTabs.indexOf(currentTabId);
+                if (currentIndex === -1) return;
+
+                // في RTL: السحب لليسار (diffX < 0) يعني التالي، والسحب لليمين (diffX > 0) يعني السابق
+                if (diffX < 0 && currentIndex < availableTabs.length - 1) {
+                    switchTab(availableTabs[currentIndex + 1]);
+                } else if (diffX > 0 && currentIndex > 0) {
+                    switchTab(availableTabs[currentIndex - 1]);
+                }
+            }
+        }, { passive: true });
+
+        // ==================== دوال ريندر السجل الشامل وقائمة التحكم ====================
+        const renderFullHistory = () => {
+            const container = document.getElementById('fullHistoryContainer');
+            if (!container) return;
+
+            let list = [];
+            if (currentHistoryFilter === 'all' || currentHistoryFilter === 't1') {
+                list = list.concat(historyTab1.map(item => ({ ...item, tabSource: 't1' })));
+            }
+            if (currentHistoryFilter === 'all' || currentHistoryFilter === 't2') {
+                list = list.concat(historyTab2.map(item => ({ ...item, tabSource: 't2' })));
+            }
+
+            list.sort((a, b) => b.id - a.id);
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 32px 14px; color: var(--text-muted);">
+                        <div style="font-size: 2.2rem; margin-bottom: 8px;">📜</div>
+                        <div style="font-weight: 800; font-size: 0.95rem; margin-bottom: 4px;">لا توجد سجلات بعد</div>
+                        <div style="font-size: 0.74rem;">بمجرد إجراء أي حسابات أو تجربة خطط ستُحفظ تلقائياً هنا</div>
+                    </div>
+                `;
+                return;
+            }
+
+            const p = appSettings.precision;
+            const c = cur();
+
+            container.innerHTML = list.map(item => {
+                const isT1 = item.tabSource === 't1';
+                const isProfit = (item.netProfit || 0) >= 0;
+                const profitColor = isProfit ? 'var(--green-accent)' : 'var(--danger-accent)';
+                const profitPrefix = isProfit ? '+' : '';
+
+                return `
+                    <div class="history-item-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="font-size: 0.72rem; font-weight: 900; padding: 3px 8px; border-radius: 6px; ${isT1 ? 'background: var(--blue-bg); color: var(--blue-accent);' : 'background: var(--amber-bg); color: var(--amber-accent);'}">
+                                    ${isT1 ? '⚡ تغطية آنية' : '⏱️ تغطية متأخرة'}
+                                </span>
+                                <span style="font-size: 0.72rem; color: var(--text-muted); direction: ltr;">${item.time || ''}</span>
+                            </div>
+                            <div style="font-size: 0.92rem; font-weight: 900; color: ${profitColor}; direction: ltr;">
+                                ${profitPrefix}${(item.netProfit || 0).toFixed(p)}${c} (${profitPrefix}${(item.pct || 0).toFixed(2)}%)
+                            </div>
+                        </div>
+
+                        <div class="grid-2" style="font-size: 0.77rem; margin-bottom: 8px; background: var(--bg-input); padding: 8px 10px; border-radius: 10px; border: 1px solid var(--border-color);">
+                            <div>
+                                <div style="color: var(--text-muted); font-size: 0.7rem;">الرهان 1</div>
+                                <div style="font-weight: 800; direction: ltr;">
+                                    ${(item.stake1 || 0).toFixed(p)}${c} @ ${(item.ratio1 || item.odds1 || 0).toFixed(2)}
+                                </div>
+                            </div>
+                            <div>
+                                <div style="color: var(--text-muted); font-size: 0.7rem;">الرهان 2</div>
+                                <div style="font-weight: 800; direction: ltr;">
+                                    ${(item.stake2 || 0).toFixed(p)}${c} @ ${(item.ratio2 || item.odds2 || 0).toFixed(2)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="font-size: 0.74rem; color: var(--text-muted);">
+                                العائد المضمون: <b style="color: var(--text-main); direction: ltr;">${(item.payout || 0).toFixed(p)}${c}</b>
+                            </div>
+                            <button type="button" class="small-action-btn" onclick="applyHistoryItemToCalc('${item.tabSource}', ${item.id})" style="font-size: 0.72rem; padding: 4px 10px;">
+                                تطبيق بالحاسبة ↩️
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            updateMenuStats();
+        };
+
+        window.applyHistoryItemToCalc = (source, id) => {
+            if (source === 't1') {
+                const item = historyTab1.find(h => h.id === id);
+                if (item) {
+                    capitalInput.value = item.capital;
+                    ratio1Input.value = item.ratio1;
+                    ratio2Input.value = item.ratio2;
+                    updateTab1();
+                    switchTab('tab1');
+                    showToast('تم تحميل بيانات العملية في حاسبة التغطية الآنية');
+                }
+            } else if (source === 't2') {
+                const item = historyTab2.find(h => h.id === id);
+                if (item) {
+                    t2AmountInput.value = item.stake1;
+                    t2Odds1Input.value = item.odds1;
+                    t2TargetPctInput.value = item.pct;
+                    syncPctChips(item.pct);
+                    updateTab2();
+                    switchTab('tab2');
+                    showToast('تم تحميل بيانات العملية في حاسبة التغطية المتأخرة');
+                }
+            }
+        };
+
+        const updateMenuStats = () => {
+            const p = appSettings.precision;
+            const c = cur();
+            let realizedPnl = 0;
+            let wonCount = 0;
+            let lostCount = 0;
+            let activeCount = 0;
+            let totalInvestedClosed = 0;
+
+            savedSlips.forEach(s => {
+                if (s.status === 'won' || s.status === 'lost') {
+                    realizedPnl += (s.realizedProfit || 0);
+                    totalInvestedClosed += (s.totalStake || 0);
+                    if (s.status === 'won') wonCount++;
+                    if (s.status === 'lost') lostCount++;
+                } else if (s.status === 'pending' || s.status === 'hedged') {
+                    activeCount++;
+                }
+            });
+
+            const totalClosed = wonCount + lostCount;
+            const winRate = totalClosed > 0 ? ((wonCount / totalClosed) * 100).toFixed(0) : '0';
+            const roi = totalInvestedClosed > 0 ? ((realizedPnl / totalInvestedClosed) * 100).toFixed(1) : '0';
+
+            const pnlEl = document.getElementById('menuStatPnl');
+            const roiEl = document.getElementById('menuStatRoi');
+            const actEl = document.getElementById('menuStatActive');
+
+            if (pnlEl) {
+                const prefix = realizedPnl >= 0 ? '+' : '';
+                pnlEl.textContent = `${prefix}${realizedPnl.toFixed(p)}${c}`;
+                pnlEl.style.color = realizedPnl >= 0 ? 'var(--green-accent)' : 'var(--danger-accent)';
+            }
+            if (roiEl) {
+                roiEl.textContent = `${roi}% | ${winRate}%`;
+            }
+            if (actEl) {
+                actEl.textContent = activeCount.toString();
+            }
+        };
 
         // ==================== منطق التبويب الأول: التغطية الثنائية ====================
         const capitalInput = document.getElementById('capital');
@@ -3172,7 +4051,13 @@
             const cLost = savedSlips.filter(s => s.status === 'lost').length;
             const activeCount = cPending + cHedged;
 
-            document.getElementById('slipsBadge').textContent = activeCount;
+            const elSlipsBadge = document.getElementById('slipsBadge');
+            if (elSlipsBadge) elSlipsBadge.textContent = activeCount;
+            const elBottomBadge = document.getElementById('bottomSlipsBadge');
+            if (elBottomBadge) elBottomBadge.textContent = activeCount;
+            const elPillBadge = document.getElementById('pillSlipsBadge');
+            if (elPillBadge) elPillBadge.textContent = activeCount;
+
             document.getElementById('statPendingCount').textContent = activeCount;
             document.getElementById('statWonCount').textContent = cWon;
             document.getElementById('statLostCount').textContent = cLost;
@@ -3404,6 +4289,7 @@
                     </div>
                 `;
             }).join('');
+            updateMenuStats();
         };
 
         document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -3434,8 +4320,70 @@
             applySettings();
         };
 
-        document.getElementById('themeQuickBtn').addEventListener('click', () => setTheme(appSettings.theme === 'dark' ? 'light' : 'dark'));
-        document.getElementById('themeSelect').addEventListener('change', (e) => setTheme(e.target.value));
+        const toggleTheme = () => {
+            const nextTheme = appSettings.theme === 'dark' ? 'light' : 'dark';
+            setTheme(nextTheme);
+            showToast(nextTheme === 'dark' ? '🌙 تم تفعيل الوضع الداكن' : '☀️ تم تفعيل الوضع الفاتح');
+        };
+
+        const quickThemeBtn = document.getElementById('themeQuickBtn');
+        if (quickThemeBtn) quickThemeBtn.addEventListener('click', toggleTheme);
+
+        const menuThemeCard = document.getElementById('menuThemeToggleBtn');
+        if (menuThemeCard) menuThemeCard.addEventListener('click', toggleTheme);
+
+        // تفاعلات تبويب القائمة (tabMenu)
+        const menuGoSlips = document.getElementById('menuGoToSlipsBtn');
+        if (menuGoSlips) menuGoSlips.addEventListener('click', () => switchTab('tab3'));
+
+        const menuOpenSet = document.getElementById('menuOpenSettingsItem');
+        if (menuOpenSet) menuOpenSet.addEventListener('click', () => settingsModal.classList.add('open'));
+
+        const menuOpenHlp = document.getElementById('menuOpenHelpItem');
+        if (menuOpenHlp) menuOpenHlp.addEventListener('click', () => {
+            helpGuideModal.classList.add('open');
+            loadAndRenderGuide();
+        });
+
+        const menuExp = document.getElementById('menuExportItem');
+        if (menuExp) menuExp.addEventListener('click', () => document.getElementById('exportDataBtn').click());
+
+        const menuImp = document.getElementById('menuImportItem');
+        if (menuImp) menuImp.addEventListener('click', () => document.getElementById('importDataBtn').click());
+
+        const menuInst = document.getElementById('menuInstallItem');
+        if (menuInst) menuInst.addEventListener('click', () => triggerAppInstall());
+
+        const menuClrHist = document.getElementById('menuClearHistoryBtn');
+        if (menuClrHist) menuClrHist.addEventListener('click', () => document.getElementById('clearHistoryBtn').click());
+
+        const menuClrSlips = document.getElementById('menuClearSlipsBtn');
+        if (menuClrSlips) menuClrSlips.addEventListener('click', () => document.getElementById('clearSlipsBtn').click());
+
+        // فلترة وعمليات السجل الشامل (tab4)
+        document.querySelectorAll('.history-filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.history-filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentHistoryFilter = btn.dataset.hfilter;
+                renderFullHistory();
+            });
+        });
+
+        const clearHistoryTab4 = document.getElementById('clearAllHistoryTab4Btn');
+        if (clearHistoryTab4) {
+            clearHistoryTab4.addEventListener('click', () => {
+                if (!confirm('هل تريد مسح جميع سجلات العمليات؟')) return;
+                historyTab1 = [];
+                historyTab2 = [];
+                localStorage.removeItem('arb_history_t1');
+                localStorage.removeItem('arb_history_t2');
+                renderHistoryTab1();
+                renderHistoryTab2();
+                renderFullHistory();
+                showToast('تم مسح جميع السجلات بنجاح');
+            });
+        }
 
         document.getElementById('currencySelect').addEventListener('change', (e) => {
             appSettings.currency = e.target.value;
@@ -3501,6 +4449,7 @@
                     renderSlips();
                     renderHistoryTab1();
                     renderHistoryTab2();
+                    renderFullHistory();
                     showToast('✅ تمت استعادة البيانات بنجاح!');
                 } catch {
                     showToast('❌ ملف غير صالح!');
@@ -3523,6 +4472,7 @@
             localStorage.removeItem('arb_history_t2');
             renderHistoryTab1();
             renderHistoryTab2();
+            renderFullHistory();
             settingsModal.classList.remove('open');
             showToast('تم مسح السجلات السريعة');
         });
@@ -3544,6 +4494,8 @@
         renderHistoryTab2();
         updateTab2();
         renderSlips();
+        renderFullHistory();
+        updateMenuStats();
         updateInstallUI();
     </script>
 </body>
