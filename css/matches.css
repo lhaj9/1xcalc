@@ -265,19 +265,163 @@
             justify-content: space-between;
         }
 
+        /* ==================== شريط التحكم في مجموعات الأيام (Day Groups Toolbar) ==================== */
+        .day-groups-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 6px 12px;
+            margin: 12px 0 8px 0;
+            font-size: 0.73rem;
+            color: var(--text-muted);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .day-groups-summary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .day-groups-toggle-btns {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-group-toggle {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 7px;
+            padding: 3px 9px;
+            font-size: 0.69rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-group-toggle:hover, .btn-group-toggle:active {
+            background: var(--accent-bg);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        /* ==================== تصميم وتفاعل طي وفتح الأيام (Collapsible Day Groups) ==================== */
+        .day-group-section {
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+
         .day-group-header {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 11px;
-            padding: 7px 11px;
-            margin-top: 13px;
+            border-radius: 12px;
+            padding: 8px 12px;
+            margin-top: 10px;
             margin-bottom: 8px;
-            font-size: 0.77rem;
+            font-size: 0.78rem;
             font-weight: 900;
             color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.18s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .day-group-header:hover {
+            border-color: var(--accent-primary);
+            background: var(--accent-bg, rgba(59, 130, 246, 0.05));
+        }
+
+        .day-group-header:active {
+            transform: scale(0.99);
+        }
+
+        .day-group-title {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-weight: 900;
+        }
+
+        .day-group-icon {
+            font-size: 0.88rem;
+        }
+
+        .day-group-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .day-group-badge {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2px 9px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            transition: all 0.18s ease;
+        }
+
+        .day-group-chevron {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* حالة الفتح: السهم متجه لأسفل والمباريات ظاهرة */
+        .day-group-section:not(.is-collapsed) .day-group-chevron {
+            transform: rotate(0deg);
+        }
+
+        .day-group-body {
+            display: block;
+            animation: fadeInGroup 0.22s ease-out;
+        }
+
+        /* حالة الطي: تدوير السهم وإخفاء المباريات */
+        .day-group-section.is-collapsed .day-group-chevron {
+            transform: rotate(90deg);
+        }
+
+        .day-group-section.is-collapsed .day-group-header {
+            margin-bottom: 0;
+            opacity: 0.92;
+        }
+
+        .day-group-section.is-collapsed .day-group-badge {
+            background: var(--accent-bg);
+            color: var(--accent-primary);
+            border-color: rgba(59, 130, 246, 0.25);
+        }
+
+        .day-group-section.is-collapsed .day-group-body {
+            display: none;
+        }
+
+        @keyframes fadeInGroup {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .match-card {

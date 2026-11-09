@@ -479,7 +479,7 @@
                 });
             }
 
-            // تجميع باقي المباريات بحسب الأيام
+            // تجميع باقي المباريات بحسب الأيام مع دعم الطي والفتح الذكي
             if (otherMatches.length > 0) {
                 const dayGroups = {};
                 otherMatches.forEach(ev => {
@@ -489,18 +489,85 @@
                     dayGroups[dayKey].push(ev);
                 });
 
-                for (const [dayTitle, matches] of Object.entries(dayGroups)) {
+                const dayEntries = Object.entries(dayGroups);
+
+                // شريط أدوات سريع للتحكم (توسيع الكل / طي الكل) يظهر عند وجود أكثر من يوم
+                if (dayEntries.length > 1) {
                     html += `
-                        <div class="day-group-header">
-                            <span>📅 ${dayTitle}</span>
-                            <span style="font-size:0.69rem; color:var(--text-muted);">${matches.length} مباريات</span>
+                        <div class="day-groups-toolbar">
+                            <span class="day-groups-summary">
+                                <i class="fa-regular fa-calendar-days"></i> ${dayEntries.length} أيام (${otherMatches.length} مباراة)
+                            </span>
+                            <div class="day-groups-toggle-btns">
+                                <button type="button" class="btn-group-toggle" onclick="toggleAllDayGroups(false)" title="فتح وتوسيع جميع الأيام">
+                                    <i class="fa-solid fa-angles-down"></i> توسيع الكل
+                                </button>
+                                <button type="button" class="btn-group-toggle" onclick="toggleAllDayGroups(true)" title="طي جميع الأيام">
+                                    <i class="fa-solid fa-angles-up"></i> طي الكل
+                                </button>
+                            </div>
                         </div>
                     `;
-
-                    matches.forEach(ev => {
-                        html += buildMatchCardHTML(ev);
-                    });
                 }
+
+                // المنطق الذكي لحالة الفتح/الطي الافتراضية:
+                // الحد الأقصى التقريبي للمباريات المفتوحة افتراضياً بين 10 إلى 15 مباراة.
+                // التاريخ الأول دائماً مفتوح بالكامل مهما كان عدد مبارياته (مثلاً 17 مباراة تظهر كلها ولا تُقص).
+                // التواريخ التالية تظل مفتوحة فقط طالما لم يتجاوز المجموع التراكمي عتبة 10 مباريات، وما زاد عن ذلك يُطوى افتراضياً.
+                const DEFAULT_MATCHES_THRESHOLD = 10;
+                let accumulatedOpenMatches = 0;
+                const hasActiveSearch = Boolean(query);
+
+                dayEntries.forEach(([dayTitle, matches], index) => {
+                    const dayId = `dayGroup_${index}`;
+                    let isCollapsed = false;
+
+                    if (hasActiveSearch) {
+                        isCollapsed = false;
+                    } else if (index === 0) {
+                        // اليوم الأول مفتوح دائماً بالكامل
+                        isCollapsed = false;
+                        accumulatedOpenMatches += matches.length;
+                    } else {
+                        // الأيام اللاحقة: إن كان المجموع حتى الآن أقل من الحد، يظل مفتوحاً
+                        if (accumulatedOpenMatches < DEFAULT_MATCHES_THRESHOLD) {
+                            isCollapsed = false;
+                            accumulatedOpenMatches += matches.length;
+                        } else {
+                            // تجاوز الحد الأقصى -> يتم طي هذا التاريخ وما بعده افتراضياً
+                            isCollapsed = true;
+                        }
+                    }
+
+                    let dayCardsHtml = '';
+                    matches.forEach(ev => {
+                        dayCardsHtml += buildMatchCardHTML(ev);
+                    });
+
+                    html += `
+                        <div class="day-group-section ${isCollapsed ? 'is-collapsed' : ''}" id="${dayId}">
+                            <div class="day-group-header" 
+                                 onclick="toggleDayGroup('${dayId}')" 
+                                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDayGroup('${dayId}');}"
+                                 role="button" 
+                                 tabindex="0" 
+                                 aria-expanded="${!isCollapsed}"
+                                 title="انقر لطي أو فتح مباريات هذا التاريخ">
+                                <div class="day-group-title">
+                                    <span class="day-group-icon">📅</span>
+                                    <span>${dayTitle}</span>
+                                </div>
+                                <div class="day-group-meta">
+                                    <span class="day-group-badge">${matches.length} مباريات</span>
+                                    <i class="fa-solid fa-chevron-down day-group-chevron"></i>
+                                </div>
+                            </div>
+                            <div class="day-group-body">
+                                ${dayCardsHtml}
+                            </div>
+                        </div>
+                    `;
+                });
             }
 
             container.innerHTML = html;
@@ -684,6 +751,29 @@
             loadMatches(false);
         };
 
+
+window.toggleDayGroup = (dayId) => {
+    const section = document.getElementById(dayId);
+    if (!section) return;
+    section.classList.toggle('is-collapsed');
+    const isCollapsed = section.classList.contains('is-collapsed');
+    const header = section.querySelector('.day-group-header');
+    if (header) {
+        header.setAttribute('aria-expanded', !isCollapsed);
+    }
+};
+
+window.toggleAllDayGroups = (collapse = true) => {
+    document.querySelectorAll('.day-group-section').forEach(sec => {
+        if (collapse) {
+            sec.classList.add('is-collapsed');
+            sec.querySelector('.day-group-header')?.setAttribute('aria-expanded', 'false');
+        } else {
+            sec.classList.remove('is-collapsed');
+            sec.querySelector('.day-group-header')?.setAttribute('aria-expanded', 'true');
+        }
+    });
+};
 
 window.loadMatches = loadMatches;
 window.switchMatchesStatusMode = switchMatchesStatusMode;
