@@ -194,14 +194,18 @@
         }
 
         .brand-area {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
+            direction: ltr !important;
+            unicode-bidi: isolate;
         }
 
         .brand-1xbet {
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            direction: ltr !important;
+            unicode-bidi: isolate;
             font-size: 1.55rem;
             font-weight: 950;
             font-style: italic;
@@ -2035,10 +2039,10 @@
 
         <!-- هيدر تطبيق 1XCALC المستوحى من 1xBet -->
         <header class="app-header">
-            <div class="brand-area">
-                <div class="brand-1xbet">
+            <div class="brand-area" dir="ltr">
+                <span class="brand-1xbet" dir="ltr">
                     <span class="logo-1x">1X</span><span class="logo-bet">CALC</span>
-                </div>
+                </span>
                 <span class="brand-pro-tag">PRO</span>
             </div>
             <div class="header-actions">
@@ -2054,42 +2058,7 @@
             </div>
         </header>
 
-        <!-- زران تفاعليان علويان مثل Log In & Registration في 1xBet للوصول المباشر -->
-        <div class="quick-action-bar">
-            <button type="button" class="action-btn-blue tab-trigger active" data-target-tab="tab1">
-                <i class="fa-solid fa-fire"></i>
-                <span>التغطية الآنية (Arbitrage)</span>
-            </button>
-            <button type="button" class="action-btn-green tab-trigger" data-target-tab="tab2">
-                <i class="fa-solid fa-bolt"></i>
-                <span>المتأخرة والمباشر (Live)</span>
-            </button>
-        </div>
-
-        <!-- شريط التبويبات الدائرية الأفقية القابلة للتمرير (Horizontal Scrollable Pills) -->
-        <nav class="category-pills-bar" id="categoryPillsBar">
-            <button type="button" class="cat-pill active" data-tab="tab1">
-                <i class="fa-solid fa-fire"></i>
-                <span>الآنية</span>
-            </button>
-            <button type="button" class="cat-pill" data-tab="tab2">
-                <i class="fa-solid fa-bolt"></i>
-                <span>المتأخرة</span>
-            </button>
-            <button type="button" class="cat-pill" data-tab="tab3">
-                <i class="fa-solid fa-ticket"></i>
-                <span>القسائم</span>
-                <span class="pill-badge" id="pillSlipsBadge">0</span>
-            </button>
-            <button type="button" class="cat-pill" data-tab="tab4">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-                <span>السجل</span>
-            </button>
-            <button type="button" class="cat-pill" data-tab="tabMenu">
-                <i class="fa-solid fa-table-cells-large"></i>
-                <span>القائمة</span>
-            </button>
-        </nav>
+        
 
         <!-- ==================== التبويب الأول: التغطية الثنائية الآنية ==================== -->
         <section id="tab1" class="tab-panel active">
@@ -3266,9 +3235,9 @@
                 if (currentIndex === -1) return;
 
                 // في RTL: السحب لليسار (diffX < 0) يعني التالي، والسحب لليمين (diffX > 0) يعني السابق
-                if (diffX < 0 && currentIndex < availableTabs.length - 1) {
+                if (diffX > 0 && currentIndex < availableTabs.length - 1) {
                     switchTab(availableTabs[currentIndex + 1]);
-                } else if (diffX > 0 && currentIndex > 0) {
+                } else if (diffX < 0 && currentIndex > 0) {
                     switchTab(availableTabs[currentIndex - 1]);
                 }
             }
