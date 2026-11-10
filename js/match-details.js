@@ -246,10 +246,16 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn-stats-hero-calc" onclick="transferMatchToCalc('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}'); closeMatchStats();">
-                        <i class="fa-solid fa-calculator"></i>
-                        <span>فتح وحساب صفقة لهذه المباراة في الحاسبة ⚡</span>
-                    </button>
+                    <div class="stats-hero-actions-bar">
+                        <button type="button" class="btn-hero-action-calc" onclick="transferMatchToCalc('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}'); closeMatchStats();" title="فتح وحساب صفقة لهذه المباراة في الحاسبة">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>حساب الصفقة ⚡</span>
+                        </button>
+                        <button type="button" class="btn-hero-action-copy" onclick="copyMatchTitle('${matchTitle.replace(/'/g, "\\'")}')" title="نسخ اسم المباراة">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>نسخ اسم المباراة</span>
+                        </button>
+                    </div>
                 `;
             }
 

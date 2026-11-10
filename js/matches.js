@@ -960,7 +960,7 @@
 
         let html = '';
 
-        // إذا تم اختيار فلتر "مباشر" حصراً، نعرض المباريات المباشرة مباشرة
+        // 1. إذا تم اختيار فلتر "مباشر" حصراً، نعرض المباريات المباشرة مقسمة حسب الدوريات بقوائم مفتوحة
         if (currentStatusMode === 'live') {
             html += `
                 <div class="live-section-banner" style="margin-bottom: 10px;">
@@ -971,14 +971,28 @@
                     <span style="direction:ltr;">${filtered.length} Live</span>
                 </div>
             `;
+
+            const liveLeagueGroups = {};
             filtered.forEach(ev => {
-                html += buildMatchCardHTML(ev);
+                const lKey = ev.leagueMeta?.name || ev.leagueCode || 'unknown';
+                if (!liveLeagueGroups[lKey]) {
+                    liveLeagueGroups[lKey] = {
+                        meta: ev.leagueMeta || { name: 'بطولة رياضية', country: 'دولي' },
+                        matches: []
+                    };
+                }
+                liveLeagueGroups[lKey].matches.push(ev);
             });
+
+            let tIdx = 0;
+            for (const grp of Object.values(liveLeagueGroups)) {
+                html += renderTournamentGroup(grp, `liveTournCard_${tIdx++}`, false);
+            }
             container.innerHTML = html;
             return;
         }
 
-        // عرض المباريات العادي: حسب البطولة في اليوم المحدد (SofaScore Tournament Cards)
+        // 2. عرض المباريات في اليوم المحدد مقسمة حسب الدوريات والبلدان بقوائم منسدلة مفتوحة
         if (currentTimeFilter === 'day') {
             const leagueGroups = {};
             filtered.forEach(ev => {
@@ -992,48 +1006,32 @@
                 leagueGroups[lKey].matches.push(ev);
             });
 
-            for (const [lKey, grp] of Object.entries(leagueGroups)) {
-                const isFav = favoriteLeagues.has(grp.matches[0]?.leagueCode);
-                const logoImg = grp.meta.logo
-                    ? `<img src="${grp.meta.logo}" class="sofa-tourn-logo" alt="" onerror="this.style.display='none'">`
-                    : '';
-                const flagImg = grp.meta.flagImg
-                    ? `<img src="${grp.meta.flagImg}" class="sofa-tourn-flag" alt="" onerror="this.style.display='none'">`
-                    : '';
+            const tournEntries = Object.entries(leagueGroups);
 
+            if (tournEntries.length > 1) {
                 html += `
-                    <div class="sofa-tournament-card">
-                        <div class="sofa-tourn-header">
-                            <div class="sofa-tourn-title-wrap">
-                                ${logoImg || flagImg}
-                                <div class="sofa-tourn-titles">
-                                    <span class="sofa-tourn-name">${grp.meta.name}</span>
-                                    <span class="sofa-tourn-country">${grp.meta.country || 'دولي'}</span>
-                                </div>
-                            </div>
-                            <div class="sofa-tourn-meta">
-                                <span class="sofa-tourn-count">${grp.matches.length} مباريات</span>
-                                <button type="button" class="sofa-star-btn ${isFav ? 'is-fav' : ''}" 
-                                        onclick="event.stopPropagation(); toggleFavoriteLeague('${grp.matches[0]?.leagueCode || lKey}')" 
-                                        title="${isFav ? 'إزالة من المفضلة' : 'تثبيت في المفضلة'}">
-                                    <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="sofa-tourn-matches">
-                `;
-
-                grp.matches.forEach(ev => {
-                    html += buildMatchCardHTML(ev);
-                });
-
-                html += `
+                    <div class="tourn-groups-toolbar">
+                        <span class="tourn-summary">
+                            <i class="fa-solid fa-trophy"></i> ${tournEntries.length} دوريات (${filtered.length} مباراة)
+                        </span>
+                        <div class="tourn-toggle-btns">
+                            <button type="button" class="btn-group-toggle" onclick="toggleAllTournGroups(false)" title="فتح وتوسيع جميع الدوريات">
+                                <i class="fa-solid fa-angles-down"></i> توسيع الكل
+                            </button>
+                            <button type="button" class="btn-group-toggle" onclick="toggleAllTournGroups(true)" title="طي جميع الدوريات">
+                                <i class="fa-solid fa-angles-up"></i> طي الكل
+                            </button>
                         </div>
                     </div>
                 `;
             }
+
+            let tIdx = 0;
+            for (const [, grp] of tournEntries) {
+                html += renderTournamentGroup(grp, `tournCard_${tIdx++}`, false);
+            }
         } else {
-            // وضع التواريخ المتعددة مع نظام الطي والفتح الذكي
+            // 3. وضع التواريخ المتعددة مع نظام الطي والفتح الذكي وتقسيم الدوريات داخل كل يوم
             const dayGroups = {};
             filtered.forEach(ev => {
                 const d = new Date(ev.date);
@@ -1062,7 +1060,7 @@
                 `;
             }
 
-            const DEFAULT_MATCHES_THRESHOLD = 10;
+            const DEFAULT_MATCHES_THRESHOLD = 15;
             let accumulatedOpenMatches = 0;
             const hasActiveSearch = Boolean(query);
 
@@ -1084,10 +1082,24 @@
                     }
                 }
 
-                let dayCardsHtml = '';
+                // تقسيم مباريات كل يوم حسب البطولات والدوريات بقوائم منسدلة
+                const dayLeagueGroups = {};
                 matches.forEach(ev => {
-                    dayCardsHtml += buildMatchCardHTML(ev);
+                    const lKey = ev.leagueMeta?.name || ev.leagueCode || 'unknown';
+                    if (!dayLeagueGroups[lKey]) {
+                        dayLeagueGroups[lKey] = {
+                            meta: ev.leagueMeta || { name: 'بطولة رياضية', country: 'دولي' },
+                            matches: []
+                        };
+                    }
+                    dayLeagueGroups[lKey].matches.push(ev);
                 });
+
+                let dayCardsHtml = '';
+                let dTournIdx = 0;
+                for (const grp of Object.values(dayLeagueGroups)) {
+                    dayCardsHtml += renderTournamentGroup(grp, `dayTournCard_${index}_${dTournIdx++}`, false);
+                }
 
                 html += `
                     <div class="day-group-section ${isCollapsed ? 'is-collapsed' : ''}" id="${dayId}">
@@ -1118,7 +1130,7 @@
         container.innerHTML = html;
     };
 
-    const buildMatchCardHTML = (ev) => {
+    function buildMatchCardHTML(ev) {
         const comp = ev.competitions?.[0] || {};
         const competitors = comp.competitors || [];
         const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
@@ -1141,7 +1153,7 @@
         if (isLive) {
             badgeHtml = `<span class="match-status-badge status-live"><span class="live-dot-pulse"></span> <span class="live-min-text">مباشر ${statusDetail}</span></span>`;
         } else if (isFinished) {
-            badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-check-double"></i> انتهت (${statusDetail})</span>`;
+            badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-check"></i> ${statusDetail || 'انتهت'}</span>`;
         } else {
             badgeHtml = `<span class="match-status-badge status-pre"><i class="fa-regular fa-clock"></i> ${formatMatchTime(ev.date)}</span>`;
         }
@@ -1150,7 +1162,6 @@
         const awayLogo = away.team?.logo || './icon-192.png';
         const homeName = home.team?.displayName || home.team?.name || 'المضيف';
         const awayName = away.team?.displayName || away.team?.name || 'الضيف';
-        const matchTitle = `${homeName} ضد ${awayName}`;
 
         let scoreCenter = '';
         if ((isLive || isFinished) && hasScores) {
@@ -1198,21 +1209,9 @@
             `;
         }
 
-        const leagueLogoImg = ev.leagueMeta?.logo 
-            ? `<img src="${ev.leagueMeta.logo}" class="league-card-mini-logo" alt="" onerror="this.style.display='none'">` 
-            : '';
-        const leagueFlagImg = ev.leagueMeta?.flagImg 
-            ? `<img src="${ev.leagueMeta.flagImg}" class="league-card-flag" alt="" onerror="this.style.display='none'">` 
-            : '';
-
         return `
             <div class="match-card ${isLive ? 'is-live' : ''}" data-event-id="${ev.id}" onclick="openMatchStats('${ev.id}', '${ev.leagueCode || currentLeague}')" title="انقر لعرض إحصائيات وتفاصيل المباراة">
                 <div class="match-card-top">
-                    <span class="league-tag">
-                        ${leagueLogoImg}
-                        ${leagueFlagImg}
-                        <span>${ev.leagueMeta?.name || 'رياضة'}</span>
-                    </span>
                     ${badgeHtml}
                 </div>
 
@@ -1231,24 +1230,67 @@
                         ${awayWon ? '<span class="winner-tag">فائز ✓</span>' : ''}
                     </div>
                 </div>
+            </div>
+        `;
+    }
 
-                <div class="match-card-footer">
-                    <div class="match-action-tools">
-                        <button type="button" class="btn-match-calc" onclick="event.stopPropagation(); transferMatchToCalc('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}')" title="فتح وحساب صفقة في الحاسبة مباشرة">
-                            <i class="fa-solid fa-bolt"></i>
-                            <span>حساب الصفقة ⚡</span>
-                        </button>
-                        <button type="button" class="btn-match-stats" onclick="event.stopPropagation(); openMatchStats('${ev.id}', '${ev.leagueCode || currentLeague}')" title="عرض الإحصائيات">
-                            <i class="fa-solid fa-chart-simple"></i>
-                            <span>الإحصائيات</span>
-                        </button>
-                        <button type="button" class="btn-match-copy" onclick="event.stopPropagation(); copyMatchTitle('${matchTitle.replace(/'/g, "\\'")}')" title="نسخ اسم المباراة">
-                            <i class="fa-regular fa-copy"></i>
-                        </button>
+    function renderTournamentGroup(grp, tournId, isCollapsed = false) {
+        const isFav = favoriteLeagues.has(grp.matches[0]?.leagueCode);
+        const logoImg = grp.meta.logo
+            ? `<img src="${grp.meta.logo}" class="sofa-tourn-logo" alt="" onerror="this.style.display='none'">`
+            : '';
+        const flagImg = grp.meta.flagImg
+            ? `<img src="${grp.meta.flagImg}" class="sofa-tourn-flag" alt="" onerror="this.style.display='none'">`
+            : '';
+
+        let matchesHtml = '';
+        grp.matches.forEach(ev => {
+            matchesHtml += buildMatchCardHTML(ev);
+        });
+
+        return `
+            <div class="sofa-tournament-card ${isCollapsed ? 'is-collapsed' : ''}" id="${tournId}">
+                <div class="sofa-tourn-header" onclick="toggleTournGroup('${tournId}')" role="button" tabindex="0" aria-expanded="${!isCollapsed}" title="انقر لطي أو فتح مباريات هذه البطولة">
+                    <div class="sofa-tourn-title-wrap">
+                        ${logoImg || flagImg}
+                        <div class="sofa-tourn-titles">
+                            <span class="sofa-tourn-name">${grp.meta.name}</span>
+                            <span class="sofa-tourn-country">${grp.meta.country || 'دولي'}</span>
+                        </div>
                     </div>
+                    <div class="sofa-tourn-meta">
+                        <span class="sofa-tourn-count">${grp.matches.length} مباريات</span>
+                        <button type="button" class="sofa-star-btn ${isFav ? 'is-fav' : ''}" 
+                                onclick="event.stopPropagation(); toggleFavoriteLeague('${grp.matches[0]?.leagueCode || tournId}')" 
+                                title="${isFav ? 'إزالة من المفضلة' : 'تثبيت في المفضلة'}">
+                            <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
+                        </button>
+                        <i class="fa-solid fa-chevron-down sofa-tourn-chevron"></i>
+                    </div>
+                </div>
+                <div class="sofa-tourn-matches">
+                    ${matchesHtml}
                 </div>
             </div>
         `;
+    }
+
+    window.toggleTournGroup = (tournId) => {
+        const card = document.getElementById(tournId);
+        if (!card) return;
+        card.classList.toggle('is-collapsed');
+        const header = card.querySelector('.sofa-tourn-header');
+        if (header) {
+            const isCollapsed = card.classList.contains('is-collapsed');
+            header.setAttribute('aria-expanded', !isCollapsed);
+        }
+    };
+
+    window.toggleAllTournGroups = (collapse = true) => {
+        document.querySelectorAll('.sofa-tournament-card').forEach(card => {
+            card.classList.toggle('is-collapsed', collapse);
+            card.querySelector('.sofa-tourn-header')?.setAttribute('aria-expanded', !collapse);
+        });
     };
 
     window.transferMatchToCalc = (matchTitle, mode = 'arbitrage') => {

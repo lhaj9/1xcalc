@@ -325,18 +325,27 @@
             max-width: 140px;
         }
 
-        /* زر الحساب والتغطية المباشر المدمج داخل بطاقة النتيجة */
-        .btn-stats-hero-calc {
+        /* أزرار الإجراءات السريعة (حساب الصفقة والنسخ) داخل بطاقة النتيجة البارزة */
+        .stats-hero-actions-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             width: 100%;
-            background: linear-gradient(135deg, #1055a4 0%, #1e70e9 100%);
+            margin-top: 4px;
+        }
+
+        .btn-hero-action-calc {
+            flex: 1.5;
+            background: linear-gradient(135deg, #0e52a8 0%, #1d72ee 100%);
             color: #ffffff;
             border: none;
             border-radius: 11px;
-            padding: 9px 12px;
-            font-size: 0.78rem;
+            padding: 10px 14px;
+            font-size: 0.82rem;
             font-weight: 800;
+            font-family: inherit;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
@@ -344,7 +353,34 @@
             transition: all 0.15s ease;
         }
 
-        .btn-stats-hero-calc:active {
+        .btn-hero-action-calc:active {
+            transform: scale(0.97);
+        }
+
+        .btn-hero-action-copy {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 11px;
+            padding: 10px 12px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-hero-action-copy:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .btn-hero-action-copy:active {
             transform: scale(0.97);
         }
 
