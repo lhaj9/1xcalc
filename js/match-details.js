@@ -182,6 +182,28 @@
             const heroBanner = document.getElementById('statsHeroBanner');
             if (heroBanner) {
                 let scoreCenterHtml = '';
+                const rLower = (statusDetail || '').toLowerCase();
+                let cleanStatus = statusDetail;
+                if (isFinished) {
+                    cleanStatus = 'انتهت المباراة';
+                    if (rLower.includes('postponed')) cleanStatus = 'مباراة مؤجلة';
+                    else if (rLower.includes('cancel')) cleanStatus = 'مباراة ملغاة';
+                    else if (rLower.includes('aet')) cleanStatus = 'بعد التمديد (AET)';
+                    else if (rLower.includes('pen')) cleanStatus = 'ركلات الترجيح';
+                } else if (!isLive) {
+                    cleanStatus = 'لم تبدأ بعد';
+                    if (rLower.includes('postponed')) cleanStatus = 'مباراة مؤجلة';
+                    else if (rLower.includes('cancel')) cleanStatus = 'مباراة ملغاة';
+                    else if (rawDate) {
+                        try {
+                            const dObj = new Date(rawDate);
+                            cleanStatus = dObj.toLocaleTimeString('ar-MA', { hour: '2-digit', minute: '2-digit' });
+                        } catch {
+                            cleanStatus = 'قادمة';
+                        }
+                    }
+                }
+
                 if ((isLive || isFinished) && hasScore) {
                     scoreCenterHtml = `
                         <div class="stats-hero-center">
@@ -195,7 +217,7 @@
                                 </span>
                             </div>
                             <span class="stats-hero-status ${isLive ? 'tag-live' : 'tag-post'}">
-                                ${isLive ? '<span class="live-dot-pulse"></span> ' : ''}${statusDetail}
+                                ${isLive ? '<span class="live-dot-pulse"></span> ' + statusDetail : cleanStatus}
                             </span>
                             ${venueName ? `<span class="stats-hero-venue">🏟️ ${venueName}</span>` : ''}
                         </div>
@@ -209,7 +231,7 @@
                                 <span class="stats-hero-score-num digit-live">0</span>
                             </div>
                             <span class="stats-hero-status tag-live">
-                                <span class="live-dot-pulse"></span> ${statusDetail}
+                                <span class="live-dot-pulse"></span> ${statusDetail || 'مباشر'}
                             </span>
                             ${venueName ? `<span class="stats-hero-venue">🏟️ ${venueName}</span>` : ''}
                         </div>
@@ -223,7 +245,7 @@
                                 <span class="stats-hero-sep">:</span>
                                 <span class="stats-hero-score-num score-pre-dash">-</span>
                             </div>
-                            <span class="stats-hero-status tag-pre">${statusDetail || 'لم تبدأ بعد'}</span>
+                            <span class="stats-hero-status tag-pre">${cleanStatus}</span>
                             ${venueName ? `<span class="stats-hero-venue">🏟️ ${venueName}</span>` : ''}
                         </div>
                     `;

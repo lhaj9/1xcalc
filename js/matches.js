@@ -1149,11 +1149,29 @@
         const homeWon = isFinished && hasScores && (homeScore > awayScore);
         const awayWon = isFinished && hasScores && (awayScore > homeScore);
 
+        const rLower = rawDetail.toLowerCase();
+        let preStatusText = 'قادمة';
+        let postStatusText = 'انتهت';
+
+        if (rLower.includes('postponed')) {
+            preStatusText = 'مؤجلة';
+            postStatusText = 'مؤجلة';
+        } else if (rLower.includes('cancel')) {
+            preStatusText = 'ملغاة';
+            postStatusText = 'ملغاة';
+        } else if (rLower.includes('aet')) {
+            postStatusText = 'بعد التمديد';
+        } else if (rLower.includes('pen')) {
+            postStatusText = 'ركلات ترجيح';
+        }
+
         let badgeHtml = '';
         if (isLive) {
             badgeHtml = `<span class="match-status-badge status-live"><span class="live-dot-pulse"></span> <span class="live-min-text">مباشر ${statusDetail}</span></span>`;
         } else if (isFinished) {
-            badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-check"></i> ${statusDetail || 'انتهت'}</span>`;
+            badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-check"></i> ${postStatusText}</span>`;
+        } else if (preStatusText !== 'قادمة') {
+            badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-calendar-xmark"></i> ${preStatusText}</span>`;
         } else {
             badgeHtml = `<span class="match-status-badge status-pre"><i class="fa-regular fa-clock"></i> ${formatMatchTime(ev.date)}</span>`;
         }
@@ -1177,7 +1195,7 @@
                         </span>
                     </div>
                     <span class="status-sub-label ${isLive ? 'live-label' : ''}">
-                        ${isLive ? `<span class="live-dot-pulse"></span> <span class="live-min-sub">${statusDetail}</span>` : (statusDetail || 'FT')}
+                        ${isLive ? `<span class="live-dot-pulse"></span> <span class="live-min-sub">${statusDetail}</span>` : postStatusText}
                     </span>
                 </div>
             `;
@@ -1195,6 +1213,7 @@
                 </div>
             `;
         } else {
+            // مباراة قادمة غير ملعوبة: عرض - : - وتحتها كلمة نظيفة بدون نصوص تاريخ إنجليزية طويلة
             scoreCenter = `
                 <div class="score-center-strip">
                     <div class="score-dual-row">
@@ -1203,7 +1222,7 @@
                         <span class="team-score-num score-pre-dash">-</span>
                     </div>
                     <span class="status-sub-label">
-                        ${statusDetail || 'قريباً'}
+                        ${preStatusText}
                     </span>
                 </div>
             `;
@@ -1380,6 +1399,7 @@
     // الربط والتصدير الخارجي
     window.loadMatches = loadMatches;
     window.renderMatchesList = renderMatchesList;
+    window.buildMatchCardHTML = buildMatchCardHTML;
     window.MAJOR_LEAGUES = MAJOR_LEAGUES;
     window.getSelectedDate = () => selectedDate;
 })();

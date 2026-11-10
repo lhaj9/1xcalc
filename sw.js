@@ -1,4 +1,4 @@
-const CACHE_NAME = 'arb-calc-pwa-v26';
+const CACHE_NAME = 'arb-calc-pwa-v27';
 const ASSETS = [
     './',
     './index.html',

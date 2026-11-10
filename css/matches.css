@@ -451,11 +451,12 @@
 
         .match-card-top {
             display: flex;
-            justify-content: flex-end;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 2px;
+            margin-bottom: 5px;
             font-size: 0.68rem;
             font-weight: 800;
+            width: 100%;
         }
 
         .league-tag {
@@ -566,24 +567,39 @@
             white-space: nowrap;
         }
 
-        /* تنسيق نتائج ومباريات الفرق بدون أي التباس في RTL */
+        /* تنسيق نتائج ومباريات الفرق متناظرة بدقة في الوسط ومؤطرة */
         .match-card-body {
             display: grid;
-            grid-template-columns: 1fr auto 1fr;
+            grid-template-columns: minmax(0, 1fr) 88px minmax(0, 1fr);
             align-items: center;
             gap: 8px;
-            padding: 2px 0;
+            padding: 3px 0;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .team-box {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             text-align: center;
-            gap: 3px;
-            padding: 2px 4px;
-            border-radius: 8px;
+            gap: 4px;
+            padding: 6px 5px;
+            border-radius: 10px;
+            background: var(--bg-input, rgba(0, 0, 0, 0.02));
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+            width: 100%;
+            min-width: 0;
+            max-width: 100%;
+            overflow: hidden;
             transition: all 0.2s ease;
+        }
+
+        .team-box.is-winner {
+            border-color: rgba(16, 185, 129, 0.35);
+            background: rgba(16, 185, 129, 0.04);
         }
 
         .team-box.is-winner .team-name-label {
@@ -592,16 +608,17 @@
         }
 
         .team-box.is-loser {
-            opacity: 0.65;
+            opacity: 0.7;
         }
 
         .team-crest {
             width: 28px;
             height: 28px;
             object-fit: contain;
-            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.2));
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.18));
             border-radius: 50%;
             padding: 1px;
+            flex-shrink: 0;
         }
 
         .team-name-label {
@@ -609,10 +626,14 @@
             font-weight: 800;
             line-height: 1.25;
             color: var(--text-main);
-            max-width: 120px;
+            width: 100%;
+            max-width: 100%;
+            text-align: center;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            box-sizing: border-box;
+            padding: 0 2px;
         }
 
         .winner-tag {
@@ -629,13 +650,18 @@
             gap: 3px;
         }
 
-        /* صندوق النتيجة المزدوج المتسق تماماً مع اتجاه الفرق في RTL */
+        /* صندوق النتيجة المزدوج المتسق تماماً في المنتصف */
         .score-center-strip {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-width: 65px;
+            width: 88px;
+            min-width: 88px;
+            max-width: 88px;
+            text-align: center;
+            overflow: hidden;
+            box-sizing: border-box;
         }
 
         .score-dual-row {
@@ -643,21 +669,24 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
+            width: 100%;
         }
 
         .team-score-num {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-weight: 950;
             line-height: 1;
             color: var(--text-main);
             min-width: 20px;
             text-align: center;
+            font-family: inherit;
         }
 
         .team-score-num.score-pre-dash {
             color: var(--text-muted);
             opacity: 0.75;
             font-weight: 800;
+            font-size: 1.25rem;
         }
 
         .team-score-num.digit-winner {
@@ -681,6 +710,22 @@
             color: var(--text-muted);
             opacity: 0.45;
             line-height: 1;
+        }
+
+        .status-sub-label {
+            font-size: 0.67rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            margin-top: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 88px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
 
         .status-sub-label {
