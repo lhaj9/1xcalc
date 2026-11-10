@@ -1383,6 +1383,13 @@
     cursor: pointer;
     flex-shrink: 0;
     transition: all 0.18s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.sofa-live-pill * {
+    pointer-events: none;
 }
 
 .sofa-live-pill.active {
@@ -1628,8 +1635,232 @@
     transform: scale(1.2);
 }
 
+/* ===================================================
+   تصميم صفوف مباريات SofaScore العالمية بدقة واحترافية
+   =================================================== */
 .sofa-tourn-matches {
-    padding: 4px 6px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sofa-match-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    gap: 8px;
+    direction: ltr; /* اتجاه مطابق لسوفاسكور العالمي: الوقت يسار، الفرق وسط، النتيجة يمين */
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    background: transparent;
+    transition: background 0.15s ease;
+    position: relative;
+}
+
+.sofa-match-row:last-child {
+    border-bottom: none;
+}
+
+.sofa-match-row:hover,
+.sofa-match-row:active {
+    background: var(--accent-bg, rgba(255, 255, 255, 0.04));
+}
+
+.sofa-match-row.is-live-row {
+    background: rgba(239, 68, 68, 0.035);
+}
+
+.sofa-match-row.is-live-row:hover,
+.sofa-match-row.is-live-row:active {
+    background: rgba(239, 68, 68, 0.07);
+}
+
+/* 1. عمود التوقيت والدقائق (يسار) */
+.sofa-row-time-col {
+    width: 52px;
+    min-width: 52px;
+    max-width: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 2px;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.sofa-row-time {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    line-height: 1.2;
+}
+
+.sofa-row-status {
+    font-size: 0.72rem;
+    line-height: 1.2;
+}
+
+.sofa-row-live-min {
+    font-size: 0.72rem;
+    font-weight: 900;
+    color: var(--danger-accent);
+    letter-spacing: -0.2px;
+}
+
+.sofa-row-post-text {
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    opacity: 0.85;
+}
+
+.sofa-row-sched-dash {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.sofa-row-postponed {
+    font-size: 0.64rem;
+    font-weight: 800;
+    color: var(--danger-accent);
+}
+
+/* 2. عمود الفريقين رأسياً (الوسط) */
+.sofa-row-teams-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 4px;
+}
+
+.sofa-row-team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    width: 100%;
+}
+
+.sofa-row-crest {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 50%;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+
+.sofa-row-team-name {
+    font-size: 0.83rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1;
+    text-align: left;
+    unicode-bidi: plaintext;
+}
+
+.sofa-row-team.is-winner .sofa-row-team-name {
+    font-weight: 950;
+    color: var(--text-main);
+}
+
+.sofa-row-team.is-loser {
+    opacity: 0.68;
+}
+
+/* 3. عمود النتيجة (يمين) */
+.sofa-row-scores-col {
+    width: 26px;
+    min-width: 26px;
+    max-width: 26px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.sofa-row-score {
+    font-size: 0.88rem;
+    font-weight: 900;
+    line-height: 20px;
+    height: 20px;
+    color: var(--text-main);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.sofa-row-score.score-live {
+    color: var(--danger-accent);
+}
+
+.sofa-row-score.score-winner {
+    font-weight: 950;
+    color: var(--text-main);
+}
+
+.sofa-row-score.score-loser {
+    opacity: 0.65;
+}
+
+.sofa-row-score.score-pre {
+    color: var(--text-muted);
+    opacity: 0.65;
+    font-size: 0.82rem;
+}
+
+/* 4. عمود التنبيه / الإجراء (أقصى اليمين) */
+.sofa-row-action-col {
+    width: 32px;
+    min-width: 32px;
+    max-width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.sofa-row-bell-btn {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-muted);
+    opacity: 0.6;
+    font-size: 0.82rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s ease;
+}
+
+.sofa-row-bell-btn:hover {
+    opacity: 1;
+    color: var(--accent-primary);
+    background: var(--accent-bg, rgba(255, 255, 255, 0.08));
 }
 
 /* 7. دليل البطولات والدوريات المنظم (SofaScore LEAGUES Tab) */

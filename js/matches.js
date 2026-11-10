@@ -1150,8 +1150,8 @@
         const awayWon = isFinished && hasScores && (awayScore > homeScore);
 
         const rLower = rawDetail.toLowerCase();
-        let preStatusText = 'قادمة';
-        let postStatusText = 'انتهت';
+        let preStatusText = '-';
+        let postStatusText = 'FT';
 
         if (rLower.includes('postponed')) {
             preStatusText = 'مؤجلة';
@@ -1160,20 +1160,9 @@
             preStatusText = 'ملغاة';
             postStatusText = 'ملغاة';
         } else if (rLower.includes('aet')) {
-            postStatusText = 'بعد التمديد';
+            postStatusText = 'AET';
         } else if (rLower.includes('pen')) {
-            postStatusText = 'ركلات ترجيح';
-        }
-
-        let badgeHtml = '';
-        if (isLive) {
-            badgeHtml = `<span class="match-status-badge status-live"><span class="live-dot-pulse"></span> <span class="live-min-text">مباشر ${statusDetail}</span></span>`;
-        } else if (isFinished) {
-            badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-check"></i> ${postStatusText}</span>`;
-        } else if (preStatusText !== 'قادمة') {
-            badgeHtml = `<span class="match-status-badge status-post"><i class="fa-solid fa-calendar-xmark"></i> ${preStatusText}</span>`;
-        } else {
-            badgeHtml = `<span class="match-status-badge status-pre"><i class="fa-regular fa-clock"></i> ${formatMatchTime(ev.date)}</span>`;
+            postStatusText = 'PEN';
         }
 
         const homeLogo = home.team?.logo || './icon-192.png';
@@ -1181,73 +1170,74 @@
         const homeName = home.team?.displayName || home.team?.name || 'المضيف';
         const awayName = away.team?.displayName || away.team?.name || 'الضيف';
 
-        let scoreCenter = '';
-        if ((isLive || isFinished) && hasScores) {
-            scoreCenter = `
-                <div class="score-center-strip">
-                    <div class="score-dual-row">
-                        <span class="team-score-num ${isLive ? 'digit-live' : (homeWon ? 'digit-winner' : (awayWon ? 'digit-loser' : ''))}">
-                            ${homeScore}
-                        </span>
-                        <span class="score-sep">:</span>
-                        <span class="team-score-num ${isLive ? 'digit-live' : (awayWon ? 'digit-winner' : (homeWon ? 'digit-loser' : ''))}">
-                            ${awayScore}
-                        </span>
-                    </div>
-                    <span class="status-sub-label ${isLive ? 'live-label' : ''}">
-                        ${isLive ? `<span class="live-dot-pulse"></span> <span class="live-min-sub">${statusDetail}</span>` : postStatusText}
-                    </span>
-                </div>
-            `;
-        } else if (isLive && !hasScores) {
-            scoreCenter = `
-                <div class="score-center-strip">
-                    <div class="score-dual-row">
-                        <span class="team-score-num digit-live">0</span>
-                        <span class="score-sep">:</span>
-                        <span class="team-score-num digit-live">0</span>
-                    </div>
-                    <span class="status-sub-label live-label">
-                        <span class="live-dot-pulse"></span> <span class="live-min-sub">${statusDetail || 'مباشر'}</span>
-                    </span>
-                </div>
-            `;
+        // 1. عمود التوقيت والدقائق (يسار)
+        const matchTime = formatMatchTime(ev.date);
+        let statusBottomHtml = '';
+
+        if (isLive) {
+            statusBottomHtml = `<span class="sofa-row-live-min">${statusDetail || 'مباشر'}</span>`;
+        } else if (isFinished) {
+            statusBottomHtml = `<span class="sofa-row-post-text">${postStatusText}</span>`;
+        } else if (preStatusText !== '-') {
+            statusBottomHtml = `<span class="sofa-row-postponed">${preStatusText}</span>`;
         } else {
-            // مباراة قادمة غير ملعوبة: عرض - : - وتحتها كلمة نظيفة بدون نصوص تاريخ إنجليزية طويلة
-            scoreCenter = `
-                <div class="score-center-strip">
-                    <div class="score-dual-row">
-                        <span class="team-score-num score-pre-dash">-</span>
-                        <span class="score-sep">:</span>
-                        <span class="team-score-num score-pre-dash">-</span>
-                    </div>
-                    <span class="status-sub-label">
-                        ${preStatusText}
-                    </span>
-                </div>
-            `;
+            statusBottomHtml = `<span class="sofa-row-sched-dash">-</span>`;
         }
 
+        // 2. عمود النتيجة (يمين)
+        let homeScoreHtml = '';
+        let awayScoreHtml = '';
+        if (hasScores) {
+            const liveCls = isLive ? 'score-live' : '';
+            homeScoreHtml = `<span class="sofa-row-score ${liveCls} ${homeWon ? 'score-winner' : (awayWon ? 'score-loser' : '')}">${homeScore}</span>`;
+            awayScoreHtml = `<span class="sofa-row-score ${liveCls} ${awayWon ? 'score-winner' : (homeWon ? 'score-loser' : '')}">${awayScore}</span>`;
+        } else if (isLive) {
+            homeScoreHtml = `<span class="sofa-row-score score-live">0</span>`;
+            awayScoreHtml = `<span class="sofa-row-score score-live">0</span>`;
+        } else {
+            homeScoreHtml = `<span class="sofa-row-score score-pre">-</span>`;
+            awayScoreHtml = `<span class="sofa-row-score score-pre">-</span>`;
+        }
+
+        const safeHomeName = (homeName || '').replace(/'/g, "\\'");
+
         return `
-            <div class="match-card ${isLive ? 'is-live' : ''}" data-event-id="${ev.id}" onclick="openMatchStats('${ev.id}', '${ev.leagueCode || currentLeague}')" title="انقر لعرض إحصائيات وتفاصيل المباراة">
-                <div class="match-card-top">
-                    ${badgeHtml}
+            <div class="sofa-match-row ${isLive ? 'is-live-row' : ''}" 
+                 data-event-id="${ev.id}" 
+                 onclick="openMatchStats('${ev.id}', '${ev.leagueCode || currentLeague}')" 
+                 role="button" 
+                 tabindex="0"
+                 title="انقر لعرض تفاصيل وإحصائيات وحاسبة المباراة">
+                
+                <!-- عمود الوقت والدقيقة (يسار) -->
+                <div class="sofa-row-time-col">
+                    <span class="sofa-row-time">${matchTime}</span>
+                    <div class="sofa-row-status">${statusBottomHtml}</div>
                 </div>
 
-                <div class="match-card-body">
-                    <div class="team-box ${homeWon ? 'is-winner' : (awayWon ? 'is-loser' : '')}">
-                        <img src="${homeLogo}" alt="${homeName}" class="team-crest" loading="lazy" onerror="this.src='./icon-192.png'">
-                        <span class="team-name-label">${homeName}</span>
-                        ${homeWon ? '<span class="winner-tag">فائز ✓</span>' : ''}
+                <!-- عمود الفريقين رأسياً (وسط) -->
+                <div class="sofa-row-teams-col">
+                    <div class="sofa-row-team ${homeWon ? 'is-winner' : (awayWon ? 'is-loser' : '')}">
+                        <img src="${homeLogo}" alt="" class="sofa-row-crest" loading="lazy" onerror="this.src='./icon-192.png'">
+                        <span class="sofa-row-team-name">${homeName}</span>
                     </div>
-
-                    ${scoreCenter}
-
-                    <div class="team-box ${awayWon ? 'is-winner' : (homeWon ? 'is-loser' : '')}">
-                        <img src="${awayLogo}" alt="${awayName}" class="team-crest" loading="lazy" onerror="this.src='./icon-192.png'">
-                        <span class="team-name-label">${awayName}</span>
-                        ${awayWon ? '<span class="winner-tag">فائز ✓</span>' : ''}
+                    <div class="sofa-row-team ${awayWon ? 'is-winner' : (homeWon ? 'is-loser' : '')}">
+                        <img src="${awayLogo}" alt="" class="sofa-row-crest" loading="lazy" onerror="this.src='./icon-192.png'">
+                        <span class="sofa-row-team-name">${awayName}</span>
                     </div>
+                </div>
+
+                <!-- عمود النتيجة (يمين) -->
+                <div class="sofa-row-scores-col">
+                    ${homeScoreHtml}
+                    ${awayScoreHtml}
+                </div>
+
+                <!-- أيقونة التنبيهات (أقصى اليمين) -->
+                <div class="sofa-row-action-col">
+                    <button type="button" class="sofa-row-bell-btn" title="تنبيهات المباراة" onclick="event.stopPropagation(); showToast('🔔 تم ضبط التنبيه لمباراة ${safeHomeName}');">
+                        <i class="fa-regular fa-bell"></i>
+                    </button>
                 </div>
             </div>
         `;
@@ -1366,7 +1356,7 @@
     let lastToggleLiveTime = 0;
     window.toggleLiveFilter = (forceMode) => {
         const now = Date.now();
-        if (!forceMode && (now - lastToggleLiveTime < 150)) return;
+        if (!forceMode && (now - lastToggleLiveTime < 180)) return;
         lastToggleLiveTime = now;
 
         const btn = document.getElementById('statusBtnLive');
@@ -1381,14 +1371,20 @@
             btn.classList.toggle('active', isLive);
         }
 
-        // إذا ضغط المستخدم على زر "مباشر" وكان يشاهد يوماً آخر (مثل أمس أو غداً)، نعيده فوراً إلى اليوم لأن المباريات المباشرة تجري اليوم
         if (isLive) {
             const isViewingToday = isSameDate(selectedDate, new Date());
             if (!isViewingToday || currentTimeFilter !== 'day') {
                 selectedDate = new Date();
                 currentTimeFilter = 'day';
                 updateDateNavDisplay();
-                loadMatches(false);
+                loadMatches(true);
+                return;
+            }
+
+            // إذا تم تفعيل فلتر مباشر ولكن لا توجد أي مباريات مباشرة في الذاكرة حالياً، نجلب التحديث فوراً
+            const hasLiveInMemory = (loadedMatchesEvents || []).some(ev => ev.status?.type?.state === 'in');
+            if (!hasLiveInMemory) {
+                loadMatches(true);
                 return;
             }
         }
