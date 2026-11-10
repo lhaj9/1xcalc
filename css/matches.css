@@ -1330,9 +1330,20 @@
 }
 
 .sofa-live-pill.active {
-    background: rgba(239, 68, 68, 0.15);
-    border-color: var(--danger-accent);
-    box-shadow: 0 0 12px rgba(239, 68, 68, 0.28);
+    background: #e53935;
+    border-color: #e53935;
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(229, 57, 53, 0.45);
+}
+
+.sofa-live-pill.active .live-dot-pulse {
+    background: #ffffff;
+    box-shadow: 0 0 6px #ffffff;
+}
+
+.sofa-live-pill.active .sofa-live-count {
+    background: rgba(0, 0, 0, 0.28);
+    color: #ffffff;
 }
 
 .sofa-live-pill:active {

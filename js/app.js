@@ -496,12 +496,8 @@ const htmlEl = document.documentElement;
 
         // 5. زر المباشر LIVE باللون الأحمر النبّاض
         document.getElementById('statusBtnLive')?.addEventListener('click', () => {
-            const btn = document.getElementById('statusBtnLive');
-            const isCurrentlyLive = btn.classList.contains('active');
-            btn.classList.toggle('active', !isCurrentlyLive);
-            currentStatusMode = isCurrentlyLive ? 'all' : 'live';
-            if (typeof window.renderMatchesList === 'function' && Array.isArray(window.loadedMatchesEvents)) {
-                window.renderMatchesList(window.loadedMatchesEvents);
+            if (typeof window.toggleLiveFilter === 'function') {
+                window.toggleLiveFilter();
             }
         });
 

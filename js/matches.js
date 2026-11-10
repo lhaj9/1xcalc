@@ -353,13 +353,14 @@
     // التنقل اليومي بالأسهم (< >)
     window.navigateDay = (delta) => {
         currentTimeFilter = 'day';
-        // إذا كان المستخدم على فلتر المباشر وقام بتغيير التاريخ، نعيد الفلتر للكل كي يرى مباريات ذلك اليوم
-        if (currentStatusMode === 'live') {
-            currentStatusMode = 'all';
-            document.querySelectorAll('.sofa-live-pill, .status-switch-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-        }
+        // إزالة فلتر المباشر تماماً عند تغيير التاريخ لأن المباشر خاص باليوم فقط
+        currentStatusMode = 'all';
+        const liveBtn = document.getElementById('statusBtnLive');
+        if (liveBtn) liveBtn.classList.remove('active');
+        document.querySelectorAll('.sofa-live-pill, .status-switch-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
         selectedDate = new Date(selectedDate.getTime() + delta * 86400000);
         updateDateNavDisplay();
         loadMatches(false);
@@ -367,6 +368,13 @@
 
     window.jumpToToday = () => {
         currentTimeFilter = 'day';
+        currentStatusMode = 'all';
+        const liveBtn = document.getElementById('statusBtnLive');
+        if (liveBtn) liveBtn.classList.remove('active');
+        document.querySelectorAll('.sofa-live-pill, .status-switch-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
         selectedDate = new Date();
         updateDateNavDisplay();
         loadMatches(false);
@@ -374,12 +382,13 @@
 
     window.selectDayDate = (d) => {
         currentTimeFilter = 'day';
-        if (currentStatusMode === 'live') {
-            currentStatusMode = 'all';
-            document.querySelectorAll('.sofa-live-pill, .status-switch-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-        }
+        currentStatusMode = 'all';
+        const liveBtn = document.getElementById('statusBtnLive');
+        if (liveBtn) liveBtn.classList.remove('active');
+        document.querySelectorAll('.sofa-live-pill, .status-switch-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
         selectedDate = new Date(d);
         updateDateNavDisplay();
         loadMatches(false);
@@ -389,6 +398,9 @@
         customPeriodStart = new Date(start);
         customPeriodEnd = new Date(end);
         currentTimeFilter = 'custom';
+        currentStatusMode = 'all';
+        const liveBtn = document.getElementById('statusBtnLive');
+        if (liveBtn) liveBtn.classList.remove('active');
         updateDateNavDisplay();
         loadMatches(true);
     };
@@ -397,6 +409,8 @@
         currentTimeFilter = 'all';
         currentStatusMode = 'all';
         currentLeague = 'all';
+        const liveBtn = document.getElementById('statusBtnLive');
+        if (liveBtn) liveBtn.classList.remove('active');
         updateDateNavDisplay();
         loadMatches(false);
         showToast('🌐 تم عرض كل المواعيد المتاحة');
@@ -417,7 +431,7 @@
         if (view === 'leagues') {
             renderLeaguesDirectory();
         } else {
-            renderMatchesList(loadedMatchesEvents);
+            renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
         }
     };
 
@@ -462,7 +476,7 @@
                 input.value = '';
                 const clearBtn = document.getElementById('matchSearchClearBtn');
                 if (clearBtn) clearBtn.style.display = 'none';
-                renderMatchesList(loadedMatchesEvents);
+                renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
             }
         }
     };
@@ -521,6 +535,9 @@
         const isCustom = currentTimeFilter !== 'day' || currentStatusMode !== 'all' || currentLeague !== 'all';
         if (dot) dot.style.display = isCustom ? 'inline-block' : 'none';
 
+        const liveBtn = document.getElementById('statusBtnLive');
+        if (liveBtn) liveBtn.classList.toggle('active', currentStatusMode === 'live');
+
         closeFilterSheet();
         updateDateNavDisplay();
         loadMatches(false);
@@ -536,6 +553,9 @@
 
         const dot = document.getElementById('filterActiveDot');
         if (dot) dot.style.display = 'none';
+
+        const liveBtn = document.getElementById('statusBtnLive');
+        if (liveBtn) liveBtn.classList.remove('active');
 
         closeFilterSheet();
         updateDateNavDisplay();
@@ -709,23 +729,25 @@
                 tournamentMatchCounts.set(c, (tournamentMatchCounts.get(c) || 0) + 1);
             });
 
-            // تحديث شارة المباريات المباشرة
+            // تحديث شارة المباريات المباشرة وحالة زر المباشر
             const liveCount = loadedMatchesEvents.filter(ev => ev.status?.type?.state === 'in').length;
             const liveBadge = document.getElementById('liveStatusBadge');
             const livePulse = document.getElementById('homeLivePulse');
+            const liveBtn = document.getElementById('statusBtnLive');
             if (liveBadge) liveBadge.textContent = liveCount;
             if (livePulse) livePulse.style.display = liveCount > 0 ? 'inline-block' : 'none';
+            if (liveBtn) liveBtn.classList.toggle('active', currentStatusMode === 'live');
 
             // خاصية التحويل التلقائي الذكي عند خلو مباريات اليوم:
-            // إن فتح المستخدم التطبيق على "اليوم" ولم تكن هناك مباريات لليوم، يتم التحويل تلقائياً لكل المواعيد المتاحة
-            if (currentTimeFilter === 'day' && isViewingToday && loadedMatchesEvents.length === 0) {
+            // إن فتح المستخدم التطبيق على "اليوم" ولم تكن هناك مباريات لليوم (وليس في وضع فلترة المباشر)، يتم التحويل تلقائياً لكل المواعيد المتاحة
+            if (currentTimeFilter === 'day' && isViewingToday && loadedMatchesEvents.length === 0 && currentStatusMode !== 'live') {
                 currentTimeFilter = 'all';
                 updateDateNavDisplay();
                 loadMatches(false);
                 return;
             }
 
-            renderMatchesList(loadedMatchesEvents);
+            renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
             initLiveMinuteTicker();
         } catch (e) {
             container.innerHTML = `
@@ -836,7 +858,7 @@
         if (currentMainView === 'leagues') {
             renderLeaguesDirectory();
         } else {
-            renderMatchesList(loadedMatchesEvents);
+            renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
         }
     };
 
@@ -850,7 +872,8 @@
             return;
         }
 
-        let filtered = [...events];
+        const list = Array.isArray(events) ? events : (loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
+        let filtered = [...list];
 
         // 1. تصفية بالدوري إن كان محدداً
         if (currentLeague !== 'all') {
@@ -891,6 +914,27 @@
         }
 
         if (filtered.length === 0) {
+            if (currentStatusMode === 'live') {
+                container.innerHTML = `
+                    <div class="match-loading-card" style="padding: 24px 16px;">
+                        <div style="font-size: 2rem; margin-bottom: 8px;">🔴</div>
+                        <div style="font-weight: 800; font-size: 0.92rem; color: var(--text-main);">لا توجد مباريات جارية الآن مباشرة (LIVE)</div>
+                        <div style="font-size: 0.74rem; color: var(--text-muted); margin: 6px auto 14px auto; max-width: 320px; line-height: 1.5;">
+                            لا توجد مباريات ملعوبة في هذه اللحظة، يمكنك تصفح جدول مباريات اليوم أو المواعيد القادمة.
+                        </div>
+                        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                            <button type="button" class="match-refresh-btn" onclick="toggleLiveFilter('all')" style="padding: 7px 14px;">
+                                <i class="fa-solid fa-calendar-day"></i> عرض جميع مباريات اليوم
+                            </button>
+                            <button type="button" class="match-refresh-btn" onclick="showAllAvailableMatches()" style="padding: 7px 14px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);">
+                                <i class="fa-solid fa-list-ul"></i> كل المواعيد المتاحة
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
             container.innerHTML = `
                 <div class="match-loading-card" style="padding: 24px 16px;">
                     <div style="font-size: 2rem; margin-bottom: 8px;">⚽</div>
@@ -1104,8 +1148,8 @@
 
         const homeLogo = home.team?.logo || './icon-192.png';
         const awayLogo = away.team?.logo || './icon-192.png';
-        const homeName = home.team?.displayName || 'المضيف';
-        const awayName = away.team?.displayName || 'الضيف';
+        const homeName = home.team?.displayName || home.team?.name || 'المضيف';
+        const awayName = away.team?.displayName || away.team?.name || 'الضيف';
         const matchTitle = `${homeName} ضد ${awayName}`;
 
         let scoreCenter = '';
@@ -1258,14 +1302,37 @@
         });
     };
 
-    window.toggleLiveFilter = () => {
+    let lastToggleLiveTime = 0;
+    window.toggleLiveFilter = (forceMode) => {
+        const now = Date.now();
+        if (!forceMode && (now - lastToggleLiveTime < 150)) return;
+        lastToggleLiveTime = now;
+
         const btn = document.getElementById('statusBtnLive');
-        const isCurrentlyLive = (currentStatusMode === 'live');
-        currentStatusMode = isCurrentlyLive ? 'all' : 'live';
-        if (btn) {
-            btn.classList.toggle('active', currentStatusMode === 'live');
+        if (typeof forceMode === 'string') {
+            currentStatusMode = forceMode;
+        } else {
+            currentStatusMode = (currentStatusMode === 'live') ? 'all' : 'live';
         }
-        renderMatchesList(loadedMatchesEvents);
+
+        const isLive = (currentStatusMode === 'live');
+        if (btn) {
+            btn.classList.toggle('active', isLive);
+        }
+
+        // إذا ضغط المستخدم على زر "مباشر" وكان يشاهد يوماً آخر (مثل أمس أو غداً)، نعيده فوراً إلى اليوم لأن المباريات المباشرة تجري اليوم
+        if (isLive) {
+            const isViewingToday = isSameDate(selectedDate, new Date());
+            if (!isViewingToday || currentTimeFilter !== 'day') {
+                selectedDate = new Date();
+                currentTimeFilter = 'day';
+                updateDateNavDisplay();
+                loadMatches(false);
+                return;
+            }
+        }
+
+        renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
     };
 
     // الربط والتصدير الخارجي
