@@ -109,7 +109,7 @@
                     if (typeof window.selectDayDate === 'function') {
                         window.selectDayDate(pickedDate);
                     }
-                    closeSetPeriodModal();
+                    closeSetPeriodModal(false);
                     if (typeof showToast === 'function') {
                         showToast(`📅 تم اختيار: ${formatShortDate(pickedDate)}`);
                     }
@@ -180,13 +180,21 @@
         setPeriodModalEl.classList.add('open');
         setPeriodModalEl.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+
+        if (typeof window.pushModalHistory === 'function') {
+            window.pushModalHistory('setPeriodModal', () => closeSetPeriodModal(true));
+        }
     };
 
-    const closeSetPeriodModal = () => {
+    const closeSetPeriodModal = (fromPopState = false) => {
         if (!setPeriodModalEl) return;
         setPeriodModalEl.classList.remove('open');
         setPeriodModalEl.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
+
+        if (!fromPopState && typeof window.popModalHistory === 'function') {
+            window.popModalHistory('setPeriodModal');
+        }
     };
 
     // التنقل بين الشهور
@@ -227,7 +235,7 @@
             if (preset === 'today') {
                 if (window.calendarMode === 'single') {
                     if (typeof window.jumpToToday === 'function') window.jumpToToday();
-                    closeSetPeriodModal();
+                    closeSetPeriodModal(false);
                     return;
                 }
                 customPeriodStart = new Date(now);
@@ -236,7 +244,7 @@
                 const tmr = new Date(now); tmr.setDate(now.getDate() + 1);
                 if (window.calendarMode === 'single') {
                     if (typeof window.selectDayDate === 'function') window.selectDayDate(tmr);
-                    closeSetPeriodModal();
+                    closeSetPeriodModal(false);
                     return;
                 }
                 customPeriodStart = tmr;
@@ -263,11 +271,11 @@
     });
 
     // أزرار الإغلاق والتطبيق
-    document.getElementById('btnPeriodCancel')?.addEventListener('click', closeSetPeriodModal);
-    document.getElementById('closeSetPeriodModalX')?.addEventListener('click', closeSetPeriodModal);
+    document.getElementById('btnPeriodCancel')?.addEventListener('click', () => closeSetPeriodModal(false));
+    document.getElementById('closeSetPeriodModalX')?.addEventListener('click', () => closeSetPeriodModal(false));
     if (setPeriodModalEl) {
         setPeriodModalEl.addEventListener('click', (e) => {
-            if (e.target === setPeriodModalEl) closeSetPeriodModal();
+            if (e.target === setPeriodModalEl) closeSetPeriodModal(false);
         });
     }
 
@@ -275,14 +283,14 @@
         if (typeof window.jumpToToday === 'function') {
             window.jumpToToday();
         }
-        closeSetPeriodModal();
+        closeSetPeriodModal(false);
     });
 
     document.getElementById('btnPeriodApply')?.addEventListener('click', () => {
         if (typeof window.applyCustomPeriod === 'function') {
             window.applyCustomPeriod(customPeriodStart, customPeriodEnd);
         }
-        closeSetPeriodModal();
+        closeSetPeriodModal(false);
     });
 
     // تصدير الواجهات العامة

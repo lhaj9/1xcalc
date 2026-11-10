@@ -1,4 +1,40 @@
 // ==================== إدارة التخزين المحلي والإعدادات والنسخ الاحتياطي (Storage Manager) ====================
+        // ==================== نظام تتبع النوافذ والتنقل بالرجوع للخلف (Mobile Popstate & Modal Manager) ====================
+        window.modalHistoryStack = window.modalHistoryStack || [];
+        window._isProgrammaticBack = false;
+
+        window.pushModalHistory = (modalId, closeFn) => {
+            const stack = window.modalHistoryStack;
+            const top = stack[stack.length - 1];
+            if (top && top.modalId === modalId) return;
+
+            stack.push({ modalId, close: closeFn });
+            try {
+                window.history.pushState({ isModal: true, modalId }, '');
+            } catch (_) {}
+        };
+
+        window.popModalHistory = (modalId) => {
+            if (window._isProgrammaticBack) return;
+            const stack = window.modalHistoryStack;
+            if (!stack || stack.length === 0) return;
+
+            const idx = stack.findLastIndex
+                ? stack.findLastIndex(m => m.modalId === modalId)
+                : stack.map(m => m.modalId).lastIndexOf(modalId);
+
+            if (idx !== -1) {
+                stack.splice(idx, 1);
+                window._isProgrammaticBack = true;
+                try {
+                    window.history.back();
+                } catch (_) {}
+                setTimeout(() => {
+                    window._isProgrammaticBack = false;
+                }, 120);
+            }
+        };
+
         // ==================== الإعدادات والذاكرة المحلية ====================
         var appSettings = {
             theme: localStorage.getItem('arb_theme') || 'light',
@@ -341,12 +377,17 @@
         if (menuGoSlips) menuGoSlips.addEventListener('click', () => switchTab('tab3'));
 
         const menuOpenSet = document.getElementById('menuOpenSettingsItem');
-        if (menuOpenSet) menuOpenSet.addEventListener('click', () => settingsModal.classList.add('open'));
+        if (menuOpenSet) menuOpenSet.addEventListener('click', openSettingsModal);
 
         const menuOpenHlp = document.getElementById('menuOpenHelpItem');
         if (menuOpenHlp) menuOpenHlp.addEventListener('click', () => {
-            helpGuideModal.classList.add('open');
-            loadAndRenderGuide();
+            if (typeof window.openHelpGuideModal === 'function') {
+                window.openHelpGuideModal();
+            } else {
+                const modal = document.getElementById('helpGuideModal');
+                if (modal) modal.classList.add('open');
+                if (typeof loadAndRenderGuide === 'function') loadAndRenderGuide();
+            }
         });
 
         const menuExp = document.getElementById('menuExportItem');
@@ -463,10 +504,27 @@
         });
 
         const settingsModal = document.getElementById('settingsModal');
-        document.getElementById('openSettingsBtn').addEventListener('click', () => settingsModal.classList.add('open'));
-        document.getElementById('closeSettingsBtn').addEventListener('click', () => settingsModal.classList.remove('open'));
+        function openSettingsModal() {
+            if (!settingsModal) return;
+            settingsModal.classList.add('open');
+            if (typeof window.pushModalHistory === 'function') {
+                window.pushModalHistory('settingsModal', () => closeSettingsModal(true));
+            }
+        }
+        function closeSettingsModal(fromPopState = false) {
+            if (!settingsModal) return;
+            settingsModal.classList.remove('open');
+            if (!fromPopState && typeof window.popModalHistory === 'function') {
+                window.popModalHistory('settingsModal');
+            }
+        }
+        window.openSettingsModal = openSettingsModal;
+        window.closeSettingsModal = closeSettingsModal;
+
+        document.getElementById('openSettingsBtn').addEventListener('click', openSettingsModal);
+        document.getElementById('closeSettingsBtn').addEventListener('click', () => closeSettingsModal(false));
         settingsModal.addEventListener('click', (e) => {
-            if (e.target === settingsModal) settingsModal.classList.remove('open');
+            if (e.target === settingsModal) closeSettingsModal(false);
         });
 
         document.getElementById('clearHistoryBtn').addEventListener('click', () => {
@@ -477,7 +535,7 @@
             renderHistoryTab1();
             renderHistoryTab2();
             renderFullHistory();
-            settingsModal.classList.remove('open');
+            closeSettingsModal(false);
             showToast('تم مسح السجلات السريعة');
         });
 
@@ -487,7 +545,7 @@
             expandedSlipIds.clear();
             localStorage.removeItem('arb_saved_slips');
             renderSlips();
-            settingsModal.classList.remove('open');
+            closeSettingsModal(false);
             showToast('تم مسح جميع القسائم المحفوظة');
         });
 

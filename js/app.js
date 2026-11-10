@@ -241,15 +241,28 @@ const htmlEl = document.documentElement;
 
         // فتح وإغلاق نافذة دليل الاستخدام (علامة الاستفهام)
         const helpGuideModal = document.getElementById('helpGuideModal');
-        document.getElementById('openHelpBtn').addEventListener('click', () => {
+        const openHelpGuideModal = () => {
+            if (!helpGuideModal) return;
             helpGuideModal.classList.add('open');
             loadAndRenderGuide();
-        });
-        document.getElementById('closeHelpBtn').addEventListener('click', () => {
+            if (typeof window.pushModalHistory === 'function') {
+                window.pushModalHistory('helpGuideModal', () => closeHelpGuideModal(true));
+            }
+        };
+        const closeHelpGuideModal = (fromPopState = false) => {
+            if (!helpGuideModal) return;
             helpGuideModal.classList.remove('open');
-        });
+            if (!fromPopState && typeof window.popModalHistory === 'function') {
+                window.popModalHistory('helpGuideModal');
+            }
+        };
+        window.openHelpGuideModal = openHelpGuideModal;
+        window.closeHelpGuideModal = closeHelpGuideModal;
+
+        document.getElementById('openHelpBtn').addEventListener('click', openHelpGuideModal);
+        document.getElementById('closeHelpBtn').addEventListener('click', () => closeHelpGuideModal(false));
         helpGuideModal.addEventListener('click', (e) => {
-            if (e.target === helpGuideModal) helpGuideModal.classList.remove('open');
+            if (e.target === helpGuideModal) closeHelpGuideModal(false);
         });
 
         // أزرار التنقل السريع داخل نافذة الشرح
@@ -322,12 +335,33 @@ const htmlEl = document.documentElement;
                 deferredPrompt = null;
                 updateInstallUI();
             } else if (isIos()) {
-                document.getElementById('settingsModal').classList.remove('open');
-                iosInstallModal.classList.add('open');
+                if (typeof window.closeSettingsModal === 'function') {
+                    window.closeSettingsModal(false);
+                } else {
+                    document.getElementById('settingsModal')?.classList.remove('open');
+                }
+                openIosModal();
             } else {
                 showToast('للتثبيت: افتح قائمة المتصفح (⋮) واختر "تثبيت التطبيق"');
             }
         };
+
+        const openIosModal = () => {
+            if (!iosInstallModal) return;
+            iosInstallModal.classList.add('open');
+            if (typeof window.pushModalHistory === 'function') {
+                window.pushModalHistory('iosInstallModal', () => closeIosModal(true));
+            }
+        };
+        const closeIosModal = (fromPopState = false) => {
+            if (!iosInstallModal) return;
+            iosInstallModal.classList.remove('open');
+            if (!fromPopState && typeof window.popModalHistory === 'function') {
+                window.popModalHistory('iosInstallModal');
+            }
+        };
+        window.openIosModal = openIosModal;
+        window.closeIosModal = closeIosModal;
 
         document.getElementById('bannerInstallTrigger').addEventListener('click', triggerAppInstall);
         settingsInstallBtn.addEventListener('click', triggerAppInstall);
@@ -337,19 +371,20 @@ const htmlEl = document.documentElement;
             firstVisitBanner.classList.remove('show');
         });
 
-        document.getElementById('closeIosModalBtn').addEventListener('click', () => iosInstallModal.classList.remove('open'));
+        document.getElementById('closeIosModalBtn').addEventListener('click', () => closeIosModal(false));
         document.getElementById('iosGotItBtn').addEventListener('click', () => {
             localStorage.setItem('arb_pwa_banner_dismissed', 'true');
             firstVisitBanner.classList.remove('show');
-            iosInstallModal.classList.remove('open');
+            closeIosModal(false);
         });
 
 
         // ==================== نظام التنقل الشامل (Tabs & Navigation System) ====================
         const availableTabs = ['tabHome', 'tabCalc', 'tab3', 'tab4', 'tabMenu'];
 
-        const switchTab = (tabId) => {
+        const switchTab = (tabId, fromHistory = false) => {
             if (!availableTabs.includes(tabId)) return;
+            const previousTab = document.querySelector('.tab-panel.active')?.id || 'tabHome';
 
             // 1. تفعيل اللوح المستهدف
             document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -377,7 +412,7 @@ const htmlEl = document.documentElement;
 
             // إعادة ضبط وضع تركيز القسائم عند مغادرة قسم القسائم
             if (tabId !== 'tab3') {
-                expandedSlipIds.clear();
+                if (typeof expandedSlipIds !== 'undefined') expandedSlipIds.clear();
                 const tab3El = document.getElementById('tab3');
                 if (tab3El) tab3El.classList.remove('has-focused-slip');
                 document.querySelectorAll('.slip-ticket.expanded').forEach(el => el.classList.remove('expanded'));
@@ -391,11 +426,24 @@ const htmlEl = document.documentElement;
             } else if (tabId === 'tabCalc') {
                 // تفعيل التحديث للحسابات
             } else if (tabId === 'tab3') {
-                renderSlips();
+                if (typeof renderSlips === 'function') renderSlips();
             } else if (tabId === 'tab4') {
-                renderFullHistory();
+                if (typeof renderFullHistory === 'function') renderFullHistory();
             } else if (tabId === 'tabMenu') {
-                updateMenuStats();
+                if (typeof updateMenuStats === 'function') updateMenuStats();
+            }
+
+            // 6. إدارة سجل التبويبات بالرجوع للخلف كأي تطبيق هاتف
+            if (!fromHistory && tabId !== previousTab) {
+                try {
+                    if (tabId === 'tabHome') {
+                        window.history.replaceState({ isRoot: true, tab: 'tabHome' }, '');
+                    } else if (previousTab === 'tabHome') {
+                        window.history.pushState({ isRoot: false, tab: tabId }, '');
+                    } else {
+                        window.history.replaceState({ isRoot: false, tab: tabId }, '');
+                    }
+                } catch (_) {}
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -558,8 +606,80 @@ const htmlEl = document.documentElement;
             showToast('🔄 جاري تحديث النتائج والمباريات...');
         });
 
+        // ==================== مستمع أحداث الرجوع للخلف بالهاتف (Popstate & Mobile Back Navigation) ====================
+        window.addEventListener('popstate', (e) => {
+            if (window._isProgrammaticBack) {
+                window._isProgrammaticBack = false;
+                return;
+            }
+
+            // 1. إذا كانت هناك نافذة منبثقة مفتوحة (مثل تفاصيل المباراة أو التقويم أو الفلاتر أو الإعدادات)، نقفلها فوراً دون الخروج من الموقع
+            const stack = window.modalHistoryStack || [];
+            if (stack.length > 0) {
+                const top = stack.pop();
+                if (top && typeof top.close === 'function') {
+                    top.close(true);
+                }
+                return;
+            }
+
+            // 2. إذا كان هناك كارت قسيمة موسع في وضع التركيز (Focus Mode)، يتم طيه
+            if (typeof expandedSlipIds !== 'undefined' && expandedSlipIds.size > 0) {
+                expandedSlipIds.clear();
+                document.querySelectorAll('.slip-ticket.expanded').forEach(el => el.classList.remove('expanded'));
+                const tab3El = document.getElementById('tab3');
+                if (tab3El) tab3El.classList.remove('has-focused-slip');
+                return;
+            }
+
+            // 3. إذا كان شريط البحث منبثقاً، نغلقه
+            const searchOverlay = document.getElementById('sofaSearchExpandable');
+            if (searchOverlay && searchOverlay.style.display !== 'none') {
+                if (typeof window.toggleSearchOverlay === 'function') {
+                    window.toggleSearchOverlay(false);
+                    return;
+                }
+            }
+
+            // 4. إذا كان المستخدم في تبويب فرعي وليس في الرئيسية، يعود للرئيسية كأي تطبيق هاتف
+            if (e.state && e.state.tab && e.state.tab !== 'tabHome') {
+                switchTab(e.state.tab, true);
+                return;
+            }
+            const currentActiveTab = document.querySelector('.tab-panel.active')?.id;
+            if (currentActiveTab && currentActiveTab !== 'tabHome') {
+                switchTab('tabHome', true);
+                return;
+            }
+
+            // إذا كان أصلاً في الصفحة الرئيسية ولا توجد أي نوافذ، يخرج المتصفح بشكل طبيعي
+        });
+
         // ==================== دورة التهيئة الشاملة للتطبيق (Master App Initialization) ====================
         const initApp = () => {
+            // إعادة ضبط حالة السجل والتأكد من البدء دائماً من نقطة البداية دون حفظ أي نوافذ في الذاكرة
+            if (window.modalHistoryStack) {
+                window.modalHistoryStack.length = 0;
+            }
+            window._isProgrammaticBack = false;
+
+            if (window.history && window.history.replaceState) {
+                try {
+                    window.history.replaceState({ isRoot: true, tab: 'tabHome' }, '', window.location.pathname + window.location.search);
+                } catch (_) {}
+            }
+
+            // التأكد من إغلاق جميع النوافذ المنبثقة عند بداية التشغيل دون استرجاع أي نافذة قديمة
+            ['matchStatsModal', 'setPeriodModal', 'matchesFilterSheetModal', 'settingsModal', 'helpGuideModal', 'iosInstallModal'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('open');
+                    el.setAttribute('aria-hidden', 'true');
+                }
+            });
+            document.body.style.overflow = '';
+            document.body.classList.remove('stats-modal-open');
+
             if (typeof applySettings === 'function') applySettings();
 
             const capInput = document.getElementById('capital');

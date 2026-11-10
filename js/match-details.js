@@ -41,6 +41,10 @@
             document.body.style.overflow = 'hidden';
             document.body.classList.add('stats-modal-open');
 
+            if (typeof window.pushModalHistory === 'function') {
+                window.pushModalHistory('matchStatsModal', () => closeMatchStats(true));
+            }
+
             // إذا كانت المباراة متوفرة في الذاكرة، نعرض فوراً الهيدر والنتيجة اللحظية
             if (foundEv) {
                 const initialData = {
@@ -140,7 +144,7 @@
             }
         };
 
-        const closeMatchStats = () => {
+        const closeMatchStats = (fromPopState = false) => {
             const modal = document.getElementById('matchStatsModal');
             if (modal) {
                 modal.classList.remove('open');
@@ -148,6 +152,10 @@
             }
             document.body.style.overflow = '';
             document.body.classList.remove('stats-modal-open');
+
+            if (!fromPopState && typeof window.popModalHistory === 'function') {
+                window.popModalHistory('matchStatsModal');
+            }
         };
 
         const refreshCurrentMatchStats = async () => {
@@ -877,11 +885,11 @@
         // مستمعات أحداث نافذة تفاصيل المباراة
         const statsModalEl = document.getElementById('matchStatsModal');
         if (statsModalEl) {
-            document.getElementById('closeStatsModalBtn')?.addEventListener('click', closeMatchStats);
-            document.getElementById('closeStatsModalX')?.addEventListener('click', closeMatchStats);
+            document.getElementById('closeStatsModalBtn')?.addEventListener('click', () => closeMatchStats(false));
+            document.getElementById('closeStatsModalX')?.addEventListener('click', () => closeMatchStats(false));
             document.getElementById('refreshStatsBtn')?.addEventListener('click', refreshCurrentMatchStats);
             statsModalEl.addEventListener('click', (e) => {
-                if (e.target === statsModalEl) closeMatchStats();
+                if (e.target === statsModalEl) closeMatchStats(false);
             });
             document.querySelectorAll('.stats-tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {

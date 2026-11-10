@@ -525,14 +525,22 @@
         modal.classList.add('open');
         modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+
+        if (typeof window.pushModalHistory === 'function') {
+            window.pushModalHistory('matchesFilterSheetModal', () => window.closeFilterSheet(true));
+        }
     };
 
-    window.closeFilterSheet = () => {
+    window.closeFilterSheet = (fromPopState = false) => {
         const modal = document.getElementById('matchesFilterSheetModal');
         if (!modal) return;
         modal.classList.remove('open');
         modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
+
+        if (!fromPopState && typeof window.popModalHistory === 'function') {
+            window.popModalHistory('matchesFilterSheetModal');
+        }
     };
 
     window.applyFilterSheet = () => {
