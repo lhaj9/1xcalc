@@ -12,17 +12,25 @@
             if (!modal) return;
 
             currentActiveStatsEventId = eventId;
-            currentActiveStatsLeague = leagueCode || window.currentLeague || 'all';
             currentActiveStatsTab = 'statsTabOverview';
 
-            if (currentActiveStatsLeague === 'all' || !currentActiveStatsLeague) {
-                const foundEv = (window.loadedMatchesEvents || []).find(e => e.id === eventId);
-                if (foundEv && foundEv.leagueCode && foundEv.leagueCode !== 'all') {
-                    currentActiveStatsLeague = foundEv.leagueCode;
-                } else {
-                    currentActiveStatsLeague = 'all';
+            // العثور على بيانات اللقاء من الذاكرة الحية أولاً
+            const foundEv = (window.loadedMatchesEvents || []).find(e => e.id === eventId);
+
+            // استخراج كود الدوري الدقيق لتجنب طلب soccer/all/summary الذي يعيد 404
+            let resolvedLeague = (leagueCode && leagueCode !== 'all' && leagueCode !== 'unknown') ? leagueCode : '';
+            if (!resolvedLeague && foundEv) {
+                const uidMatch = (foundEv.uid || '').match(/~l:([^~]+)/);
+                if (uidMatch && uidMatch[1]) {
+                    resolvedLeague = uidMatch[1];
+                } else if (foundEv.leagueCode && foundEv.leagueCode !== 'all') {
+                    resolvedLeague = foundEv.leagueCode;
+                } else if (foundEv.league?.slug) {
+                    resolvedLeague = foundEv.league.slug;
                 }
             }
+            if (!resolvedLeague) resolvedLeague = 'all';
+            currentActiveStatsLeague = resolvedLeague;
 
             document.querySelectorAll('.stats-tab-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset?.tab === 'statsTabOverview');
@@ -33,17 +41,45 @@
             document.body.style.overflow = 'hidden';
             document.body.classList.add('stats-modal-open');
 
-            const heroBanner = document.getElementById('statsHeroBanner');
-            const sheetBody = document.getElementById('statsSheetBody');
-            if (heroBanner) {
-                heroBanner.innerHTML = `
-                    <div style="text-align:center; padding:18px 10px; display:flex; flex-direction:column; align-items:center; gap:8px;">
-                        <div class="match-spinner"></div>
-                        <span style="font-size:0.8rem; font-weight:800; color:var(--text-muted);">جاري تجهيز وتفصيل بيانات اللقاء...</span>
-                    </div>
-                `;
+            // إذا كانت المباراة متوفرة في الذاكرة، نعرض فوراً الهيدر والنتيجة اللحظية
+            if (foundEv) {
+                const initialData = {
+                    header: {
+                        id: foundEv.id,
+                        season: foundEv.season || {},
+                        competitions: foundEv.competitions || []
+                    },
+                    gameInfo: {
+                        venue: foundEv.competitions?.[0]?.venue || {},
+                        attendance: null,
+                        officials: []
+                    },
+                    boxscore: { teams: [] },
+                    keyEvents: (foundEv.competitions?.[0]?.details || []).map(d => ({
+                        text: d.type?.text || d.text || '',
+                        clock: { displayValue: d.clock?.displayValue || '' },
+                        scoringPlay: d.scoringPlay || false
+                    })),
+                    plays: [],
+                    commentary: [],
+                    rosters: []
+                };
+                currentActiveStatsData = initialData;
+                renderMatchSummary(initialData);
+            } else {
+                const heroBanner = document.getElementById('statsHeroBanner');
+                if (heroBanner) {
+                    heroBanner.innerHTML = `
+                        <div style="text-align:center; padding:18px 10px; display:flex; flex-direction:column; align-items:center; gap:8px;">
+                            <div class="match-spinner"></div>
+                            <span style="font-size:0.8rem; font-weight:800; color:var(--text-muted);">جاري تجهيز وتفصيل بيانات اللقاء...</span>
+                        </div>
+                    `;
+                }
             }
-            if (sheetBody) {
+
+            const sheetBody = document.getElementById('statsSheetBody');
+            if (sheetBody && (!currentActiveStatsData || !currentActiveStatsData.boxscore?.teams?.length)) {
                 sheetBody.innerHTML = `
                     <div class="stats-loading-box" style="text-align:center; padding:35px 16px; color:var(--text-muted);">
                         <div style="font-size:1.8rem; margin-bottom:8px;">⚽</div>
@@ -73,16 +109,23 @@
                     url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${sLeague}/summary?event=${eventId}`;
                 }
 
-                const res = await fetch(url);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
+                let res = await fetch(url);
+                if (!res.ok && currentActiveStatsLeague !== 'all') {
+                    const altRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=${eventId}`).catch(() => null);
+                    if (altRes && altRes.ok) res = altRes;
+                }
 
-                const isFinished = data.header?.competitions?.[0]?.status?.type?.state === 'post';
-                matchSummaryCache.set(cacheKey, { data, timestamp: now, isFinished });
-                currentActiveStatsData = data;
-                renderMatchSummary(data);
+                if (res.ok) {
+                    const data = await res.json();
+                    const isFinished = data.header?.competitions?.[0]?.status?.type?.state === 'post';
+                    matchSummaryCache.set(cacheKey, { data, timestamp: now, isFinished });
+                    currentActiveStatsData = data;
+                    renderMatchSummary(data);
+                } else if (!foundEv) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
             } catch (err) {
-                if (sheetBody) {
+                if (!foundEv && sheetBody) {
                     sheetBody.innerHTML = `
                         <div class="stats-empty-state">
                             <div class="stats-empty-icon" style="color:var(--danger-accent);">⚠️</div>
@@ -182,6 +225,7 @@
             const heroBanner = document.getElementById('statsHeroBanner');
             if (heroBanner) {
                 let scoreCenterHtml = '';
+                const rawDate = comp.date || header.date || '';
                 const rLower = (statusDetail || '').toLowerCase();
                 let cleanStatus = statusDetail;
                 if (isFinished) {
@@ -219,7 +263,6 @@
                             <span class="stats-hero-status ${isLive ? 'tag-live' : 'tag-post'}">
                                 ${isLive ? '<span class="live-dot-pulse"></span> ' + statusDetail : cleanStatus}
                             </span>
-                            ${venueName ? `<span class="stats-hero-venue">🏟️ ${venueName}</span>` : ''}
                         </div>
                     `;
                 } else if (isLive) {
@@ -233,7 +276,6 @@
                             <span class="stats-hero-status tag-live">
                                 <span class="live-dot-pulse"></span> ${statusDetail || 'مباشر'}
                             </span>
-                            ${venueName ? `<span class="stats-hero-venue">🏟️ ${venueName}</span>` : ''}
                         </div>
                     `;
                 } else {
@@ -246,7 +288,6 @@
                                 <span class="stats-hero-score-num score-pre-dash">-</span>
                             </div>
                             <span class="stats-hero-status tag-pre">${cleanStatus}</span>
-                            ${venueName ? `<span class="stats-hero-venue">🏟️ ${venueName}</span>` : ''}
                         </div>
                     `;
                 }
@@ -308,12 +349,23 @@
         const renderOverviewTab = (data, container) => {
             const boxscoreTeams = data.boxscore?.teams || [];
             if (!Array.isArray(boxscoreTeams) || boxscoreTeams.length < 2) {
+                const comp = data.header?.competitions?.[0] || {};
+                const isLive = comp.status?.type?.state === 'in';
+                const isFinished = comp.status?.type?.state === 'post';
+
                 container.innerHTML = `
                     <div class="stats-empty-state">
                         <div class="stats-empty-icon">📊</div>
-                        <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">إحصائيات الأداء التراكمية غير متوفرة بعد</div>
-                        <div style="font-size: 0.73rem; max-width: 320px; line-height: 1.4;">
-                            المباراة لم تبدأ بعد أو لم يكتمل جمع أرقام الأداء (الاستحواذ، التسديدات، الركنيات). ستظهر الأرقام فور انطلاق صافرة اللقاء.
+                        <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">
+                            ${isLive ? 'إحصائيات الأداء التراكمية غير متوفرة لهذه البطولة' : (isFinished ? 'إحصائيات الأداء الرقمية غير مسجلة' : 'المباراة لم تبدأ بعد')}
+                        </div>
+                        <div style="font-size: 0.73rem; max-width: 320px; line-height: 1.4; color: var(--text-muted); margin-top: 4px;">
+                            ${isLive ? 'المزود لا يوفر عدادات الاستحواذ والتسديدات لهذه البطولة المحددة، يمكنك متابعة وقائع وأحداث المباراة في تبويب أبرز الأحداث.' : 'ستتوفر أرقام وإحصائيات اللقاء فور انطلاق المباراة وتوفرها من المصدر الرسمي.'}
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <button type="button" class="match-refresh-btn" onclick="document.querySelector('.stats-tab-btn[data-tab=statsTabEvents]')?.click()" style="padding: 7px 15px; font-size: 0.76rem;">
+                                <i class="fa-solid fa-timeline"></i> الانتقال إلى أبرز الأحداث والوقائع
+                            </button>
                         </div>
                     </div>
                 `;
@@ -356,10 +408,12 @@
                 const rawHome = getStat(homeTeamStats, m.keys);
                 const rawAway = getStat(awayTeamStats, m.keys);
                 if (rawHome !== null || rawAway !== null) {
-                    const numHome = parseFloat(rawHome) || 0;
-                    const numAway = parseFloat(rawAway) || 0;
-                    const displayHome = (rawHome !== null ? rawHome : '0') + (m.suffix || '');
-                    const displayAway = (rawAway !== null ? rawAway : '0') + (m.suffix || '');
+                    const cleanHome = (rawHome !== null ? String(rawHome).replace('%', '').trim() : '0');
+                    const cleanAway = (rawAway !== null ? String(rawAway).replace('%', '').trim() : '0');
+                    const numHome = parseFloat(cleanHome) || 0;
+                    const numAway = parseFloat(cleanAway) || 0;
+                    const displayHome = cleanHome + (m.suffix || '');
+                    const displayAway = cleanAway + (m.suffix || '');
                     availableRows.push({
                         label: m.label,
                         displayHome,
@@ -376,6 +430,7 @@
                     <div class="stats-empty-state">
                         <div class="stats-empty-icon">📊</div>
                         <div style="font-weight:800; font-size:0.85rem; color:var(--text-main);">لم تتوفر مقاييس رقمية للأداء بعد</div>
+                        <div style="font-size:0.73rem; color:var(--text-muted); margin-top:4px;">المزود لم يرسل عدادات الأداء لهذه المباراة بعد.</div>
                     </div>
                 `;
                 return;
@@ -431,13 +486,19 @@
 
         // التبويب 2: أبرز الأحداث (Key Events)
         const renderEventsTab = (data, container) => {
-            const events = data.keyEvents || [];
+            const events = data.keyEvents || data.plays || data.header?.competitions?.[0]?.details || [];
             if (!Array.isArray(events) || events.length === 0) {
+                const comp = data.header?.competitions?.[0] || {};
+                const isLive = comp.status?.type?.state === 'in';
                 container.innerHTML = `
                     <div class="stats-empty-state">
                         <div class="stats-empty-icon">⏱️</div>
-                        <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">لم تُسجل أحداث رئيسية بعد</div>
-                        <div style="font-size: 0.73rem;">سيتم رصد الأهداف والبطاقات فور حدوثها في المباراة مباشرة.</div>
+                        <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">
+                            ${isLive ? 'لا توجد أهداف أو بطاقات مسجلة حتى اللحظة' : 'لم تُسجل أحداث رئيسية'}
+                        </div>
+                        <div style="font-size: 0.73rem; color: var(--text-muted); margin-top: 4px;">
+                            ${isLive ? 'المباراة جارية حالياً، وسيتم رصد الأهداف والإنذارات فور حدوثها في الوقت الحقيقي.' : 'المباراة انتهت دون تسجيل أهداف أو بطاقات في سجل الوقائع.'}
+                        </div>
                     </div>
                 `;
                 return;
@@ -552,7 +613,7 @@
                 const players = teamRoster.roster || [];
                 const starters = players.filter(p => p.starter !== false && !p.subbedIn);
                 const subs = players.filter(p => p.starter === false || p.subbedIn);
-                const coach = teamRoster.coach?.[0]?.displayName || 'المدرب الفني';
+                const coach = teamRoster.coach?.[0]?.displayName || 'غير متوفر';
 
                 return `
                     <div class="lineup-starters-card">
@@ -732,14 +793,15 @@
             const comp = data.header?.competitions?.[0] || {};
             const gameInfo = data.gameInfo || {};
             const venue = gameInfo.venue || comp.venue || {};
-            const venueName = venue.fullName || 'غير محدد';
+            const venueName = venue.fullName;
             const city = venue.address?.city || '';
-            const venueDisplay = city ? `${venueName} (${city})` : venueName;
+            const venueDisplay = venueName ? (city ? `${venueName} (${city})` : venueName) : 'غير متوفر';
 
-            const officials = (gameInfo.officials || []).map(o => o.displayName).filter(Boolean).join('، ') || 'طاقم تحكيم رسمي';
-            const attendance = gameInfo.attendance ? `${Number(gameInfo.attendance).toLocaleString('ar-MA')} متفرج` : 'غير معلن';
+            const officialsList = (gameInfo.officials || []).map(o => o.displayName).filter(Boolean);
+            const officials = officialsList.length > 0 ? officialsList.join('، ') : 'غير متوفر';
+            const attendance = gameInfo.attendance ? `${Number(gameInfo.attendance).toLocaleString('ar-MA')} متفرج` : 'غير متوفر';
             
-            let dateStr = '–';
+            let dateStr = 'غير متوفر';
             try {
                 if (comp.date) {
                     dateStr = new Date(comp.date).toLocaleString('ar-MA', {
@@ -834,3 +896,7 @@
 
 window.openMatchStats = openMatchStats;
 window.closeMatchStats = closeMatchStats;
+window.switchStatsTab = (tabId) => {
+    currentActiveStatsTab = tabId;
+    renderActiveStatsTabPane();
+};

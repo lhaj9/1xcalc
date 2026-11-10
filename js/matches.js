@@ -191,7 +191,26 @@
                 const comp = ev.competitions?.[0] || {};
                 let leagueMeta = knownMeta;
 
-                // إذا كانت من الخلاصة العالمية الشاملة (soccer/all)، استخرج اسم وهوية البطولة الحقيقية
+                // استخراج كود الدوري الحقيقي من ESPN بدقة (من UID أو كائن البطولة)
+                let realLeagueCode = (leagueCode !== 'all') ? leagueCode : '';
+                if (!realLeagueCode) {
+                    const uidMatch = (ev.uid || '').match(/~l:([^~]+)/);
+                    if (uidMatch && uidMatch[1]) {
+                        realLeagueCode = uidMatch[1];
+                    } else if (ev.league?.slug) {
+                        realLeagueCode = ev.league.slug;
+                    } else if (comp.league?.slug) {
+                        realLeagueCode = comp.league.slug;
+                    } else if (data.leagues?.[0]?.slug) {
+                        realLeagueCode = data.leagues[0].slug;
+                    }
+                }
+
+                if (!leagueMeta && realLeagueCode) {
+                    leagueMeta = MAJOR_LEAGUES.find(l => l.code === realLeagueCode && l.sport === sport);
+                }
+
+                // إذا كانت من الخلاصة العالمية الشاملة (soccer/all) ولم نجد بطولة سابقة، استخرج اسم وهوية البطولة
                 if (!leagueMeta || leagueCode === 'all') {
                     const rawNote = (comp.altGameNote || ev.season?.slug || ev.league?.name || '').toLowerCase();
                     let mapped = null;
@@ -213,7 +232,7 @@
                         name: resolvedName,
                         shortName: resolvedName,
                         country: resolvedCountry,
-                        logo: './icon-192.png',
+                        logo: leagueMeta?.logo || './icon-192.png',
                         flagImg: resolvedFlag
                     };
                 }
@@ -221,7 +240,7 @@
                 return {
                     ...ev,
                     sport,
-                    leagueCode: ev.leagueCode || leagueCode,
+                    leagueCode: realLeagueCode || ev.leagueCode || leagueCode,
                     leagueMeta
                 };
             });
