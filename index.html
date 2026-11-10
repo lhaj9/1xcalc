@@ -112,108 +112,93 @@
         
         <!-- ==================== التبويب الأول: مركز المباريات والأحداث المباشرة (1XBET Style Live & Matches Hub) ==================== -->
         <section id="tabHome" class="tab-panel active">
-            <!-- شريط حالة المباريات والبحث السريع -->
-            <div class="matches-header-card">
-                <div class="matches-header-top">
-                    <div class="matches-title-box">
-                        <span class="live-dot-pulse" id="homeLivePulse" style="display: none;"></span>
-                        <span class="matches-title" id="homeMatchesTitle">⚽ مركز مباريات الدوريات والبطولات</span>
-                    </div>
-                    <button type="button" class="match-refresh-btn" id="refreshMatchesBtn" title="تحديث المباريات والنتائج">
+            <!-- ==================== تصميم واجهة المباريات بأسلوب SofaScore الاحترافي ==================== -->
+            <!-- 1. شريط العنوان العلوي وأزرار الإجراءات (Top Bar: Brand, Search Icon, Refresh) -->
+            <div class="sofa-top-bar">
+                <div class="sofa-top-brand">
+                    <span class="live-dot-pulse" id="homeLivePulse" style="display: none;"></span>
+                    <i class="fa-solid fa-bolt sofa-brand-icon"></i>
+                    <span class="sofa-brand-title" id="homeMatchesTitle">مركز المباريات</span>
+                </div>
+                <div class="sofa-top-actions">
+                    <button type="button" class="sofa-icon-btn" id="btnToggleSearch" title="بحث في المباريات (فرق وبطولات)">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <button type="button" class="sofa-icon-btn" id="refreshMatchesBtn" title="تحديث المباريات فورياً">
                         <i class="fa-solid fa-rotate"></i>
-                        <span>تحديث فوري</span>
                     </button>
                 </div>
-                
-                <!-- شريط البحث السريع في المباريات -->
-                <div class="match-search-wrap">
-                    <i class="fa-solid fa-magnifying-glass match-search-icon"></i>
-                    <input type="text" id="matchSearchInput" class="match-search-input" placeholder="ابحث باسم الفريق أو النادي (مثلاً: ريال مدريد، أرسنال)...">
-                    <button type="button" class="match-search-clear" id="matchSearchClearBtn" style="display: none;">✕</button>
+            </div>
+
+            <!-- 2. حقل البحث المنبثق الأنيق (يفتح بنقرة على أيقونة البحث ويوفر مساحة الشاشة بالكامل) -->
+            <div class="sofa-search-expandable" id="sofaSearchExpandable" style="display: none;">
+                <div class="sofa-search-inner">
+                    <i class="fa-solid fa-magnifying-glass sofa-search-icon"></i>
+                    <input type="text" id="matchSearchInput" class="sofa-search-input" placeholder="ابحث باسم الفريق، النادي، أو الدوري...">
+                    <button type="button" class="sofa-search-clear" id="matchSearchClearBtn" style="display: none;">✕</button>
+                    <button type="button" class="sofa-search-close" id="btnCloseSearch" title="إغلاق البحث">✕</button>
                 </div>
             </div>
 
-            <!-- مفتاح التبديل المزدوج لنوع المباريات (1xBet Dual Status Switcher) -->
-            <div class="matches-status-switch" id="matchesStatusSwitch">
-                <button type="button" class="status-switch-btn active" data-status="all" id="statusBtnAll" title="جميع المباريات">
-                    <i class="fa-solid fa-layer-group"></i>
-                    <span class="btn-text">
-                        <span class="text-full">جميع المباريات</span>
-                        <span class="text-compact">الكل</span>
-                    </span>
+            <!-- 3. شريط اختيار الرياضة (Sports Bar: Soccer / Basketball) -->
+            <div class="sofa-sports-nav" id="sportsSwitchBar">
+                <button type="button" class="sofa-sport-item active" data-sport="soccer">
+                    <span class="sofa-sport-icon">⚽</span>
+                    <span class="sofa-sport-label">كرة القدم</span>
                 </button>
-                <button type="button" class="status-switch-btn btn-live" data-status="live" id="statusBtnLive" title="مباشر الآن">
+                <button type="button" class="sofa-sport-item" data-sport="basketball">
+                    <span class="sofa-sport-icon">🏀</span>
+                    <span class="sofa-sport-label">كرة السلة</span>
+                </button>
+            </div>
+
+            <!-- 4. مفتاح التبديل المزدوج بين المباريات والبطولات (SofaScore View Switcher: GAMES / LEAGUES) -->
+            <div class="sofa-view-switch">
+                <button type="button" class="sofa-view-btn active" data-view="games" id="sofaViewGamesBtn">
+                    <i class="fa-solid fa-futbol"></i>
+                    <span>المباريات</span>
+                </button>
+                <button type="button" class="sofa-view-btn" data-view="leagues" id="sofaViewLeaguesBtn">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>البطولات</span>
+                </button>
+            </div>
+
+            <!-- 5. شريط التحكم والتواريخ في سطر واحد مدمج: [تصفية] [مباشر] [< اليوم >] -->
+            <div class="sofa-control-row" id="sofaGamesControlRow">
+                <!-- زر التصفية والفلاتر -->
+                <button type="button" class="sofa-filter-btn" id="btnOpenFilterSheet" title="تصفية وفلاتر المباريات المتقدمة">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>تصفية</span>
+                    <span class="filter-active-dot" id="filterActiveDot" style="display: none;"></span>
+                </button>
+
+                <!-- زر المباشر LIVE باللون الأحمر النبّاض وعداد المباريات المباشرة -->
+                <button type="button" class="sofa-live-pill status-switch-btn" data-status="live" id="statusBtnLive" title="عرض المباريات المباشرة الجارية الآن فقط">
                     <span class="live-dot-pulse"></span>
-                    <span class="btn-text">
-                        <span class="text-full">مباشر (LIVE)</span>
-                        <span class="text-compact">مباشر</span>
-                    </span>
-                    <span class="status-count-badge" id="liveStatusBadge">0</span>
+                    <span>مباشر</span>
+                    <span class="sofa-live-count" id="liveStatusBadge">0</span>
                 </button>
-                <button type="button" class="status-switch-btn" data-status="pre" id="statusBtnPre" title="المباريات القادمة والجدول">
-                    <i class="fa-regular fa-clock"></i>
-                    <span class="btn-text">
-                        <span class="text-full">المباريات القادمة</span>
-                        <span class="text-compact">القادمة</span>
-                    </span>
-                </button>
+
+                <!-- شريط تصفح الأيام والتنقل بالأسهم والتقويم المباشر -->
+                <div class="sofa-date-navigator">
+                    <!-- في RTL: السهم الأيمن ينقل لليوم السابق (أمس) -->
+                    <button type="button" class="sofa-date-arrow" id="dateNavPrev" title="اليوم السابق">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                    <!-- الزر الأوسط يعرض التاريخ الحالي والنقر عليه يفتح التقويم المباشر -->
+                    <button type="button" class="sofa-date-label-btn" id="dateNavCenter" title="انقر لاختيار أي يوم من التقويم">
+                        <i class="fa-regular fa-calendar-days"></i>
+                        <span id="currentDateNavLabel">اليوم</span>
+                    </button>
+                    <!-- السهم الأيسر ينقل لليوم التالي (غداً) -->
+                    <button type="button" class="sofa-date-arrow" id="dateNavNext" title="اليوم التالي">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- شريط التبديل بين الرياضات العالمية (Sports Switcher) -->
-            <div class="sports-switch-bar" id="sportsSwitchBar">
-                <button type="button" class="sport-chip active" data-sport="soccer">
-                    <span>⚽</span>
-                    <span>كرة القدم (Soccer)</span>
-                </button>
-                <button type="button" class="sport-chip" data-sport="basketball">
-                    <span>🏀</span>
-                    <span>كرة السلة (NBA)</span>
-                </button>
-            </div>
-
-            <!-- شريط الفلاتر السريعة بالأزرار الأفقية (Horizontal Time Chips) -->
-            <div class="time-chips-bar" id="timeChipsBar">
-                <button type="button" class="time-chip active" data-time="all">
-                    <i class="fa-solid fa-calendar-day"></i>
-                    <span>الكل</span>
-                </button>
-                <button type="button" class="time-chip" data-time="6h">
-                    <i class="fa-solid fa-hourglass-start"></i>
-                    <span>خلال 6 ساعات</span>
-                </button>
-                <button type="button" class="time-chip" data-time="12h">
-                    <span>خلال 12 ساعة</span>
-                </button>
-                <button type="button" class="time-chip" data-time="24h">
-                    <span>خلال 24 ساعة</span>
-                </button>
-                <button type="button" class="time-chip" data-time="48h">
-                    <span>خلال 48 ساعة</span>
-                </button>
-                <button type="button" class="time-chip" data-time="this_week">
-                    <i class="fa-solid fa-calendar-week"></i>
-                    <span>الأسبوع الحالي</span>
-                </button>
-                <button type="button" class="time-chip" data-time="next_week">
-                    <i class="fa-solid fa-forward"></i>
-                    <span>الأسبوع القادم</span>
-                </button>
-                <button type="button" class="time-chip" data-time="last_week">
-                    <i class="fa-solid fa-backward"></i>
-                    <span>نتائج سابقة</span>
-                </button>
-                <button type="button" class="time-chip chip-select-period" id="btnOpenSetPeriodModal">
-                    <i class="fa-regular fa-calendar-days"></i>
-                    <span>تحديد الفترة ▾</span>
-                </button>
-            </div>
-
-            <!-- شريط البطولات والدوريات مع عداد المباريات والنجمة المفضلة (Tournaments Selector) -->
-            <div class="tournaments-selector-bar" id="tournamentsBarContainer">
-                <!-- يتم تعبئتها ديناميكياً مع عدادات المباريات والنجوم المفضلة والأعلام الرسمية -->
-            </div>
-
-            <!-- حاوية عرض المباريات الذكية -->
+            <!-- حاوية عرض المباريات والبطولات الذكية -->
             <div id="homeMatchesContainer">
                 <div class="match-loading-card">
                     <div class="match-spinner"></div>
@@ -927,7 +912,67 @@
         </div>
     </div>
 
-    <!-- ==================== نافذة تحديد الفترة والتقويم المخصص (1xBet Style Set Period Modal) ==================== -->
+    <!-- ==================== نافذة التصفية والفلاتر المتقدمة (SofaScore Filter Sheet) ==================== -->
+    <div class="modal-overlay" id="matchesFilterSheetModal" aria-hidden="true">
+        <div class="filter-sheet-modal">
+            <div class="period-modal-drag"></div>
+            <div class="filter-sheet-header">
+                <div class="filter-sheet-title">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>تصفية وفلاتر المباريات</span>
+                </div>
+                <button type="button" class="stats-header-close-x" id="closeFilterSheetX" title="إغلاق">✕</button>
+            </div>
+
+            <div class="filter-sheet-body">
+                <!-- قسم المواعيد والفترات الزمنية -->
+                <div class="filter-section-title">
+                    <i class="fa-regular fa-clock"></i>
+                    <span>الفترة الزمنية ومواعيد اللقاء</span>
+                </div>
+                <div class="filter-chips-grid">
+                    <button type="button" class="filter-chip-btn active" data-time="day">اليوم المحدد</button>
+                    <button type="button" class="filter-chip-btn" data-time="all">كل المواعيد المتاحة</button>
+                    <button type="button" class="filter-chip-btn" data-time="6h">خلال 6 ساعات</button>
+                    <button type="button" class="filter-chip-btn" data-time="12h">خلال 12 ساعة</button>
+                    <button type="button" class="filter-chip-btn" data-time="24h">خلال 24 ساعة</button>
+                    <button type="button" class="filter-chip-btn" data-time="48h">خلال 48 ساعة</button>
+                    <button type="button" class="filter-chip-btn" data-time="this_week">الأسبوع الحالي</button>
+                    <button type="button" class="filter-chip-btn" data-time="next_week">الأسبوع القادم</button>
+                    <button type="button" class="filter-chip-btn" data-time="last_week">نتائج سابقة</button>
+                    <button type="button" class="filter-chip-btn" data-time="custom" id="btnFilterSheetOpenCal">تحديد فترة مخصصة...</button>
+                </div>
+
+                <!-- قسم نوع وحالة المباراة -->
+                <div class="filter-section-title" style="margin-top: 15px;">
+                    <i class="fa-solid fa-signal"></i>
+                    <span>حالة المباراة</span>
+                </div>
+                <div class="filter-chips-grid">
+                    <button type="button" class="filter-status-btn active" data-status="all">جميع الحالات</button>
+                    <button type="button" class="filter-status-btn" data-status="live">🔴 مباشر فقط (LIVE)</button>
+                    <button type="button" class="filter-status-btn" data-status="pre">⏳ القادمة فقط</button>
+                    <button type="button" class="filter-status-btn" data-status="post">✓ المنتهية فقط</button>
+                </div>
+
+                <!-- قسم اختيار دوري محدد -->
+                <div class="filter-section-title" style="margin-top: 15px;">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>البطولة أو الدوري</span>
+                </div>
+                <select class="filter-league-select" id="filterLeagueSelect">
+                    <option value="all">كل البطولات والدوريات العالمية</option>
+                </select>
+            </div>
+
+            <div class="filter-sheet-footer">
+                <button type="button" class="filter-btn-reset" id="btnResetFilters">إعادة ضبط ↺</button>
+                <button type="button" class="filter-btn-apply" id="btnApplyFilters">تطبيق التصفية ✓</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== نافذة تحديد الفترة والتقويم المخصص (SofaScore Calendar & Period Modal) ==================== -->
     <div class="modal-overlay" id="setPeriodModal" aria-hidden="true">
         <div class="period-modal-sheet">
             <div class="period-modal-drag"></div>
@@ -990,10 +1035,14 @@
                 <button type="button" class="preset-pill" data-preset="next7">الـ 7 أيام القادمة</button>
             </div>
 
-            <!-- أزرار الإلغاء والتطبيق -->
+            <!-- زر الانتقال الفوري لليوم وزر التطبيق (SofaScore Quick Today Button) -->
             <div class="period-modal-actions">
-                <button type="button" class="period-btn-cancel" id="btnPeriodCancel">إلغاء (Cancel)</button>
-                <button type="button" class="period-btn-apply" id="btnPeriodApply">تطبيق الفترة (Apply)</button>
+                <button type="button" class="period-btn-today" id="btnCalendarJumpToday" title="الانتقال فورياً إلى مباريات اليوم">
+                    <i class="fa-solid fa-calendar-day"></i>
+                    <span>اليوم (Today)</span>
+                </button>
+                <button type="button" class="period-btn-cancel" id="btnPeriodCancel">إلغاء</button>
+                <button type="button" class="period-btn-apply" id="btnPeriodApply">تطبيق الفترة</button>
             </div>
         </div>
     </div>

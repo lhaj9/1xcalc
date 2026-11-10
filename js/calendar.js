@@ -209,5 +209,13 @@
         document.getElementById('btnOpenSetPeriodModal')?.addEventListener('click', openSetPeriodModal);
 
 
+document.getElementById('btnCalendarJumpToday')?.addEventListener('click', () => {
+    if (typeof window.jumpToToday === 'function') {
+        window.jumpToToday();
+    }
+    closeSetPeriodModal();
+    showToast('📅 تم الانتقال إلى مباريات اليوم');
+});
+
 window.openSetPeriodModal = openSetPeriodModal;
 window.closeSetPeriodModal = closeSetPeriodModal;

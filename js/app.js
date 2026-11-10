@@ -419,59 +419,20 @@ const htmlEl = document.documentElement;
 
 
 
-        // ==================== ربط أزرار التحكم والتبديل ====================
-        // 1. مفتاح التبديل المزدوج للحالة (Status Switcher: All / LIVE / Pre-match)
-        document.querySelectorAll('.status-switch-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.status-switch-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentStatusMode = btn.dataset.status;
-                renderMatchesList(loadedMatchesEvents);
-            });
+        // ==================== ربط أزرار التحكم والواجهة بنظام SofaScore ====================
+        // 1. أزرار البحث المنبثق الأنيق (أيقونة البحث والتوسيع)
+        document.getElementById('btnToggleSearch')?.addEventListener('click', () => {
+            if (typeof window.toggleSearchOverlay === 'function') {
+                window.toggleSearchOverlay();
+            }
+        });
+        document.getElementById('btnCloseSearch')?.addEventListener('click', () => {
+            if (typeof window.toggleSearchOverlay === 'function') {
+                window.toggleSearchOverlay(false);
+            }
         });
 
-        // 2. شريط التبديل بين الرياضات (Sports Switcher: Soccer / Basketball)
-        document.querySelectorAll('.sport-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-                document.querySelectorAll('.sport-chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-                currentSport = chip.dataset.sport;
-                currentLeague = 'all';
-
-                const titleEl = document.getElementById('homeMatchesTitle');
-                if (titleEl) {
-                    titleEl.textContent = currentSport === 'basketball'
-                        ? '🏀 مركز مباريات كرة السلة (NBA)'
-                        : '⚽ مركز مباريات الدوريات والبطولات';
-                }
-
-                loadMatches(true);
-            });
-        });
-
-        // 3. شريط الفلاتر السريعة بالأزرار الأفقية (Time Chips)
-        document.querySelectorAll('.time-chip:not(.chip-select-period)').forEach(chip => {
-            chip.addEventListener('click', () => {
-                document.querySelectorAll('.time-chip').forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-
-                const selectPeriodChip = document.getElementById('btnOpenSetPeriodModal');
-                if (selectPeriodChip) {
-                    selectPeriodChip.innerHTML = '<i class="fa-regular fa-calendar-days"></i> <span>تحديد الفترة ▾</span>';
-                }
-
-                currentTimeFilter = chip.dataset.time;
-                loadMatches(false);
-            });
-        });
-
-        // 4. زر التحديث الفوري
-        document.getElementById('refreshMatchesBtn')?.addEventListener('click', () => {
-            loadMatches(true);
-            showToast('🔄 جاري تحديث النتائج والمباريات...');
-        });
-
-        // 5. شريط البحث السريع في المباريات
+        // حقل البحث السريع
         const searchInput = document.getElementById('matchSearchInput');
         const clearSearchBtn = document.getElementById('matchSearchClearBtn');
         if (searchInput) {
@@ -479,20 +440,132 @@ const htmlEl = document.documentElement;
                 if (clearSearchBtn) {
                     clearSearchBtn.style.display = searchInput.value ? 'inline-block' : 'none';
                 }
-                renderMatchesList(loadedMatchesEvents);
+                if (typeof window.renderMatchesList === 'function' && Array.isArray(loadedMatchesEvents)) {
+                    window.renderMatchesList(loadedMatchesEvents);
+                }
             });
         }
         if (clearSearchBtn) {
             clearSearchBtn.addEventListener('click', () => {
                 if (searchInput) searchInput.value = '';
                 clearSearchBtn.style.display = 'none';
-                renderMatchesList(loadedMatchesEvents);
+                if (typeof window.renderMatchesList === 'function' && Array.isArray(loadedMatchesEvents)) {
+                    window.renderMatchesList(loadedMatchesEvents);
+                }
             });
         }
 
+        // 2. شريط الرياضات (Sports Switcher: Soccer / Basketball)
+        document.querySelectorAll('.sofa-sport-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (typeof window.switchSport === 'function') {
+                    window.switchSport(btn.dataset.sport);
+                }
+            });
+        });
+
+        // 3. مفتاح التبديل المزدوج (المباريات GAMES / البطولات LEAGUES)
+        document.getElementById('sofaViewGamesBtn')?.addEventListener('click', () => {
+            if (typeof window.switchMainView === 'function') {
+                window.switchMainView('games');
+            }
+        });
+        document.getElementById('sofaViewLeaguesBtn')?.addEventListener('click', () => {
+            if (typeof window.switchMainView === 'function') {
+                window.switchMainView('leagues');
+            }
+        });
+
+        // 4. أزرار تصفح الأيام بالأسهم والتقويم المباشر (< اليوم >)
+        document.getElementById('dateNavPrev')?.addEventListener('click', () => {
+            if (typeof window.navigateDay === 'function') {
+                window.navigateDay(-1); // أمس
+            }
+        });
+        document.getElementById('dateNavNext')?.addEventListener('click', () => {
+            if (typeof window.navigateDay === 'function') {
+                window.navigateDay(1); // غداً
+            }
+        });
+        document.getElementById('dateNavCenter')?.addEventListener('click', () => {
+            window.calendarMode = 'single';
+            if (typeof window.openSetPeriodModal === 'function') {
+                window.openSetPeriodModal();
+            }
+        });
+
+        // 5. زر المباشر LIVE باللون الأحمر النبّاض
+        document.getElementById('statusBtnLive')?.addEventListener('click', () => {
+            const btn = document.getElementById('statusBtnLive');
+            const isCurrentlyLive = btn.classList.contains('active');
+            btn.classList.toggle('active', !isCurrentlyLive);
+            currentStatusMode = isCurrentlyLive ? 'all' : 'live';
+            if (typeof window.renderMatchesList === 'function' && Array.isArray(loadedMatchesEvents)) {
+                window.renderMatchesList(loadedMatchesEvents);
+            }
+        });
+
+        // 6. نافذة التصفية والفلاتر (Filter Sheet)
+        document.getElementById('btnOpenFilterSheet')?.addEventListener('click', () => {
+            if (typeof window.openFilterSheet === 'function') {
+                window.openFilterSheet();
+            }
+        });
+        document.getElementById('closeFilterSheetX')?.addEventListener('click', () => {
+            if (typeof window.closeFilterSheet === 'function') {
+                window.closeFilterSheet();
+            }
+        });
+        document.getElementById('btnApplyFilters')?.addEventListener('click', () => {
+            if (typeof window.applyFilterSheet === 'function') {
+                window.applyFilterSheet();
+            }
+        });
+        document.getElementById('btnResetFilters')?.addEventListener('click', () => {
+            if (typeof window.resetFilterSheet === 'function') {
+                window.resetFilterSheet();
+            }
+        });
+        document.getElementById('btnFilterSheetOpenCal')?.addEventListener('click', () => {
+            if (typeof window.closeFilterSheet === 'function') {
+                window.closeFilterSheet();
+            }
+            window.calendarMode = 'range';
+            if (typeof window.openSetPeriodModal === 'function') {
+                window.openSetPeriodModal();
+            }
+        });
+
+        // تبديل أزرار الفلاتر داخل نافذة التصفية
+        document.querySelectorAll('.filter-chip-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-chip-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+        document.querySelectorAll('.filter-status-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-status-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // 7. زر التحديث الفوري
+        document.getElementById('refreshMatchesBtn')?.addEventListener('click', () => {
+            const icon = document.querySelector('#refreshMatchesBtn i');
+            if (icon) icon.classList.add('fa-spin');
+            if (typeof window.loadMatches === 'function') {
+                window.loadMatches(true).finally(() => {
+                    setTimeout(() => icon?.classList.remove('fa-spin'), 600);
+                });
+            }
+            showToast('🔄 جاري تحديث النتائج والمباريات...');
+        });
+
         // تشغيل التحميل الأولي
-        renderTournamentsBar();
-        loadMatches(false);
+        if (typeof window.loadMatches === 'function') {
+            window.loadMatches(false);
+        }
 
 
         // ==================== مؤقت شاشة البداية الرياضية (Splash Screen Timer ~1.3s) ====================
