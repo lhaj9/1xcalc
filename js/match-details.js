@@ -15,12 +15,12 @@
             currentActiveStatsLeague = leagueCode || currentLeague || 'all';
             currentActiveStatsTab = 'statsTabOverview';
 
-            if (currentActiveStatsLeague === 'all') {
+            if (currentActiveStatsLeague === 'all' || !currentActiveStatsLeague) {
                 const foundEv = loadedMatchesEvents.find(e => e.id === eventId);
-                if (foundEv && foundEv.leagueCode) {
+                if (foundEv && foundEv.leagueCode && foundEv.leagueCode !== 'all') {
                     currentActiveStatsLeague = foundEv.leagueCode;
                 } else {
-                    currentActiveStatsLeague = 'uefa.nations';
+                    currentActiveStatsLeague = 'all';
                 }
             }
 
@@ -65,9 +65,11 @@
             try {
                 let url = '';
                 if (currentSport === 'basketball') {
-                    url = `https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event=${eventId}`;
+                    const bLeague = (currentActiveStatsLeague === 'mens-college-basketball') ? 'mens-college-basketball' : 'nba';
+                    url = `https://site.api.espn.com/apis/site/v2/sports/basketball/${bLeague}/summary?event=${eventId}`;
                 } else {
-                    url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${currentActiveStatsLeague}/summary?event=${eventId}`;
+                    const sLeague = (currentActiveStatsLeague === 'all' || !currentActiveStatsLeague) ? 'all' : currentActiveStatsLeague;
+                    url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${sLeague}/summary?event=${eventId}`;
                 }
 
                 const res = await fetch(url);
