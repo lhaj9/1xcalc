@@ -1,22 +1,39 @@
 // ==================== إدارة التخزين المحلي والإعدادات والنسخ الاحتياطي (Storage Manager) ====================
         // ==================== الإعدادات والذاكرة المحلية ====================
-        let appSettings = {
+        var appSettings = {
             theme: localStorage.getItem('arb_theme') || 'light',
             currency: localStorage.getItem('arb_currency') || '$',
             defaultCapital: localStorage.getItem('arb_def_capital') || '1000',
             precision: parseInt(localStorage.getItem('arb_precision') || '2', 10)
         };
 
-        let historyTab1 = JSON.parse(localStorage.getItem('arb_history_t1') || '[]');
-        let historyTab2 = JSON.parse(localStorage.getItem('arb_history_t2') || '[]');
-        let savedSlips = JSON.parse(localStorage.getItem('arb_saved_slips') || '[]');
+        var historyTab1 = JSON.parse(localStorage.getItem('arb_history_t1') || '[]');
+        var historyTab2 = JSON.parse(localStorage.getItem('arb_history_t2') || '[]');
+        var savedSlips = JSON.parse(localStorage.getItem('arb_saved_slips') || '[]');
 
-        let currentTab2Mode = 'stake1';
-        let currentSlipFilter = 'all';
-        let currentHistoryFilter = 'all';
-        let expandedSlipIds = new Set();
-        let timerT1 = null;
-        let timerT2 = null;
+        // تعقيم وتدقيق السجلات التاريخية لضمان وجود المعرفات والتواريخ
+        historyTab1 = historyTab1.map((item, index) => {
+            if (!item.id) item.id = Date.now() - (index * 1000);
+            if (!item.time && item.date) item.time = item.date;
+            if (!item.date && item.time) item.date = item.time;
+            if (!item.capital && item.totalStake) item.capital = item.totalStake;
+            if (!item.ratio1 && item.odds1) item.ratio1 = item.odds1;
+            if (!item.ratio2 && item.odds2) item.ratio2 = item.odds2;
+            return item;
+        });
+        historyTab2 = historyTab2.map((item, index) => {
+            if (!item.id) item.id = Date.now() - (index * 1000);
+            if (!item.time && item.date) item.time = item.date;
+            if (!item.date && item.time) item.date = item.time;
+            return item;
+        });
+
+        var currentTab2Mode = 'stake1';
+        var currentSlipFilter = 'all';
+        var currentHistoryFilter = 'all';
+        var expandedSlipIds = new Set();
+        var timerT1 = null;
+        var timerT2 = null;
 
         const cur = () => appSettings.currency;
 
@@ -76,7 +93,7 @@
         };
 
         const applySettings = () => {
-            htmlEl.setAttribute('data-theme', appSettings.theme);
+            document.documentElement.setAttribute('data-theme', appSettings.theme);
             const metaColor = appSettings.theme === 'dark' ? '#0c111a' : '#f4f6fa';
             const metaEl = document.getElementById('metaThemeColor');
             if (metaEl) metaEl.setAttribute('content', metaColor);
@@ -126,7 +143,7 @@
                 list = list.concat(historyTab2.map(item => ({ ...item, tabSource: 't2' })));
             }
 
-            list.sort((a, b) => b.id - a.id);
+            list.sort((a, b) => (b.id || 0) - (a.id || 0));
 
             if (list.length === 0) {
                 container.innerHTML = `
@@ -155,7 +172,7 @@
                                 <span style="font-size: 0.72rem; font-weight: 900; padding: 3px 8px; border-radius: 6px; ${isT1 ? 'background: var(--blue-bg); color: var(--blue-accent);' : 'background: var(--amber-bg); color: var(--amber-accent);'}">
                                     ${isT1 ? '⚡ تغطية آنية' : '⏱️ تغطية متأخرة'}
                                 </span>
-                                <span style="font-size: 0.72rem; color: var(--text-muted); direction: ltr;">${item.time || ''}</span>
+                                <span style="font-size: 0.72rem; color: var(--text-muted); direction: ltr;">${item.time || item.date || ''}</span>
                             </div>
                             <div style="font-size: 0.92rem; font-weight: 900; color: ${profitColor}; direction: ltr;">
                                 ${profitPrefix}${(item.netProfit || 0).toFixed(p)}${c} (${profitPrefix}${(item.pct || 0).toFixed(2)}%)
@@ -208,32 +225,55 @@
             });
         }
 
-        window.applyHistoryItemToCalc = (source, id) => {
+        const applyHistoryItemToCalc = (source, id) => {
             if (source === 't1') {
                 const item = historyTab1.find(h => h.id === id);
                 if (item) {
-                    capitalInput.value = item.capital;
-                    ratio1Input.value = item.ratio1;
-                    ratio2Input.value = item.ratio2;
-                    updateTab1();
-                    switchTab('tabCalc');
-                    switchCalcPane('paneArbitrage');
+                    const capEl = document.getElementById('capital');
+                    const r1El = document.getElementById('ratio1');
+                    const r2El = document.getElementById('ratio2');
+                    if (capEl) capEl.value = item.capital || item.totalStake || '';
+                    if (r1El) r1El.value = item.ratio1 || item.odds1 || '';
+                    if (r2El) r2El.value = item.ratio2 || item.odds2 || '';
+                    if (typeof updateTab1 === 'function') updateTab1();
+                    if (typeof switchTab === 'function') switchTab('tabCalc');
+                    if (typeof switchCalcPane === 'function') switchCalcPane('paneArbitrage');
                     showToast('تم تحميل بيانات العملية في حاسبة التغطية الآنية');
                 }
             } else if (source === 't2') {
                 const item = historyTab2.find(h => h.id === id);
                 if (item) {
-                    t2AmountInput.value = item.stake1;
-                    t2Odds1Input.value = item.odds1;
-                    t2TargetPctInput.value = item.pct;
-                    syncPctChips(item.pct);
-                    updateTab2();
-                    switchTab('tabCalc');
-                    switchCalcPane('paneDelayed');
+                    const mode = item.mode || 'stake1';
+                    currentTab2Mode = mode;
+                    document.querySelectorAll('.mode-btn').forEach(b => {
+                        b.classList.toggle('active', b.dataset.mode === mode);
+                    });
+                    const labelEl = document.getElementById('stakeInputLabel');
+                    const titleEl = document.getElementById('tab2ModeTitle');
+                    if (labelEl && titleEl) {
+                        if (mode === 'stake1') {
+                            labelEl.textContent = 'مبلغ الرهان 1';
+                            titleEl.textContent = 'بيانات الدخول الأول (الرهان 1 الأساسي)';
+                        } else {
+                            labelEl.textContent = 'رأس المال الكلي';
+                            titleEl.textContent = 'توزيع ميزانية كلية محددة على الرهانين معاً';
+                        }
+                    }
+                    const amtEl = document.getElementById('t2AmountInput');
+                    const o1El = document.getElementById('t2Odds1Input');
+                    const pctEl = document.getElementById('t2TargetPctInput');
+                    if (amtEl) amtEl.value = (mode === 'total' && item.totalStake ? item.totalStake : item.stake1) || '';
+                    if (o1El) o1El.value = item.odds1 || '';
+                    if (pctEl) pctEl.value = (typeof item.pct !== 'undefined' ? item.pct : 10);
+                    if (typeof syncPctChips === 'function') syncPctChips(item.pct ?? 10);
+                    if (typeof updateTab2 === 'function') updateTab2();
+                    if (typeof switchTab === 'function') switchTab('tabCalc');
+                    if (typeof switchCalcPane === 'function') switchCalcPane('paneDelayed');
                     showToast('تم تحميل بيانات العملية في حاسبة التغطية المتأخرة');
                 }
             }
         };
+        window.applyHistoryItemToCalc = applyHistoryItemToCalc;
 
         const updateMenuStats = () => {
             const p = appSettings.precision;
@@ -451,19 +491,19 @@
             showToast('تم مسح جميع القسائم المحفوظة');
         });
 
-        // التهيئة الأولية
+        // تطبيق الإعدادات الفورية
         applySettings();
-        capitalInput.value = appSettings.defaultCapital;
-        renderHistoryTab1();
-        renderHistoryTab2();
-        updateTab2();
-        renderSlips();
         renderFullHistory();
         updateMenuStats();
-        updateInstallUI();
-    
-
 
 window.showToast = showToast;
 window.applyHistoryItemToCalc = applyHistoryItemToCalc;
-window.renderHistory = renderHistory;
+window.renderFullHistory = renderFullHistory;
+window.applySettings = applySettings;
+window.setTheme = setTheme;
+window.toggleTheme = toggleTheme;
+window.updateMenuStats = updateMenuStats;
+window.appSettings = appSettings;
+window.savedSlips = savedSlips;
+window.historyTab1 = historyTab1;
+window.historyTab2 = historyTab2;

@@ -558,14 +558,34 @@ const htmlEl = document.documentElement;
             showToast('🔄 جاري تحديث النتائج والمباريات...');
         });
 
-        // تشغيل التحميل الأولي
-        if (typeof window.loadMatches === 'function') {
-            window.loadMatches(false);
-        }
+        // ==================== دورة التهيئة الشاملة للتطبيق (Master App Initialization) ====================
+        const initApp = () => {
+            if (typeof applySettings === 'function') applySettings();
 
+            const capInput = document.getElementById('capital');
+            if (capInput && typeof appSettings !== 'undefined' && appSettings.defaultCapital) {
+                capInput.value = appSettings.defaultCapital;
+            }
+
+            if (typeof renderHistoryTab1 === 'function') renderHistoryTab1();
+            if (typeof renderHistoryTab2 === 'function') renderHistoryTab2();
+            if (typeof updateTab1 === 'function') updateTab1();
+            if (typeof updateTab2 === 'function') updateTab2();
+            if (typeof renderSlips === 'function') renderSlips();
+            if (typeof renderFullHistory === 'function') renderFullHistory();
+            if (typeof updateMenuStats === 'function') updateMenuStats();
+            if (typeof updateInstallUI === 'function') updateInstallUI();
+
+            if (typeof window.loadMatches === 'function') {
+                window.loadMatches(false);
+            }
+        };
+
+        // تنفيذ التهيئة الشاملة
+        initApp();
 
         // ==================== مؤقت شاشة البداية الرياضية (Splash Screen Timer ~1.3s) ====================
-        window.addEventListener('DOMContentLoaded', () => {
+        const handleSplash = () => {
             const splashEl = document.getElementById('appSplashScreen');
             if (splashEl) {
                 setTimeout(() => {
@@ -575,7 +595,13 @@ const htmlEl = document.documentElement;
                     }, 450);
                 }, 1300);
             }
-        });
+        };
 
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', handleSplash);
+        } else {
+            handleSplash();
+        }
 
 window.switchTab = switchTab;
+window.initApp = initApp;

@@ -70,3 +70,7 @@ function setAppLanguage(lang) {
         document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     }
 }
+
+window.I18N_TRANSLATIONS = I18N_TRANSLATIONS;
+window.t = t;
+window.setAppLanguage = setAppLanguage;

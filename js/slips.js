@@ -36,13 +36,15 @@
 
         document.getElementById('saveTab1SlipBtn').addEventListener('click', () => {
             const nameInput = document.getElementById('tab1SlipName');
-            createSlip(lastCalcTab1, nameInput.value, 'hedged');
+            createSlip((typeof lastCalcTab1 !== 'undefined' && lastCalcTab1) ? lastCalcTab1 : window.lastCalcTab1, nameInput.value, 'hedged');
             nameInput.value = '';
         });
 
         document.getElementById('saveTab2SlipBtn').addEventListener('click', () => {
             const nameInput = document.getElementById('tab2SlipName');
-            const sourceCalc = lastSimCalcTab2 ? { type: 'تغطية متأخرة', ...lastSimCalcTab2 } : lastCalcTab2;
+            const sim = (typeof lastSimCalcTab2 !== 'undefined' && lastSimCalcTab2) ? lastSimCalcTab2 : window.lastSimCalcTab2;
+            const calc = (typeof lastCalcTab2 !== 'undefined' && lastCalcTab2) ? lastCalcTab2 : window.lastCalcTab2;
+            const sourceCalc = sim ? { type: 'تغطية متأخرة', ...sim } : calc;
             createSlip(sourceCalc, nameInput.value, 'pending');
             nameInput.value = '';
         });
@@ -598,4 +600,5 @@ window.applySlipLiveHedge = applySlipLiveHedge;
 window.updateSlipStatus = updateSlipStatus;
 window.deleteSlip = deleteSlip;
 window.renderSlips = renderSlips;
-window.addSlip = addSlip;
+window.createSlip = createSlip;
+window.addSlip = createSlip;

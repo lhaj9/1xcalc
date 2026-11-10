@@ -3,7 +3,7 @@
         const capitalInput = document.getElementById('capital');
         const ratio1Input = document.getElementById('ratio1');
         const ratio2Input = document.getElementById('ratio2');
-        let lastCalcTab1 = null;
+        var lastCalcTab1 = null;
 
         const updateTab1 = () => {
             clearTimeout(timerT1);
@@ -49,23 +49,32 @@
             const isLoss = pct < 0;
             [resBlue, resGreen, retBlue, retGreen].forEach(el => el.classList.toggle('strikethrough', isLoss));
 
-            lastCalcTab1 = {
+            const nowDt = getFormattedDateTime();
+            lastCalcTab1 = window.lastCalcTab1 = {
+                id: Date.now(),
                 type: 'تغطية ثنائية',
+                capital: capital,
                 stake1: blueStake,
                 odds1: r1,
+                ratio1: r1,
                 stake2: greenStake,
                 odds2: r2,
+                ratio2: r2,
                 totalStake: capital,
                 payout: totalReturn,
                 netProfit,
-                pct
+                pct,
+                time: nowDt,
+                date: nowDt
             };
 
             timerT1 = setTimeout(() => {
-                historyTab1.unshift({ ...lastCalcTab1, date: getFormattedDateTime() });
+                const itemToSave = { ...lastCalcTab1, id: Date.now(), time: getFormattedDateTime(), date: getFormattedDateTime() };
+                historyTab1.unshift(itemToSave);
                 if (historyTab1.length > 25) historyTab1.pop();
                 localStorage.setItem('arb_history_t1', JSON.stringify(historyTab1));
                 renderHistoryTab1();
+                if (typeof renderFullHistory === 'function') renderFullHistory();
             }, 900);
         };
 
@@ -100,8 +109,8 @@
         const t2Odds1Input = document.getElementById('t2Odds1Input');
         const t2TargetPctInput = document.getElementById('t2TargetPctInput');
         const t2CustomOdds2Input = document.getElementById('t2CustomOdds2Input');
-        let lastCalcTab2 = null;
-        let lastSimCalcTab2 = null;
+        var lastCalcTab2 = null;
+        var lastSimCalcTab2 = null;
 
         const computeDelayedHedge = (amountVal, odds1, targetPct, mode) => {
             const factor = 1 + (targetPct / 100);
@@ -157,7 +166,7 @@
                 return;
             }
 
-            lastSimCalcTab2 = sim;
+            lastSimCalcTab2 = window.lastSimCalcTab2 = sim;
             simBox.classList.add('active');
 
             const verdictEl = document.getElementById('simVerdictBanner');
@@ -220,7 +229,7 @@
                 banner.classList.add('negative');
                 reqOdds2El.textContent = 'غير متاح';
                 reqStake2El.textContent = '0.00';
-                lastCalcTab2 = {
+                lastCalcTab2 = window.lastCalcTab2 = {
                     type: 'تغطية متأخرة',
                     stake1: activeStake1,
                     odds1: odds1,
@@ -250,13 +259,23 @@
                 netEl.textContent = `${sign}${res.netProfit.toFixed(p)}${cur()} (${sign}${res.pct.toFixed(1)}%)`;
                 netEl.style.color = res.netProfit >= 0 ? 'var(--green-accent)' : 'var(--danger-accent)';
 
-                lastCalcTab2 = { type: 'تغطية متأخرة', ...res };
+                const nowDt2 = getFormattedDateTime();
+                lastCalcTab2 = {
+                    id: Date.now(),
+                    type: 'تغطية متأخرة',
+                    mode: currentTab2Mode,
+                    time: nowDt2,
+                    date: nowDt2,
+                    ...res
+                };
 
                 timerT2 = setTimeout(() => {
-                    historyTab2.unshift({ ...lastCalcTab2, date: getFormattedDateTime() });
+                    const itemToSave = { ...lastCalcTab2, id: Date.now(), time: getFormattedDateTime(), date: getFormattedDateTime() };
+                    historyTab2.unshift(itemToSave);
                     if (historyTab2.length > 25) historyTab2.pop();
                     localStorage.setItem('arb_history_t2', JSON.stringify(historyTab2));
                     renderHistoryTab2();
+                    if (typeof renderFullHistory === 'function') renderFullHistory();
                 }, 1000);
             }
 
@@ -412,3 +431,6 @@
 window.switchCalcPane = switchCalcPane;
 window.updateTab1 = updateTab1;
 window.updateTab2 = updateTab2;
+window.renderHistoryTab1 = renderHistoryTab1;
+window.renderHistoryTab2 = renderHistoryTab2;
+window.syncPctChips = syncPctChips;

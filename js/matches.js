@@ -689,10 +689,12 @@
                 tasks.push(fetchLeagueScoreboard(currentSport, lCode, null));
             });
             if (currentSport === 'soccer') {
-                const upcomingNationsDays = ['20261112', '20261113', '20261114', '20261115'];
-                upcomingNationsDays.forEach(dStr => {
-                    tasks.push(fetchLeagueScoreboard('soccer', 'uefa.nations', dStr));
-                });
+                const today = new Date();
+                for (let i = 1; i <= 4; i++) {
+                    const upcomingDay = new Date(today);
+                    upcomingDay.setDate(today.getDate() + i);
+                    tasks.push(fetchLeagueScoreboard('soccer', 'uefa.nations', toESPNDate(upcomingDay)));
+                }
             }
         }
 
