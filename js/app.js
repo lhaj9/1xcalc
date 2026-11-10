@@ -385,8 +385,8 @@ const htmlEl = document.documentElement;
 
             // 5. استدعاء ريندر التبويب المحدد
             if (tabId === 'tabHome') {
-                if (loadedMatchesEvents.length === 0) {
-                    loadMatches();
+                if ((window.loadedMatchesEvents || []).length === 0) {
+                    if (typeof window.loadMatches === 'function') window.loadMatches();
                 }
             } else if (tabId === 'tabCalc') {
                 // تفعيل التحديث للحسابات
@@ -440,8 +440,8 @@ const htmlEl = document.documentElement;
                 if (clearSearchBtn) {
                     clearSearchBtn.style.display = searchInput.value ? 'inline-block' : 'none';
                 }
-                if (typeof window.renderMatchesList === 'function' && Array.isArray(loadedMatchesEvents)) {
-                    window.renderMatchesList(loadedMatchesEvents);
+                if (typeof window.renderMatchesList === 'function' && Array.isArray(window.loadedMatchesEvents)) {
+                    window.renderMatchesList(window.loadedMatchesEvents);
                 }
             });
         }
@@ -449,8 +449,8 @@ const htmlEl = document.documentElement;
             clearSearchBtn.addEventListener('click', () => {
                 if (searchInput) searchInput.value = '';
                 clearSearchBtn.style.display = 'none';
-                if (typeof window.renderMatchesList === 'function' && Array.isArray(loadedMatchesEvents)) {
-                    window.renderMatchesList(loadedMatchesEvents);
+                if (typeof window.renderMatchesList === 'function' && Array.isArray(window.loadedMatchesEvents)) {
+                    window.renderMatchesList(window.loadedMatchesEvents);
                 }
             });
         }
@@ -500,8 +500,8 @@ const htmlEl = document.documentElement;
             const isCurrentlyLive = btn.classList.contains('active');
             btn.classList.toggle('active', !isCurrentlyLive);
             currentStatusMode = isCurrentlyLive ? 'all' : 'live';
-            if (typeof window.renderMatchesList === 'function' && Array.isArray(loadedMatchesEvents)) {
-                window.renderMatchesList(loadedMatchesEvents);
+            if (typeof window.renderMatchesList === 'function' && Array.isArray(window.loadedMatchesEvents)) {
+                window.renderMatchesList(window.loadedMatchesEvents);
             }
         });
 

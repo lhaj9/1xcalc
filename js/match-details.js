@@ -7,16 +7,16 @@
         let currentActiveStatsTab = 'statsTabOverview';
         let currentActiveStatsData = null;
 
-        window.openMatchStats = async (eventId, leagueCode) => {
+        const openMatchStats = async (eventId, leagueCode) => {
             const modal = document.getElementById('matchStatsModal');
             if (!modal) return;
 
             currentActiveStatsEventId = eventId;
-            currentActiveStatsLeague = leagueCode || currentLeague || 'all';
+            currentActiveStatsLeague = leagueCode || window.currentLeague || 'all';
             currentActiveStatsTab = 'statsTabOverview';
 
             if (currentActiveStatsLeague === 'all' || !currentActiveStatsLeague) {
-                const foundEv = loadedMatchesEvents.find(e => e.id === eventId);
+                const foundEv = (window.loadedMatchesEvents || []).find(e => e.id === eventId);
                 if (foundEv && foundEv.leagueCode && foundEv.leagueCode !== 'all') {
                     currentActiveStatsLeague = foundEv.leagueCode;
                 } else {
@@ -25,7 +25,7 @@
             }
 
             document.querySelectorAll('.stats-tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tab === 'statsTabOverview');
+                btn.classList.toggle('active', btn.dataset?.tab === 'statsTabOverview');
             });
 
             modal.classList.add('open');
@@ -64,7 +64,8 @@
 
             try {
                 let url = '';
-                if (currentSport === 'basketball') {
+                const activeSport = window.currentSport || 'soccer';
+                if (activeSport === 'basketball') {
                     const bLeague = (currentActiveStatsLeague === 'mens-college-basketball') ? 'mens-college-basketball' : 'nba';
                     url = `https://site.api.espn.com/apis/site/v2/sports/basketball/${bLeague}/summary?event=${eventId}`;
                 } else {
@@ -96,7 +97,7 @@
             }
         };
 
-        window.closeMatchStats = () => {
+        const closeMatchStats = () => {
             const modal = document.getElementById('matchStatsModal');
             if (modal) {
                 modal.classList.remove('open');
@@ -796,7 +797,7 @@
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.stats-tab-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    currentActiveStatsTab = btn.dataset.tab;
+                    currentActiveStatsTab = btn.dataset?.tab || 'statsTabOverview';
                     renderActiveStatsTabPane();
                 });
             });

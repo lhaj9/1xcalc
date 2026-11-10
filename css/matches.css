@@ -554,6 +554,16 @@
             gap: 6px;
             font-size: 0.72rem;
             font-weight: 800;
+            max-width: 65%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .league-tag span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         /* تنسيق نتائج ومباريات الفرق بدون أي التباس في RTL */
@@ -695,92 +705,98 @@
         }
 
         .match-card-footer {
-            margin-top: 9px;
-            padding-top: 7px;
+            margin-top: 10px;
+            padding-top: 8px;
             border-top: 1px dashed var(--border-color);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 0.68rem;
-            color: var(--text-muted);
-        }
-
-        .match-venue {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 140px;
-            font-weight: 700;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .match-action-tools {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .btn-match-calc {
-            background: linear-gradient(135deg, #1055a4 0%, #1e70e9 100%);
+            flex: 1 1 0;
+            min-width: 0;
+            height: 35px;
+            background: linear-gradient(135deg, #0e52a8 0%, #1d72ee 100%);
             color: #ffffff;
             border: none;
-            border-radius: 8px;
-            padding: 5px 10px;
-            font-size: 0.72rem;
+            border-radius: 9px;
+            padding: 0 10px;
+            font-size: 0.74rem;
             font-weight: 800;
+            font-family: inherit;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 5px;
+            white-space: nowrap;
+            box-shadow: 0 2px 7px rgba(16, 85, 164, 0.28);
             transition: all 0.15s ease;
-            box-shadow: 0 2px 7px rgba(16, 85, 164, 0.3);
+            box-sizing: border-box;
         }
 
         .btn-match-calc:active {
-            transform: scale(0.94);
+            transform: scale(0.96);
+        }
+
+        .btn-match-stats {
+            flex: 1 1 0;
+            min-width: 0;
+            height: 35px;
+            background: var(--bg-card);
+            border: 1px solid var(--accent-primary);
+            color: var(--accent-primary);
+            border-radius: 9px;
+            padding: 0 8px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+            box-sizing: border-box;
+        }
+
+        .btn-match-stats:active {
+            transform: scale(0.96);
+            background: var(--accent-bg);
         }
 
         .btn-match-copy {
-            background: var(--bg-input);
+            flex: 0 0 35px;
+            width: 35px;
+            height: 35px;
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            border-radius: 8px;
-            width: 27px;
-            height: 27px;
+            border-radius: 9px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             transition: all 0.15s ease;
+            box-sizing: border-box;
         }
 
         .btn-match-copy:active {
-            transform: scale(0.9);
+            transform: scale(0.92);
             color: var(--accent-primary);
-        }
-
-        .btn-match-stats {
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            color: var(--accent-primary);
-            border-radius: 8px;
-            padding: 5px 9px;
-            font-size: 0.72rem;
-            font-weight: 800;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.15s ease;
-        }
-
-        .btn-match-stats:hover {
-            background: var(--accent-bg);
             border-color: var(--accent-primary);
-        }
-
-        .btn-match-stats:active {
-            transform: scale(0.94);
         }
 
 
