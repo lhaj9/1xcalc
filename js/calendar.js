@@ -232,16 +232,27 @@
             const preset = btn.dataset.preset;
             const now = new Date();
 
+            document.querySelectorAll('.preset-pill').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+
+            const notify = (msg) => {
+                if (typeof window.showToast === 'function') {
+                    window.showToast(msg);
+                } else if (typeof showToast === 'function') {
+                    showToast(msg);
+                }
+            };
+
             if (preset === 'today') {
                 if (typeof window.jumpToToday === 'function') window.jumpToToday();
-                if (typeof showToast === 'function') showToast('📅 تم الانتقال إلى مباريات اليوم');
+                notify('📅 تم الانتقال إلى مباريات اليوم');
                 closeSetPeriodModal(false);
                 return;
             } else if (preset === 'tomorrow') {
                 const tmr = new Date(now);
                 tmr.setDate(now.getDate() + 1);
                 if (typeof window.selectDayDate === 'function') window.selectDayDate(tmr);
-                if (typeof showToast === 'function') showToast(`📅 تم اختيار: غداً (${formatShortDate(tmr)})`);
+                notify(`📅 تم اختيار: غداً (${formatShortDate(tmr)})`);
                 closeSetPeriodModal(false);
                 return;
             } else if (preset === 'weekend') {
@@ -264,9 +275,7 @@
                 if (typeof window.applyCustomPeriod === 'function') {
                     window.applyCustomPeriod(fri, sun);
                 }
-                if (typeof showToast === 'function') {
-                    showToast(`📅 تم تحديد فترة نهاية الأسبوع (${formatShortDate(fri)} - ${formatShortDate(sun)})`);
-                }
+                notify(`📅 تم تحديد فترة نهاية الأسبوع (${formatShortDate(fri)} - ${formatShortDate(sun)})`);
                 closeSetPeriodModal(false);
                 return;
             } else if (preset === 'next7') {
@@ -277,9 +286,7 @@
                 if (typeof window.applyCustomPeriod === 'function') {
                     window.applyCustomPeriod(start7, end7);
                 }
-                if (typeof showToast === 'function') {
-                    showToast(`📅 تم تحديد فترة الـ 7 أيام القادمة (${formatShortDate(start7)} - ${formatShortDate(end7)})`);
-                }
+                notify(`📅 تم تحديد فترة الـ 7 أيام القادمة (${formatShortDate(start7)} - ${formatShortDate(end7)})`);
                 closeSetPeriodModal(false);
                 return;
             }
