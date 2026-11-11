@@ -200,30 +200,122 @@
     // قاموس تحويل معرّفات ESPN الرقمية والسلاسل إلى الأكواد المعيارية للبطولات (Canonical League Mapper)
     const ESPN_ID_TO_CODE = {
         '700': 'eng.1',
+        '23': 'eng.1',
         '3914': 'eng.2',
+        '24': 'eng.2',
         '8097': 'eng.w.1',
+        '40': 'eng.fa',
         '740': 'esp.1',
+        '15': 'esp.1',
+        '80': 'esp.copa_del_rey',
         '20956': 'esp.w.1',
         '730': 'ita.1',
+        '12': 'ita.1',
         '720': 'ger.1',
+        '10': 'ger.1',
         '3927': 'ger.2',
+        '97': 'ger.2',
         '710': 'fra.1',
+        '9': 'fra.1',
         '20922': 'uefa.nations',
+        '2395': 'uefa.nations',
+        '2': 'uefa.champions',
+        '2310': 'uefa.europa',
+        '20296': 'uefa.europa.conf',
         '3946': 'tur.1',
+        '18': 'tur.1',
         '3906': 'por.1',
+        '14': 'por.1',
         '3901': 'ned.1',
+        '11': 'ned.1',
         '3939': 'rus.1',
+        '106': 'rus.1',
         '2488': 'ksa.1',
         '770': 'usa.1',
+        '19': 'usa.1',
         '1308': 'aus.1',
         '20955': 'bra.1',
+        '85': 'bra.1',
+        '1': 'arg.1',
+        '22': 'mex.1',
+        '1543': 'col.1',
+        '58': 'conmebol.libertadores',
+        '1208': 'conmebol.sudamericana',
         'nba': 'nba',
         'mens-college-basketball': 'mens-college-basketball'
     };
 
-    const resolveCanonicalCode = (rawCode, slug, name) => {
-        if (rawCode && ESPN_ID_TO_CODE[rawCode]) {
-            return ESPN_ID_TO_CODE[rawCode];
+    // خريطة كبرى لأشهر أندية العالم لربط مبارياتها بالدوري الصحيح فوراً حتى لو جاءت من خلاصة عامة
+    const KNOWN_CLUBS = {
+        // الدوري الإنجليزي الممتاز (Premier League)
+        'manchester city': 'eng.1', 'man city': 'eng.1', 'arsenal': 'eng.1', 'liverpool': 'eng.1',
+        'aston villa': 'eng.1', 'tottenham': 'eng.1', 'tottenham hotspur': 'eng.1', 'chelsea': 'eng.1',
+        'newcastle': 'eng.1', 'newcastle united': 'eng.1', 'manchester united': 'eng.1', 'man utd': 'eng.1',
+        'west ham': 'eng.1', 'west ham united': 'eng.1', 'brighton': 'eng.1', 'brighton & hove albion': 'eng.1',
+        'bournemouth': 'eng.1', 'afc bournemouth': 'eng.1', 'fulham': 'eng.1', 'wolverhampton': 'eng.1',
+        'wolves': 'eng.1', 'everton': 'eng.1', 'brentford': 'eng.1', 'crystal palace': 'eng.1',
+        'nottingham forest': 'eng.1', 'nottingham': 'eng.1', 'leicester city': 'eng.1', 'leicester': 'eng.1',
+        'ipswich town': 'eng.1', 'ipswich': 'eng.1', 'southampton': 'eng.1', 'leeds united': 'eng.1',
+        'sunderland': 'eng.1', 'coventry city': 'eng.1',
+
+        // الدوري الإسباني (LaLiga)
+        'real madrid': 'esp.1', 'barcelona': 'esp.1', 'fc barcelona': 'esp.1', 'atletico madrid': 'esp.1',
+        'atlético madrid': 'esp.1', 'athletic club': 'esp.1', 'athletic bilbao': 'esp.1', 'real sociedad': 'esp.1',
+        'real betis': 'esp.1', 'villarreal': 'esp.1', 'valencia': 'esp.1', 'sevilla': 'esp.1',
+        'girona': 'esp.1', 'celta vigo': 'esp.1', 'mallorca': 'esp.1', 'osasuna': 'esp.1',
+        'rayo vallecano': 'esp.1', 'getafe': 'esp.1', 'alaves': 'esp.1', 'deportivo alaves': 'esp.1',
+        'las palmas': 'esp.1', 'leganes': 'esp.1', 'valladolid': 'esp.1', 'espanyol': 'esp.1',
+
+        // الدوري الإيطالي (Serie A)
+        'inter milan': 'ita.1', 'inter': 'ita.1', 'internazionale': 'ita.1', 'ac milan': 'ita.1',
+        'milan': 'ita.1', 'juventus': 'ita.1', 'napoli': 'ita.1', 'roma': 'ita.1', 'as roma': 'ita.1',
+        'lazio': 'ita.1', 'atalanta': 'ita.1', 'fiorentina': 'ita.1', 'bologna': 'ita.1', 'torino': 'ita.1',
+        'monza': 'ita.1', 'genoa': 'ita.1', 'udinese': 'ita.1', 'cagliari': 'ita.1', 'verona': 'ita.1',
+        'hellas verona': 'ita.1', 'empoli': 'ita.1', 'parma': 'ita.1', 'como': 'ita.1', 'venezia': 'ita.1',
+        'lecce': 'ita.1',
+
+        // الدوري الألماني (Bundesliga)
+        'bayern munich': 'ger.1', 'bayern münchen': 'ger.1', 'borussia dortmund': 'ger.1', 'dortmund': 'ger.1',
+        'bayer leverkusen': 'ger.1', 'leverkusen': 'ger.1', 'rb leipzig': 'ger.1', 'leipzig': 'ger.1',
+        'eintracht frankfurt': 'ger.1', 'frankfurt': 'ger.1', 'vfb stuttgart': 'ger.1', 'stuttgart': 'ger.1',
+        'borussia mönchengladbach': 'ger.1', 'gladbach': 'ger.1', 'wolfsburg': 'ger.1', 'freiburg': 'ger.1',
+        'werder bremen': 'ger.1', 'augsburg': 'ger.1', 'heidenheim': 'ger.1', 'mainz': 'ger.1',
+        'union berlin': 'ger.1', 'st. pauli': 'ger.1', 'holstein kiel': 'ger.1', 'bochum': 'ger.1',
+        'hoffenheim': 'ger.1',
+
+        // الدوري الفرنسي (Ligue 1)
+        'paris saint-germain': 'fra.1', 'psg': 'fra.1', 'monaco': 'fra.1', 'as monaco': 'fra.1',
+        'marseille': 'fra.1', 'olympique marseille': 'fra.1', 'lille': 'fra.1', 'lyon': 'fra.1',
+        'olympique lyonnais': 'fra.1', 'lens': 'fra.1', 'rennes': 'fra.1', 'nice': 'fra.1',
+
+        // دوري روشن السعودي (Saudi Pro League)
+        'al hilal': 'ksa.1', 'al-hilal': 'ksa.1', 'al nassr': 'ksa.1', 'al-nassr': 'ksa.1',
+        'al ittihad': 'ksa.1', 'al-ittihad': 'ksa.1', 'al ahli': 'ksa.1', 'al-ahli': 'ksa.1',
+        'al shabab': 'ksa.1', 'al ettifaq': 'ksa.1', 'al qadsiah': 'ksa.1',
+
+        // دوري أستراليا (A-League)
+        'central coast mariners': 'aus.1', 'perth glory': 'aus.1', 'brisbane roar': 'aus.1',
+        'sydney fc': 'aus.1', 'melbourne victory': 'aus.1', 'melbourne city': 'aus.1',
+        'adelaide united': 'aus.1', 'western united': 'aus.1', 'wellington phoenix': 'aus.1',
+
+        // الدوري الروسي (Russian Premier)
+        'gazovik orenburg': 'rus.1', 'orenburg': 'rus.1', 'fc baltika': 'rus.1', 'akron tolyatti': 'rus.1',
+        'fakel voronezh': 'rus.1', 'rubin kazan': 'rus.1', 'zenit': 'rus.1', 'spartak moscow': 'rus.1',
+        'cska moscow': 'rus.1', 'dynamo moscow': 'rus.1', 'lokomotiv moscow': 'rus.1', 'krasnodar': 'rus.1',
+
+        // كرة السلة NBA
+        'celtics': 'nba', 'boston celtics': 'nba', 'lakers': 'nba', 'los angeles lakers': 'nba',
+        'warriors': 'nba', 'golden state warriors': 'nba', 'miami heat': 'nba', 'bulls': 'nba',
+        'chicago bulls': 'nba', 'nuggets': 'nba', 'denver nuggets': 'nba', 'bucks': 'nba',
+        'milwaukee bucks': 'nba', 'suns': 'nba', 'phoenix suns': 'nba', 'mavericks': 'nba',
+        'dallas mavericks': 'nba', 'knicks': 'nba', 'new york knicks': 'nba', 'clippers': 'nba',
+        '76ers': 'nba', 'philadelphia 76ers': 'nba', 'timberwolves': 'nba', 'cavaliers': 'nba',
+        'thunder': 'nba', 'pacers': 'nba', 'rockets': 'nba', 'grizzlies': 'nba', 'magic': 'nba'
+    };
+
+    const resolveCanonicalCode = (rawCode, slug, name, competitors = []) => {
+        if (rawCode && ESPN_ID_TO_CODE[String(rawCode).trim()]) {
+            return ESPN_ID_TO_CODE[String(rawCode).trim()];
         }
 
         const t = `${rawCode || ''} ${slug || ''} ${name || ''}`.toLowerCase();
@@ -253,6 +345,20 @@
         if (t.includes('major league soccer') || t.includes('mls')) return 'usa.1';
         if (t.includes('libertadores')) return 'conmebol.libertadores';
         if (t.includes('sudamericana')) return 'conmebol.sudamericana';
+        if (t.includes('nba')) return 'nba';
+        if (t.includes('college basketball') || t.includes('ncaa')) return 'mens-college-basketball';
+
+        // مطابقة ذكية بناءً على أسماء الأندية الشهيرة إذا كانت البطولة تظهر كعامة
+        if (Array.isArray(competitors) && competitors.length > 0) {
+            for (const c of competitors) {
+                const teamName = (c.team?.displayName || c.team?.name || '').toLowerCase();
+                for (const [clubKey, leagueVal] of Object.entries(KNOWN_CLUBS)) {
+                    if (teamName.includes(clubKey)) {
+                        return leagueVal;
+                    }
+                }
+            }
+        }
 
         return rawCode || 'other';
     };
@@ -315,6 +421,7 @@
 
             const events = (data.events || []).map(ev => {
                 const comp = ev.competitions?.[0] || {};
+                const competitors = comp.competitors || [];
 
                 // 1. استخراج كود أو معرّف الدوري الأولي من ESPN
                 let rawCode = (leagueCode !== 'all') ? leagueCode : '';
@@ -322,20 +429,33 @@
                     const uidMatch = (ev.uid || '').match(/~l:([^~]+)/);
                     if (uidMatch && uidMatch[1]) {
                         rawCode = uidMatch[1];
+                    } else if (ev.league?.id) {
+                        rawCode = ev.league.id;
+                    } else if (comp.league?.id) {
+                        rawCode = comp.league.id;
                     } else if (ev.league?.slug) {
                         rawCode = ev.league.slug;
                     } else if (comp.league?.slug) {
                         rawCode = comp.league.slug;
-                    } else if (data.leagues?.[0]?.slug) {
-                        rawCode = data.leagues[0].slug;
+                    }
+                }
+
+                // إذا لم يتوفر كود ومازلنا في خلاصة عامة، نبحث في قائمة الدوريات المرفقة في البيانات data.leagues
+                if (!rawCode && Array.isArray(data.leagues)) {
+                    const evLeagueId = ev.leagueId || comp.leagueId;
+                    if (evLeagueId) {
+                        const matchedL = data.leagues.find(l => String(l.id) === String(evLeagueId));
+                        if (matchedL) rawCode = matchedL.slug || matchedL.id;
+                    } else if (data.leagues.length === 1 && leagueCode !== 'all') {
+                        rawCode = data.leagues[0].slug || data.leagues[0].id;
                     }
                 }
 
                 const rawSlug = ev.season?.slug || ev.league?.slug || comp.league?.slug || '';
                 const rawName = comp.altGameNote || ev.league?.name || comp.league?.name || ev.name || '';
 
-                // 2. توحيد ومطابقة كود البطولة المعياري
-                const canonicalCode = resolveCanonicalCode(rawCode, rawSlug, rawName);
+                // 2. توحيد ومطابقة كود البطولة المعياري مع الاستعانة بأسماء الأندية الشهيرة
+                const canonicalCode = resolveCanonicalCode(rawCode, rawSlug, rawName, competitors);
 
                 // 3. البحث عن البطولة من القائمة المعيارية
                 let leagueMeta = MAJOR_LEAGUES.find(l => l.code === canonicalCode && l.sport === sport);
@@ -487,7 +607,7 @@
     // فحص وجود تذكرة/صفقة نشطة في حاسبة الأرباح تطابق أحد الفريقين (In-Play Hedge Linker)
     const getActiveHedgeSlip = (homeName, awayName) => {
         try {
-            const raw1 = localStorage.getItem('arb_slips_tab1');
+            const raw1 = localStorage.getItem('arb_saved_slips') || localStorage.getItem('arb_slips_tab1');
             const slips = raw1 ? JSON.parse(raw1) : [];
             if (!Array.isArray(slips) || slips.length === 0) return null;
 
@@ -495,7 +615,7 @@
             const aLow = (awayName || '').toLowerCase().trim();
 
             return slips.find(s => {
-                const name = (s.slipName || s.matchTitle || '').toLowerCase();
+                const name = (s.title || s.slipName || s.matchTitle || '').toLowerCase();
                 return (hLow && name.includes(hLow)) || (aLow && name.includes(aLow));
             }) || null;
         } catch {
@@ -551,7 +671,12 @@
                             ? (home.team?.displayName || 'المضيف')
                             : (away.team?.displayName || 'الضيف');
 
-                        showToast(`⚽ هدف! ${scoringTeam}${scorerInfo} - [${homeScore} - ${awayScore}]`);
+                        const activeHedgeSlip = getActiveHedgeSlip(home.team?.displayName, away.team?.displayName);
+                        if (activeHedgeSlip) {
+                            showToast(`⚡ تنبيه صفقة نشطة O₂! هدف في مباراة ${scoringTeam}${scorerInfo} - [${homeScore} - ${awayScore}]! توجه للحاسبة لتأمين أرباح الهيدج.`);
+                        } else {
+                            showToast(`⚽ هدف! ${scoringTeam}${scorerInfo} - [${homeScore} - ${awayScore}]`);
+                        }
                     }
                 }
 
@@ -1095,7 +1220,7 @@
             }
         }
 
-        // 2. جلب الدوريات المحددة أو الدوريات الكبرى
+        // 2. جلب الدوريات المحددة أو الدوريات الكبرى بذكاء وسرعة
         if (currentTimeFilter === 'day') {
             const dStr = toESPNDate(selectedDate);
             targetLeagues.forEach(lCode => {
@@ -1108,39 +1233,74 @@
             e.setHours(0,0,0,0);
             const cur = new Date(s);
             let count = 0;
+            const topMajorSoccer = ['eng.1', 'esp.1', 'ita.1', 'ger.1', 'fra.1', 'uefa.nations'];
             while (cur <= e && count < 14) {
                 const dStr = toESPNDate(cur);
-                targetLeagues.forEach(lCode => {
-                    tasks.push(fetchLeagueScoreboard(currentSport, lCode, dStr));
-                });
+                if (currentSport === 'soccer') {
+                    if (currentLeague === 'all') {
+                        tasks.push(fetchLeagueScoreboard('soccer', 'all', dStr));
+                        topMajorSoccer.forEach(lCode => tasks.push(fetchLeagueScoreboard('soccer', lCode, dStr)));
+                    } else {
+                        tasks.push(fetchLeagueScoreboard('soccer', currentLeague, dStr));
+                    }
+                } else {
+                    targetLeagues.forEach(lCode => tasks.push(fetchLeagueScoreboard(currentSport, lCode, dStr)));
+                }
                 cur.setDate(cur.getDate() + 1);
                 count++;
             }
         } else if (currentTimeFilter === 'this_week') {
             const monday = getMonday(new Date());
             const weekDays = getDaysArray(monday, 7);
-            targetLeagues.forEach(lCode => {
-                weekDays.forEach(d => {
-                    tasks.push(fetchLeagueScoreboard(currentSport, lCode, toESPNDate(d)));
-                });
+            const topMajorSoccer = ['eng.1', 'esp.1', 'ita.1', 'ger.1', 'fra.1', 'uefa.nations'];
+            weekDays.forEach(d => {
+                const dStr = toESPNDate(d);
+                if (currentSport === 'soccer') {
+                    if (currentLeague === 'all') {
+                        tasks.push(fetchLeagueScoreboard('soccer', 'all', dStr));
+                        topMajorSoccer.forEach(lCode => tasks.push(fetchLeagueScoreboard('soccer', lCode, dStr)));
+                    } else {
+                        tasks.push(fetchLeagueScoreboard('soccer', currentLeague, dStr));
+                    }
+                } else {
+                    targetLeagues.forEach(lCode => tasks.push(fetchLeagueScoreboard(currentSport, lCode, dStr)));
+                }
             });
         } else if (currentTimeFilter === 'next_week') {
             const nextMon = getMonday(new Date());
             nextMon.setDate(nextMon.getDate() + 7);
             const weekDays = getDaysArray(nextMon, 7);
-            targetLeagues.forEach(lCode => {
-                weekDays.forEach(d => {
-                    tasks.push(fetchLeagueScoreboard(currentSport, lCode, toESPNDate(d)));
-                });
+            const topMajorSoccer = ['eng.1', 'esp.1', 'ita.1', 'ger.1', 'fra.1', 'uefa.nations'];
+            weekDays.forEach(d => {
+                const dStr = toESPNDate(d);
+                if (currentSport === 'soccer') {
+                    if (currentLeague === 'all') {
+                        tasks.push(fetchLeagueScoreboard('soccer', 'all', dStr));
+                        topMajorSoccer.forEach(lCode => tasks.push(fetchLeagueScoreboard('soccer', lCode, dStr)));
+                    } else {
+                        tasks.push(fetchLeagueScoreboard('soccer', currentLeague, dStr));
+                    }
+                } else {
+                    targetLeagues.forEach(lCode => tasks.push(fetchLeagueScoreboard(currentSport, lCode, dStr)));
+                }
             });
         } else if (currentTimeFilter === 'last_week') {
             const lastMon = getMonday(new Date());
             lastMon.setDate(lastMon.getDate() - 7);
             const weekDays = getDaysArray(lastMon, 7);
-            targetLeagues.forEach(lCode => {
-                weekDays.forEach(d => {
-                    tasks.push(fetchLeagueScoreboard(currentSport, lCode, toESPNDate(d)));
-                });
+            const topMajorSoccer = ['eng.1', 'esp.1', 'ita.1', 'ger.1', 'fra.1', 'uefa.nations'];
+            weekDays.forEach(d => {
+                const dStr = toESPNDate(d);
+                if (currentSport === 'soccer') {
+                    if (currentLeague === 'all') {
+                        tasks.push(fetchLeagueScoreboard('soccer', 'all', dStr));
+                        topMajorSoccer.forEach(lCode => tasks.push(fetchLeagueScoreboard('soccer', lCode, dStr)));
+                    } else {
+                        tasks.push(fetchLeagueScoreboard('soccer', currentLeague, dStr));
+                    }
+                } else {
+                    targetLeagues.forEach(lCode => tasks.push(fetchLeagueScoreboard(currentSport, lCode, dStr)));
+                }
             });
         } else {
             // all / 6h / 12h / 24h / 48h:
@@ -1163,7 +1323,16 @@
 
             const uniqueMap = new Map();
             allEvents.forEach(ev => {
-                if (!uniqueMap.has(ev.id)) uniqueMap.set(ev.id, ev);
+                if (!uniqueMap.has(ev.id)) {
+                    uniqueMap.set(ev.id, ev);
+                } else {
+                    const existing = uniqueMap.get(ev.id);
+                    const existingIsGeneric = !existing.leagueCode || existing.leagueCode === 'all' || existing.leagueCode === 'other' || !existing.leagueMeta?.logo;
+                    const newIsSpecific = ev.leagueCode && ev.leagueCode !== 'all' && ev.leagueCode !== 'other' && ev.leagueMeta?.logo;
+                    if (existingIsGeneric && newIsSpecific) {
+                        uniqueMap.set(ev.id, ev);
+                    }
+                }
             });
 
             let rawEvents = Array.from(uniqueMap.values());
@@ -1827,12 +1996,15 @@
     function renderTournamentGroup(grp, tournId, isCollapsed = false) {
         const isFav = favoriteLeagues.has(grp.matches[0]?.leagueCode);
         const hasValidLogo = grp.meta.logo && grp.meta.logo !== './icon-192.png' && grp.meta.logo.startsWith('http');
+        const hasValidFlag = grp.meta.flagImg && grp.meta.flagImg.startsWith('http');
+        
         const logoImg = hasValidLogo
-            ? `<img src="${grp.meta.logo}" class="sofa-tourn-logo" alt="" onerror="this.style.display='none'; const n = this.parentElement.querySelector('.sofa-tourn-flag'); if(n) n.style.display='inline-block';">`
+            ? `<img src="${grp.meta.logo}" class="sofa-tourn-logo" alt="" onerror="this.style.display='none'; const n = this.parentElement.querySelector('.sofa-tourn-flag'); if(n && n.getAttribute('src')) { n.style.display='inline-block'; } else { const f = this.parentElement.querySelector('.sofa-tourn-fallback-icon'); if(f) f.style.display='inline-block'; }">`
             : '';
-        const flagImg = grp.meta.flagImg
-            ? `<img src="${grp.meta.flagImg}" class="sofa-tourn-flag" alt="" style="${hasValidLogo ? 'display:none;' : ''}" onerror="this.style.display='none'">`
+        const flagImg = hasValidFlag
+            ? `<img src="${grp.meta.flagImg}" class="sofa-tourn-flag" alt="" style="${hasValidLogo ? 'display:none;' : ''}" onerror="this.style.display='none'; const f = this.parentElement.querySelector('.sofa-tourn-fallback-icon'); if(f) f.style.display='inline-block';">`
             : '';
+        const fallbackIcon = `<span class="sofa-tourn-fallback-icon" style="${(hasValidLogo || hasValidFlag) ? 'display:none;' : 'display:inline-block;'}">🏆</span>`;
 
         let matchesHtml = '';
         grp.matches.forEach(ev => {
@@ -1845,6 +2017,7 @@
                     <div class="sofa-tourn-title-wrap">
                         ${logoImg}
                         ${flagImg}
+                        ${fallbackIcon}
                         <div class="sofa-tourn-titles">
                             <span class="sofa-tourn-name">${grp.meta.name}</span>
                             <span class="sofa-tourn-country">${grp.meta.country || 'دولي'}</span>
@@ -1899,8 +2072,20 @@
         const btnModeDelayed = document.getElementById('btnModeDelayed');
         if (mode === 'delayed' && btnModeDelayed) {
             btnModeDelayed.click();
+            const stakeInput = document.getElementById('t2InitialStake');
+            const odds1Input = document.getElementById('t2InitialOdds');
+            if (stakeInput && !stakeInput.value) stakeInput.value = '100';
+            if (odds1Input && !odds1Input.value) odds1Input.value = '2.10';
+            stakeInput?.dispatchEvent(new Event('input'));
         } else if (btnModeArbitrage) {
             btnModeArbitrage.click();
+            const cap = document.getElementById('capital');
+            const r1 = document.getElementById('ratio1');
+            const r2 = document.getElementById('ratio2');
+            if (cap && !cap.value) cap.value = '100';
+            if (r1 && !r1.value) r1.value = '2.10';
+            if (r2 && !r2.value) r2.value = '2.00';
+            cap?.dispatchEvent(new Event('input'));
         }
 
         showToast(`⚡ تم نقل [${matchTitle}] إلى الحاسبة!`);

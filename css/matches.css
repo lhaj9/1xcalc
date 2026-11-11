@@ -1622,6 +1622,12 @@
     flex-shrink: 0;
 }
 
+.sofa-tourn-fallback-icon {
+    font-size: 1.15rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
 .sofa-tourn-titles {
     display: flex;
     flex-direction: column;

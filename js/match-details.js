@@ -1,11 +1,152 @@
 // ==================== مركز تفاصيل وإحصائيات المباراة (Match Details & 6 Tabs) ====================
-        // ==================== مركز تفاصيل وإحصائيات المباراة (Match Details & 6 Tabs) ====================
         const matchSummaryCache = new Map();
         const standingsCache = new Map();
         let currentActiveStatsEventId = null;
         let currentActiveStatsLeague = null;
+        let currentActiveStatsSport = 'soccer';
         let currentActiveStatsTab = 'statsTabOverview';
         let currentActiveStatsData = null;
+
+        // دالة إضافة المباراة مباشرة إلى القسائم كصفقة نشطة O₂
+        window.addMatchToSavedSlips = (matchTitle, mode = 'delayed') => {
+            try {
+                const raw = localStorage.getItem('arb_saved_slips') || '[]';
+                let savedSlips = [];
+                try { savedSlips = JSON.parse(raw); } catch { savedSlips = []; }
+                if (!Array.isArray(savedSlips)) savedSlips = [];
+
+                const titleClean = (matchTitle || '').trim();
+                const existing = savedSlips.find(s => (s.title || s.slipName || '').trim().toLowerCase() === titleClean.toLowerCase());
+                if (existing) {
+                    showToast(`⚡ هذه المباراة مسجلة بالفعل كصفقة نشطة في القسائم!`);
+                    return;
+                }
+
+                const newSlip = {
+                    id: Date.now(),
+                    title: titleClean,
+                    type: mode === 'delayed' ? 'رهان متأخر' : 'رهان موازنة',
+                    createdAt: new Date().toLocaleDateString('ar-MA', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'numeric' }),
+                    settledAt: null,
+                    status: 'pending',
+                    hedgePlayed: false,
+                    stake1: 100,
+                    odds1: 2.10,
+                    stake2: 105,
+                    odds2: 2.00,
+                    totalStake: 205,
+                    plannedTotalStake: 205,
+                    payout: 210,
+                    expectedProfit: 5,
+                    realizedProfit: 0,
+                    pct: 2.44
+                };
+
+                savedSlips.unshift(newSlip);
+                localStorage.setItem('arb_saved_slips', JSON.stringify(savedSlips));
+
+                if (typeof window.renderSlips === 'function') {
+                    window.renderSlips();
+                }
+
+                if (typeof window.renderMatchesList === 'function' && window.loadedMatchesEvents) {
+                    window.renderMatchesList(window.loadedMatchesEvents);
+                }
+
+                showToast(`⚡ تم حفظ [${titleClean}] كصفقة نشطة O₂! ستظهر شارة التنبيه في القائمة.`);
+            } catch (e) {
+                showToast('تعذر حفظ الصفقة في القسائم');
+            }
+        };
+
+        // نسخ تفاصيل المباراة الشاملة إلى الحافظة (الملخص الكامل)
+        window.copyMatchDetails = () => {
+            const data = currentActiveStatsData;
+            const comp = data?.header?.competitions?.[0] || {};
+            const competitors = comp.competitors || [];
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+
+            const homeName = home.team?.displayName || 'المضيف';
+            const awayName = away.team?.displayName || 'الضيف';
+            const homeScore = home.score !== undefined ? home.score : '-';
+            const awayScore = away.score !== undefined ? away.score : '-';
+
+            const state = comp.status?.type?.state || 'pre';
+            const statusDetail = comp.status?.type?.detail || (state === 'in' ? 'مباشر' : (state === 'post' ? 'انتهت' : 'قريباً'));
+
+            const leagueMeta = (window.MAJOR_LEAGUES || []).find(l => l.code === currentActiveStatsLeague) || { name: 'بطولة رياضية' };
+            const leagueName = leagueMeta.name || 'كرة قدم';
+
+            const venue = data?.gameInfo?.venue?.fullName || comp.venue?.fullName || '';
+
+            let dateStr = '';
+            try {
+                if (comp.date) {
+                    const tzMode = localStorage.getItem('arb_match_timezone') || 'gmt';
+                    const tzOpt = (tzMode === 'local') ? {} : { timeZone: 'UTC' };
+                    const tzSuffix = (tzMode === 'local') ? ' (توقيت محلي)' : ' (توقيت غرينتش GMT)';
+                    dateStr = new Date(comp.date).toLocaleString('ar-MA', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false,
+                        ...tzOpt
+                    }) + tzSuffix;
+                }
+            } catch {}
+
+            let text = `🏆 مباراة: ${homeName} ضد ${awayName}\n`;
+            text += `⚽ البطولة: ${leagueName}\n`;
+            if (state === 'in' || state === 'post') {
+                text += `📊 الحالة: ${statusDetail} | النتيجة: [${homeScore} - ${awayScore}]\n`;
+            } else {
+                text += `📊 الحالة: قادمة (لم تبدأ بعد)\n`;
+            }
+            if (dateStr) text += `📅 الموعد: ${dateStr}\n`;
+            if (venue) text += `🏟️ الملعب: ${venue}\n`;
+            text += `⚡ تم النسخ عبر تطبيق 1XCALC PRO`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('📋 تم نسخ تفاصيل المباراة الشاملة إلى الحافظة!');
+                }).catch(() => {
+                    window.copyMatchTitle(`${homeName} ضد ${awayName}`);
+                });
+            } else {
+                window.copyMatchTitle(`${homeName} ضد ${awayName}`);
+            }
+        };
+
+        // أزرار أسفل محتوى التبويبات للتنقل والحساب والنسخ كما في التصميم الأصلي
+        const renderTabBottomActions = (matchTitle, isLive) => {
+            const safeTitle = (matchTitle || '').replace(/'/g, "\\'");
+            return `
+                <div class="stats-tab-bottom-actions" style="margin-top:16px;">
+                    <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
+                        <button type="button" class="btn-calc-action" style="flex:1; min-width:130px; padding:10px;" onclick="copyMatchDetails()" title="نسخ تقرير وتفاصيل المباراة الشاملة">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>نسخ تفاصيل المباراة</span>
+                        </button>
+                        <button type="button" class="btn-calc-action btn-calc-save" style="flex:1.2; min-width:130px; padding:10px;" onclick="transferMatchToCalc('${safeTitle}', '${isLive ? 'delayed' : 'arbitrage'}'); closeMatchStats();" title="فتح المباراة وتأمين الأرباح في الحاسبة">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>حساب الصفقة ⚡</span>
+                        </button>
+                        <button type="button" class="btn-calc-action" style="flex:1; min-width:130px; padding:10px; background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.35);" onclick="addMatchToSavedSlips('${safeTitle}', '${isLive ? 'delayed' : 'arbitrage'}')" title="حفظ وتثبيت المباراة في القسائم كصفقة نشطة O₂">
+                            <i class="fa-solid fa-plus-circle"></i>
+                            <span>إضافة للقسائم O₂</span>
+                        </button>
+                    </div>
+                    <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
+                        <i class="fa-solid fa-xmark"></i>
+                        <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
+                    </button>
+                </div>
+            `;
+        };
 
         const openMatchStats = async (eventId, leagueCode) => {
             const modal = document.getElementById('matchStatsModal');
@@ -13,6 +154,7 @@
 
             currentActiveStatsEventId = eventId;
             window.currentActiveStatsEventId = eventId;
+            currentActiveStatsSport = window.currentSport || 'soccer';
             currentActiveStatsTab = 'statsTabOverview';
 
             // العثور على بيانات اللقاء من الذاكرة الحية أولاً
@@ -286,6 +428,7 @@
                             <span class="stats-hero-status ${isLive ? 'tag-live' : 'tag-post'}">
                                 ${isLive ? '<span class="live-dot-pulse"></span> ' + statusDetail : cleanStatus}
                             </span>
+                            ${venueName ? `<span class="stats-hero-venue" title="${venueName}">${venueName}</span>` : ''}
                         </div>
                     `;
                 } else if (isLive) {
@@ -299,6 +442,7 @@
                             <span class="stats-hero-status tag-live">
                                 <span class="live-dot-pulse"></span> ${statusDetail || 'مباشر'}
                             </span>
+                            ${venueName ? `<span class="stats-hero-venue" title="${venueName}">${venueName}</span>` : ''}
                         </div>
                     `;
                 } else {
@@ -311,6 +455,7 @@
                                 <span class="stats-hero-score-num score-pre-dash">-</span>
                             </div>
                             <span class="stats-hero-status tag-pre">${cleanStatus}</span>
+                            ${venueName ? `<span class="stats-hero-venue" title="${venueName}">${venueName}</span>` : ''}
                         </div>
                     `;
                 }
@@ -333,13 +478,17 @@
                     </div>
 
                     <div class="stats-hero-actions-bar">
+                        <button type="button" class="btn-hero-action-copy" onclick="copyMatchTitle('${matchTitle.replace(/'/g, "\\'")}')" title="نسخ اسم المباراة">
+                            <i class="fa-regular fa-copy"></i>
+                            <span>نسخ اسم المباراة</span>
+                        </button>
                         <button type="button" class="btn-hero-action-calc" onclick="transferMatchToCalc('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}'); closeMatchStats();" title="فتح وحساب صفقة لهذه المباراة في الحاسبة">
                             <i class="fa-solid fa-bolt"></i>
                             <span>حساب الصفقة ⚡</span>
                         </button>
-                        <button type="button" class="btn-hero-action-copy" onclick="copyMatchTitle('${matchTitle.replace(/'/g, "\\'")}')" title="نسخ اسم المباراة">
-                            <i class="fa-regular fa-copy"></i>
-                            <span>نسخ اسم المباراة</span>
+                        <button type="button" class="btn-hero-action-save-slip" onclick="addMatchToSavedSlips('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}')" title="إضافة وتثبيت المباراة في القسائم كصفقة نشطة O₂">
+                            <i class="fa-solid fa-plus-circle"></i>
+                            <span>إضافة للقسائم O₂</span>
                         </button>
                     </div>
                 `;
@@ -372,12 +521,18 @@
 
         // التبويب 1: إحصائيات الأداء (Team Stats)
         const renderOverviewTab = (data, container) => {
+            const comp = data.header?.competitions?.[0] || {};
+            const competitors = comp.competitors || [];
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+            const homeName = home.team?.displayName || 'المضيف';
+            const awayName = away.team?.displayName || 'الضيف';
+            const matchTitle = `${homeName} ضد ${awayName}`;
+            const isLive = comp.status?.type?.state === 'in';
+            const isFinished = comp.status?.type?.state === 'post';
+
             const boxscoreTeams = data.boxscore?.teams || [];
             if (!Array.isArray(boxscoreTeams) || boxscoreTeams.length < 2) {
-                const comp = data.header?.competitions?.[0] || {};
-                const isLive = comp.status?.type?.state === 'in';
-                const isFinished = comp.status?.type?.state === 'post';
-
                 container.innerHTML = `
                     <div class="stats-empty-state">
                         <div class="stats-empty-icon">📊</div>
@@ -387,20 +542,19 @@
                         <div style="font-size: 0.73rem; max-width: 320px; line-height: 1.4; color: var(--text-muted); margin-top: 4px;">
                             ${isLive ? 'المزود لا يوفر عدادات الاستحواذ والتسديدات لهذه البطولة المحددة، يمكنك متابعة وقائع وأحداث المباراة في تبويب أبرز الأحداث.' : 'ستتوفر أرقام وإحصائيات اللقاء فور انطلاق المباراة وتوفرها من المصدر الرسمي.'}
                         </div>
-                        <div style="margin-top: 12px;">
+                        <div style="margin-top: 12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
                             <button type="button" class="match-refresh-btn" onclick="document.querySelector('.stats-tab-btn[data-tab=statsTabEvents]')?.click()" style="padding: 7px 15px; font-size: 0.76rem;">
                                 <i class="fa-solid fa-timeline"></i> الانتقال إلى أبرز الأحداث والوقائع
                             </button>
+                            <button type="button" class="match-refresh-btn" onclick="document.querySelector('.stats-tab-btn[data-tab=statsTabInfo]')?.click()" style="padding: 7px 15px; font-size: 0.76rem; background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-color);">
+                                <i class="fa-solid fa-circle-info"></i> بطاقة معلومات اللقاء
+                            </button>
                         </div>
                     </div>
+                    ${renderTabBottomActions(matchTitle, isLive)}
                 `;
                 return;
             }
-
-            const comp = data.header?.competitions?.[0] || {};
-            const competitors = comp.competitors || [];
-            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
-            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
 
             let homeTeamStats = boxscoreTeams.find(t => t.homeAway === 'home' || t.team?.id === home.id || t.team?.id === home.team?.id);
             let awayTeamStats = boxscoreTeams.find(t => t.homeAway === 'away' || t.team?.id === away.id || t.team?.id === away.team?.id);
@@ -502,19 +656,23 @@
                         </div>
                     `;
                 }).join('')}
-                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
-                    <i class="fa-solid fa-xmark"></i>
-                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
-                </button>
+                ${renderTabBottomActions(matchTitle, isLive)}
             `;
         };
 
         // التبويب 2: أبرز الأحداث (Key Events)
         const renderEventsTab = (data, container) => {
-            const events = data.keyEvents || data.plays || data.header?.competitions?.[0]?.details || [];
+            const comp = data.header?.competitions?.[0] || {};
+            const competitors = comp.competitors || [];
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+            const homeName = home.team?.displayName || 'المضيف';
+            const awayName = away.team?.displayName || 'الضيف';
+            const matchTitle = `${homeName} ضد ${awayName}`;
+            const isLive = comp.status?.type?.state === 'in';
+
+            const events = data.keyEvents || data.plays || comp.details || [];
             if (!Array.isArray(events) || events.length === 0) {
-                const comp = data.header?.competitions?.[0] || {};
-                const isLive = comp.status?.type?.state === 'in';
                 container.innerHTML = `
                     <div class="stats-empty-state">
                         <div class="stats-empty-icon">⏱️</div>
@@ -525,6 +683,7 @@
                             ${isLive ? 'المباراة جارية حالياً، وسيتم رصد الأهداف والإنذارات فور حدوثها في الوقت الحقيقي.' : 'المباراة انتهت دون تسجيل أهداف أو بطاقات في سجل الوقائع.'}
                         </div>
                     </div>
+                    ${renderTabBottomActions(matchTitle, isLive)}
                 `;
                 return;
             }
@@ -565,15 +724,21 @@
                         </div>
                     `;
                 }).join('')}
-                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
-                    <i class="fa-solid fa-xmark"></i>
-                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
-                </button>
+                ${renderTabBottomActions(matchTitle, isLive)}
             `;
         };
 
         // التبويب 3: التعليق المباشر (Live Commentary)
         const renderCommentaryTab = (data, container) => {
+            const comp = data.header?.competitions?.[0] || {};
+            const competitors = comp.competitors || [];
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+            const homeName = home.team?.displayName || 'المضيف';
+            const awayName = away.team?.displayName || 'الضيف';
+            const matchTitle = `${homeName} ضد ${awayName}`;
+            const isLive = comp.status?.type?.state === 'in';
+
             const commentary = data.commentary || data.plays || [];
             if (!Array.isArray(commentary) || commentary.length === 0) {
                 container.innerHTML = `
@@ -582,6 +747,7 @@
                         <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">لا يتوفر تعليق كتابي مباشر حالياً</div>
                         <div style="font-size: 0.73rem;">التعليق النصي والوصف الدقيق لمجريات اللقاء ينطلق مع صافرة البداية للمباريات المتاحة.</div>
                     </div>
+                    ${renderTabBottomActions(matchTitle, isLive)}
                 `;
                 return;
             }
@@ -602,10 +768,7 @@
                         `;
                     }).join('')}
                 </div>
-                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
-                    <i class="fa-solid fa-xmark"></i>
-                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
-                </button>
+                ${renderTabBottomActions(matchTitle, isLive)}
             `;
         };
 
@@ -621,6 +784,15 @@
 
         // التبويب 4: التشكيلة والخطط التكتيكية على أرضية الملعب (Tactical Pitch & Lineups)
         const renderLineupsTab = (data, container) => {
+            const comp = data.header?.competitions?.[0] || {};
+            const competitors = comp.competitors || [];
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+            const homeName = home.team?.displayName || 'المضيف';
+            const awayName = away.team?.displayName || 'الضيف';
+            const matchTitle = `${homeName} ضد ${awayName}`;
+            const isLive = comp.status?.type?.state === 'in';
+
             const rosters = data.rosters || [];
             if (!Array.isArray(rosters) || rosters.length < 2) {
                 container.innerHTML = `
@@ -631,14 +803,10 @@
                             يتم اعتماد التشكيلات والخطط التكتيكية الرسمية قبل انطلاق المباراة بنحو ساعة تقريباً من مصادر الأندية الرسمية.
                         </div>
                     </div>
+                    ${renderTabBottomActions(matchTitle, isLive)}
                 `;
                 return;
             }
-
-            const comp = data.header?.competitions?.[0] || {};
-            const competitors = comp.competitors || [];
-            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
-            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
 
             const homeRoster = rosters.find(r => r.team?.id === home.id || r.team?.id === home.team?.id) || rosters[0];
             const awayRoster = rosters.find(r => r.team?.id === away.id || r.team?.id === away.team?.id) || rosters[1];
@@ -761,10 +929,7 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
-                    <i class="fa-solid fa-xmark"></i>
-                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
-                </button>
+                ${renderTabBottomActions(matchTitle, isLive)}
             `;
         };
 
@@ -780,6 +945,8 @@
             const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
             const homeName = home.team?.displayName || 'المضيف';
             const awayName = away.team?.displayName || 'الضيف';
+            const matchTitle = `${homeName} ضد ${awayName}`;
+            const isLive = comp.status?.type?.state === 'in';
 
             if (h2hEvents.length === 0 && lastFive.length === 0) {
                 container.innerHTML = `
@@ -790,6 +957,7 @@
                             تتوفر المواجهات المباشرة المجمعة للبطولات الكبرى عند وجود لقاءات سابقة مسجلة بين الفريقين.
                         </div>
                     </div>
+                    ${renderTabBottomActions(matchTitle, isLive)}
                 `;
                 return;
             }
@@ -913,10 +1081,7 @@
 
                 ${formHtml}
 
-                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
-                    <i class="fa-solid fa-xmark"></i>
-                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
-                </button>
+                ${renderTabBottomActions(matchTitle, isLive)}
             `;
         };
 
@@ -935,6 +1100,8 @@
             const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
             const homeName = (home.team?.displayName || '').toLowerCase();
             const awayName = (away.team?.displayName || '').toLowerCase();
+            const matchTitle = `${home.team?.displayName || 'المضيف'} ضد ${away.team?.displayName || 'الضيف'}`;
+            const isLive = comp.status?.type?.state === 'in';
 
             const leagueCode = currentActiveStatsLeague;
             let entries = [];
@@ -960,6 +1127,7 @@
                         <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">جدول الترتيب غير متاح لهذه البطولة</div>
                         <div style="font-size: 0.73rem;">البطولات الإقصائية أو الكؤوس لا تعتمد نظام الترتيب النقطي.</div>
                     </div>
+                    ${renderTabBottomActions(matchTitle, isLive)}
                 `;
                 return;
             }
@@ -1020,10 +1188,7 @@
                         </tbody>
                     </table>
                 </div>
-                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
-                    <i class="fa-solid fa-xmark"></i>
-                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
-                </button>
+                ${renderTabBottomActions(matchTitle, isLive)}
             `;
         };
 
@@ -1062,6 +1227,7 @@
             const home = comp.competitors?.find(c => c.homeAway === 'home') || {};
             const away = comp.competitors?.find(c => c.homeAway === 'away') || {};
             const matchTitle = `${home.team?.displayName || 'المضيف'} ضد ${away.team?.displayName || 'الضيف'}`;
+            const isLive = comp.status?.type?.state === 'in';
 
             container.innerHTML = `
                 <div style="font-weight:800; font-size:0.78rem; color:var(--text-muted); margin-bottom:4px;">
@@ -1100,21 +1266,7 @@
                     </div>
                 </div>
 
-                <div style="margin-top:8px; display:flex; gap:8px;">
-                    <button type="button" class="btn-calc-action" style="flex:1; padding:9px;" onclick="copyMatchTitle('${matchTitle.replace(/'/g, "\\'")}')">
-                        <i class="fa-regular fa-copy"></i>
-                        <span>نسخ تفاصيل المباراة</span>
-                    </button>
-                    <button type="button" class="btn-calc-action btn-calc-save" style="flex:1; padding:9px;" onclick="transferMatchToCalc('${matchTitle.replace(/'/g, "\\'")}', 'delayed'); closeMatchStats();">
-                        <i class="fa-solid fa-bolt"></i>
-                        <span>حساب الصفقة</span>
-                    </button>
-                </div>
-
-                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
-                    <i class="fa-solid fa-xmark"></i>
-                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
-                </button>
+                ${renderTabBottomActions(matchTitle, isLive)}
             `;
         };
 
