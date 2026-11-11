@@ -314,8 +314,16 @@
     };
 
     const resolveCanonicalCode = (rawCode, slug, name, competitors = []) => {
-        if (rawCode && ESPN_ID_TO_CODE[String(rawCode).trim()]) {
-            return ESPN_ID_TO_CODE[String(rawCode).trim()];
+        const rawTrimmed = String(rawCode || '').trim();
+        if (rawTrimmed && MAJOR_LEAGUES.some(l => l.code === rawTrimmed)) {
+            return rawTrimmed;
+        }
+        if (rawTrimmed && ESPN_ID_TO_CODE[rawTrimmed]) {
+            return ESPN_ID_TO_CODE[rawTrimmed];
+        }
+        const slugTrimmed = String(slug || '').trim();
+        if (slugTrimmed && MAJOR_LEAGUES.some(l => l.code === slugTrimmed)) {
+            return slugTrimmed;
         }
 
         const t = `${rawCode || ''} ${slug || ''} ${name || ''}`.toLowerCase();
@@ -460,6 +468,16 @@
                 // 3. البحث عن البطولة من القائمة المعيارية
                 let leagueMeta = MAJOR_LEAGUES.find(l => l.code === canonicalCode && l.sport === sport);
 
+                // استخراج الشعار الرسمي للدوري من استجابة ESPN إن توفرت
+                const espnLeagueLogo = ev.league?.logos?.[0]?.href 
+                    || comp.league?.logos?.[0]?.href 
+                    || (Array.isArray(data.leagues) ? data.leagues.find(l => String(l.id) === String(rawCode) || l.slug === rawSlug)?.logos?.[0]?.href : '')
+                    || '';
+
+                if (leagueMeta && !leagueMeta.logo && espnLeagueLogo) {
+                    leagueMeta.logo = espnLeagueLogo;
+                }
+
                 if (!leagueMeta) {
                     const rawNote = `${rawName} ${rawSlug}`.toLowerCase();
                     let mapped = null;
@@ -483,7 +501,7 @@
                         name: resolvedName,
                         shortName: resolvedName,
                         country: resolvedCountry,
-                        logo: mapped?.logo || '',
+                        logo: mapped?.logo || espnLeagueLogo || '',
                         flagImg: resolvedFlag
                     };
                 }
@@ -754,6 +772,8 @@
     };
 
     // التحديث الدوري الخلفي الذكي للمباريات الحية (Smart Polling & Visibility API)
+    // يستمر دائماً كل 30 ثانية ما دام المستخدم داخل الموقع (حتى عند الانتقال لتبويب القسائم أو أي قسم آخر)
+    // ويتوقف فقط إذا غادر المتصفح/قفل الشاشة (document.hidden)، ويعود فوراً عند فتح التطبيق
     let liveAutoFetchInterval = null;
     const initLiveAutoFetch = () => {
         if (liveAutoFetchInterval) {
@@ -761,33 +781,22 @@
             liveAutoFetchInterval = null;
         }
 
-        const hasLive = (loadedMatchesEvents || []).some(ev => ev.status?.type?.state === 'in');
-        const shouldPoll = hasLive || currentStatusMode === 'live';
+        const pollFrequency = 30000; // استعلام خفيف كل 30 ثانية للأحداث المباشرة
 
-        if (!shouldPoll) return;
-
-        // تردد 28 ثانية يتوافق مع كاش Akamai/Cloudflare لسيرفرات ESPN دون استنزاف البطارية أو الشبكة
         liveAutoFetchInterval = setInterval(() => {
-            if (document.hidden) return; // توقف تلقائي عند مغادرة التبويب لتوفير الطاقة
-            const stillHasLive = (loadedMatchesEvents || []).some(ev => ev.status?.type?.state === 'in');
-            if (stillHasLive || currentStatusMode === 'live') {
-                loadMatches(false, false);
-            } else {
-                clearInterval(liveAutoFetchInterval);
-                liveAutoFetchInterval = null;
-            }
-        }, 28000);
+            // توقف فقط إذا غادر المستخدم الموقع بالكامل (تم تصغير المتصفح أو قفل شاشة الهاتف)
+            if (document.hidden) return;
 
-        // مراقبة Visibility API لتحديث النتائج فوراً عند رجوع المستخدم للتطبيق
+            // استعلام خفيف وتحديث صامت لنتائج وأهداف ودقائق المباريات الحية
+            loadMatches(false, false);
+        }, pollFrequency);
+
+        // مراقبة Visibility API لتحديث النتائج فوراً وبدون انتظار عند رجوع المستخدم للتطبيق بعد مغادرته
         if (!window._visibilityListenerAdded) {
             window._visibilityListenerAdded = true;
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden) {
-                    const activeLive = (loadedMatchesEvents || []).some(ev => ev.status?.type?.state === 'in');
-                    if (activeLive || currentStatusMode === 'live') {
-                        loadMatches(false, false);
-                        initLiveAutoFetch();
-                    }
+                    loadMatches(false, false);
                 }
             });
         }
@@ -1490,6 +1499,12 @@
             } else {
                 renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
             }
+
+            // مزامنة حالة الصفقات وتبويب القسائم في حال كان مفتوحاً
+            if (typeof window.renderSlips === 'function' && document.getElementById('tab3')?.classList.contains('active')) {
+                window.renderSlips();
+            }
+
             initLiveMinuteTicker();
             initLiveAutoFetch();
         } catch (e) {
@@ -2047,14 +2062,17 @@
     function renderTournamentGroup(grp, tournId, isCollapsed = false) {
         const lCode = grp.leagueCode || grp.matches[0]?.leagueCode || grp.meta?.code || '';
         const isFav = Boolean(lCode && favoriteLeagues.has(lCode));
-        const hasValidLogo = grp.meta.logo && grp.meta.logo !== './icon-192.png' && grp.meta.logo.startsWith('http');
-        const hasValidFlag = grp.meta.flagImg && grp.meta.flagImg.startsWith('http');
+        const matchedMajor = MAJOR_LEAGUES.find(l => l.code === lCode && l.sport === (grp.matches[0]?.sport || currentSport));
+        const metaLogo = (grp.meta?.logo && grp.meta.logo !== './icon-192.png' && grp.meta.logo.startsWith('http')) ? grp.meta.logo : (matchedMajor?.logo || '');
+        const metaFlag = (grp.meta?.flagImg && grp.meta.flagImg.startsWith('http')) ? grp.meta.flagImg : (matchedMajor?.flagImg || '');
+        const hasValidLogo = metaLogo && metaLogo !== './icon-192.png' && metaLogo.startsWith('http');
+        const hasValidFlag = metaFlag && metaFlag.startsWith('http');
         
         const logoImg = hasValidLogo
-            ? `<img src="${grp.meta.logo}" class="sofa-tourn-logo" alt="" onerror="this.style.display='none'; const n = this.parentElement.querySelector('.sofa-tourn-flag'); if(n && n.getAttribute('src')) { n.style.display='inline-block'; } else { const f = this.parentElement.querySelector('.sofa-tourn-fallback-icon'); if(f) f.style.display='inline-block'; }">`
+            ? `<img src="${metaLogo}" class="sofa-tourn-logo" alt="" onerror="this.style.display='none'; const n = this.parentElement.querySelector('.sofa-tourn-flag'); if(n && n.getAttribute('src')) { n.style.display='inline-block'; } else { const f = this.parentElement.querySelector('.sofa-tourn-fallback-icon'); if(f) f.style.display='inline-block'; }">`
             : '';
         const flagImg = hasValidFlag
-            ? `<img src="${grp.meta.flagImg}" class="sofa-tourn-flag" alt="" style="${hasValidLogo ? 'display:none;' : ''}" onerror="this.style.display='none'; const f = this.parentElement.querySelector('.sofa-tourn-fallback-icon'); if(f) f.style.display='inline-block';">`
+            ? `<img src="${metaFlag}" class="sofa-tourn-flag" alt="" style="${hasValidLogo ? 'display:none;' : ''}" onerror="this.style.display='none'; const f = this.parentElement.querySelector('.sofa-tourn-fallback-icon'); if(f) f.style.display='inline-block';">`
             : '';
         const fallbackIcon = `<span class="sofa-tourn-fallback-icon" style="${(hasValidLogo || hasValidFlag) ? 'display:none;' : 'display:inline-block;'}">🏆</span>`;
 
@@ -2223,6 +2241,7 @@
     window.getSelectedDate = () => selectedDate;
     window.parseMinuteDetail = parseMinuteDetail;
     window.initLiveMinuteTicker = initLiveMinuteTicker;
+    window.initLiveAutoFetch = initLiveAutoFetch;
     window.formatMatchTime = formatMatchTime;
     window.getTeamLogoUrl = getTeamLogoUrl;
 })();
