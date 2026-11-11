@@ -1667,22 +1667,44 @@
     border-radius: 10px;
 }
 
+.sofa-tournament-card.is-favorite-league {
+    border-color: rgba(245, 158, 11, 0.45);
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.08);
+}
+
+.day-group-body .sofa-tournament-card.is-favorite-league {
+    border-color: rgba(245, 158, 11, 0.45);
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.08);
+}
+
+.sofa-tournament-card.is-favorite-league .sofa-tourn-header {
+    background: rgba(245, 158, 11, 0.06);
+}
+
 .sofa-star-btn {
     background: none;
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    font-size: 0.88rem;
+    font-size: 0.95rem;
     padding: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.15s ease, color 0.15s ease;
 }
 
 .sofa-star-btn.is-fav {
     color: #f59e0b;
+    filter: drop-shadow(0 1px 3px rgba(245, 158, 11, 0.45));
+}
+
+.sofa-star-btn:hover {
+    color: #f59e0b;
 }
 
 .sofa-star-btn:active {
-    transform: scale(1.2);
+    transform: scale(1.25);
 }
 
 /* ===================================================
@@ -1880,35 +1902,18 @@
     font-size: 0.82rem;
 }
 
-/* 4. عمود التنبيه / الإجراء (أقصى اليمين) */
-.sofa-row-action-col {
+/* عمود النتيجة (أقصى اليمين) */
+.sofa-row-scores-col {
+    width: 28px;
+    min-width: 28px;
+    max-width: 28px;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 3px;
-    flex-shrink: 0;
-}
-
-.sofa-row-bell-btn {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text-muted);
-    opacity: 0.6;
-    font-size: 0.82rem;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 50%;
-    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: all 0.18s ease;
-}
-
-.sofa-row-bell-btn:hover {
-    opacity: 1;
-    color: var(--accent-primary);
-    background: var(--accent-bg, rgba(255, 255, 255, 0.08));
+    gap: 6px;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
 }
 
 /* 7. دليل البطولات والدوريات المنظم (SofaScore LEAGUES Tab) */
@@ -2258,15 +2263,22 @@
     justify-content: center;
     background: #ef4444;
     color: #ffffff;
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     font-weight: 900;
-    min-width: 14px;
-    height: 16px;
-    padding: 0 3px;
-    border-radius: 3px;
-    box-shadow: 0 1px 3px rgba(239, 68, 68, 0.4);
-    margin-right: 5px;
+    width: 8px;
+    height: 12px;
+    border-radius: 2px;
+    margin: 0 4px;
+    vertical-align: middle;
+    box-shadow: 0 1px 2px rgba(239, 68, 68, 0.45);
+    flex-shrink: 0;
+    line-height: 1;
     animation: fadeInGroup 0.2s ease-out;
+}
+
+.red-card-badge.has-multiple {
+    width: 14px;
+    padding: 0 2px;
 }
 
 .hedge-active-pill {
@@ -2290,55 +2302,7 @@
     color: #ffffff;
 }
 
-/* قسم المباريات المثبتة في أعلى الشاشة */
-.pinned-matches-section {
-    background: linear-gradient(180deg, rgba(245, 158, 11, 0.06) 0%, transparent 100%), var(--bg-card);
-    border: 1px solid rgba(245, 158, 11, 0.35);
-    border-radius: 16px;
-    margin-bottom: 14px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.08);
-}
 
-.pinned-matches-header {
-    background: rgba(245, 158, 11, 0.1);
-    border-bottom: 1px solid rgba(245, 158, 11, 0.2);
-    padding: 9px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    font-weight: 900;
-    color: #f59e0b;
-}
-
-.pinned-count-badge {
-    background: rgba(245, 158, 11, 0.2);
-    color: #f59e0b;
-    font-size: 0.7rem;
-    font-weight: 900;
-    padding: 2px 8px;
-    border-radius: 12px;
-}
-
-.sofa-row-pin-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    font-size: 0.78rem;
-    padding: 4px;
-    cursor: pointer;
-    transition: all 0.18s ease;
-}
-
-.sofa-row-pin-btn:hover {
-    color: #f59e0b;
-    transform: scale(1.15);
-}
-
-.sofa-row-pin-btn.is-pinned {
-    color: #f59e0b;
-}
 
 /* ==================== 11. أرضية الملعب التكتيكية (Tactical Pitch & Formations) ==================== */
 .pitch-container-wrap {

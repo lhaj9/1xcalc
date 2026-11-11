@@ -702,7 +702,7 @@
                 row.classList.add('is-live-row');
             }
 
-            // 3. تحديث شارات البطاقات الحمراء
+            // 3. تحديث شارات البطاقات الحمراء (بطاقة حمراء منفردة وأنيقة)
             const homeRed = getTeamRedCardCount(ev, home.id || home.team?.id);
             const awayRed = getTeamRedCardCount(ev, away.id || away.team?.id);
             const teamEls = row.querySelectorAll('.sofa-row-teams-col .sofa-row-team-name');
@@ -711,11 +711,11 @@
                 if (homeRed > 0) {
                     if (!homeBadge) {
                         homeBadge = document.createElement('span');
-                        homeBadge.className = 'red-card-badge';
-                        homeBadge.title = 'بطاقة حمراء';
                         teamEls[0].appendChild(homeBadge);
                     }
-                    homeBadge.textContent = `🟥${homeRed > 1 ? ` ${homeRed}` : ''}`;
+                    homeBadge.className = homeRed > 1 ? 'red-card-badge has-multiple' : 'red-card-badge';
+                    homeBadge.title = homeRed > 1 ? `${homeRed} بطاقات حمراء` : 'بطاقة حمراء (طرد)';
+                    homeBadge.textContent = homeRed > 1 ? String(homeRed) : '';
                 } else if (homeBadge) {
                     homeBadge.remove();
                 }
@@ -724,11 +724,11 @@
                 if (awayRed > 0) {
                     if (!awayBadge) {
                         awayBadge = document.createElement('span');
-                        awayBadge.className = 'red-card-badge';
-                        awayBadge.title = 'بطاقة حمراء';
                         teamEls[1].appendChild(awayBadge);
                     }
-                    awayBadge.textContent = `🟥${awayRed > 1 ? ` ${awayRed}` : ''}`;
+                    awayBadge.className = awayRed > 1 ? 'red-card-badge has-multiple' : 'red-card-badge';
+                    awayBadge.title = awayRed > 1 ? `${awayRed} بطاقات حمراء` : 'بطاقة حمراء (طرد)';
+                    awayBadge.textContent = awayRed > 1 ? String(awayRed) : '';
                 } else if (awayBadge) {
                     awayBadge.remove();
                 }
@@ -1584,12 +1584,13 @@
     };
 
     window.toggleFavoriteLeague = (leagueCode) => {
+        if (!leagueCode) return;
         if (favoriteLeagues.has(leagueCode)) {
             favoriteLeagues.delete(leagueCode);
-            showToast('⭐ تمت الإزالة من المفضلة');
+            showToast('⭐ تمت إزالة الدوري من المفضلة وإلغاء تثبيته');
         } else {
             favoriteLeagues.add(leagueCode);
-            showToast('⭐ تمت الإضافة للمفضلة');
+            showToast('⭐ تم تمييز الدوري وتثبيته في الأعلى!');
         }
         saveFavoriteLeagues();
         if (currentMainView === 'leagues') {
@@ -1716,47 +1717,9 @@
             `;
         }
 
-        // فصل المباريات المفضلة والمثبتة في الأعلى (Pinned Matches)
-        const pinnedMatches = [];
-        const unpinnedMatches = [];
-
-        filtered.forEach(ev => {
-            if (favoriteMatches.has(String(ev.id))) {
-                pinnedMatches.push(ev);
-            } else {
-                unpinnedMatches.push(ev);
-            }
-        });
-
-        if (pinnedMatches.length > 0) {
-            let pinnedCardsHtml = '';
-            pinnedMatches.forEach(ev => {
-                pinnedCardsHtml += buildMatchCardHTML(ev, true);
-            });
-
-            html += `
-                <div class="pinned-matches-section">
-                    <div class="pinned-matches-header">
-                        <div style="display:flex; align-items:center; gap:7px;">
-                            <i class="fa-solid fa-thumbtack"></i>
-                            <span>المباريات المثبتة</span>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span class="pinned-count-badge">${pinnedMatches.length}</span>
-                            <button type="button" onclick="clearAllFavoriteMatches()" style="background:transparent; border:none; color:var(--text-muted); font-size:0.72rem; cursor:pointer;" title="إلغاء تثبيت كل المباريات">✕ إلغاء الكل</button>
-                        </div>
-                    </div>
-                    <div class="pinned-matches-body">
-                        ${pinnedCardsHtml}
-                    </div>
-                </div>
-            `;
-        }
-
         // تجميع المباريات حسب التاريخ مع نظام الطي والفتح الذكي وتثبيت التاريخ أثناء التمرير (Sticky Date Headers)
         const dayGroups = {};
-        const matchesToGroup = unpinnedMatches.length > 0 ? unpinnedMatches : (pinnedMatches.length === 0 ? filtered : []);
-        matchesToGroup.forEach(ev => {
+        filtered.forEach(ev => {
             const d = new Date(ev.date);
             const dayKey = d.toLocaleDateString('ar-MA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             if (!dayGroups[dayKey]) dayGroups[dayKey] = [];
@@ -1813,12 +1776,14 @@
                 }
             }
 
-            // تقسيم مباريات هذا اليوم حسب البطولات والدوريات بقوائم منسدلة داخل اليوم
+            // تقسيم مباريات هذا اليوم حسب البطولات والدوريات مع فرز وتثبيت الدوريات المميزة في الأعلى
             const dayLeagueGroups = {};
             matches.forEach(ev => {
-                const lKey = ev.leagueMeta?.name || ev.leagueCode || 'unknown';
+                const lCode = ev.leagueCode || ev.leagueMeta?.code || 'unknown';
+                const lKey = lCode + '_' + (ev.leagueMeta?.name || '');
                 if (!dayLeagueGroups[lKey]) {
                     dayLeagueGroups[lKey] = {
+                        leagueCode: lCode,
                         meta: ev.leagueMeta || { name: 'بطولة رياضية', country: 'دولي' },
                         matches: []
                     };
@@ -1826,9 +1791,19 @@
                 dayLeagueGroups[lKey].matches.push(ev);
             });
 
+            // فرز الدوريات: الدوريات المميزة بنجمة تظهر أولاً في قمة اليوم
+            const sortedLeagueGroups = Object.values(dayLeagueGroups).sort((a, b) => {
+                const aCode = a.leagueCode || a.matches[0]?.leagueCode || '';
+                const bCode = b.leagueCode || b.matches[0]?.leagueCode || '';
+                const aFav = (aCode && favoriteLeagues.has(aCode)) ? 1 : 0;
+                const bFav = (bCode && favoriteLeagues.has(bCode)) ? 1 : 0;
+                if (aFav !== bFav) return bFav - aFav;
+                return 0;
+            });
+
             let dayCardsHtml = '';
             let dTournIdx = 0;
-            for (const grp of Object.values(dayLeagueGroups)) {
+            for (const grp of sortedLeagueGroups) {
                 dayCardsHtml += renderTournamentGroup(grp, `dayTournCard_${index}_${dTournIdx++}`, false);
             }
 
@@ -1933,12 +1908,11 @@
         const safeHomeName = (homeName || '').replace(/'/g, "\\'");
         const safeAwayName = (awayName || '').replace(/'/g, "\\'");
 
-        // 3. فحص البطاقات الحمراء وحالة التثبيت وربط الحاسبة بالصفقات النشطة (In-Play Hedge)
-        const isPinned = favoriteMatches.has(String(ev.id));
+        // 3. فحص البطاقات الحمراء (بطاقة حمراء منفردة وأنيقة) وربط الحاسبة بالصفقات النشطة (In-Play Hedge)
         const homeRed = getTeamRedCardCount(ev, home.id || home.team?.id);
         const awayRed = getTeamRedCardCount(ev, away.id || away.team?.id);
-        const homeRedHtml = homeRed > 0 ? `<span class="red-card-badge" title="بطاقة حمراء">🟥${homeRed > 1 ? ` ${homeRed}` : ''}</span>` : '';
-        const awayRedHtml = awayRed > 0 ? `<span class="red-card-badge" title="بطاقة حمراء">🟥${awayRed > 1 ? ` ${awayRed}` : ''}</span>` : '';
+        const homeRedHtml = homeRed > 0 ? `<span class="red-card-badge ${homeRed > 1 ? 'has-multiple' : ''}" title="بطاقة حمراء (طرد)">${homeRed > 1 ? homeRed : ''}</span>` : '';
+        const awayRedHtml = awayRed > 0 ? `<span class="red-card-badge ${awayRed > 1 ? 'has-multiple' : ''}" title="بطاقة حمراء (طرد)">${awayRed > 1 ? awayRed : ''}</span>` : '';
 
         const hedgeSlip = getActiveHedgeSlip(homeName, awayName);
         const hedgePillHtml = hedgeSlip
@@ -1977,24 +1951,13 @@
                     ${homeScoreHtml}
                     ${awayScoreHtml}
                 </div>
-
-                <!-- عمود الإجراءات والتثبيت والتنبيهات (أقصى اليمين) -->
-                <div class="sofa-row-action-col">
-                    <button type="button" class="sofa-row-pin-btn ${isPinned ? 'is-pinned' : ''}" 
-                            title="${isPinned ? 'إلغاء تثبيت المباراة' : 'تثبيت المباراة في الأعلى'}" 
-                            onclick="event.stopPropagation(); toggleFavoriteMatch('${ev.id}')">
-                        <i class="fa-solid fa-thumbtack"></i>
-                    </button>
-                    <button type="button" class="sofa-row-bell-btn" title="تنبيهات المباراة" onclick="event.stopPropagation(); showToast('🔔 تم ضبط التنبيه لمباراة ${safeHomeName}');">
-                        <i class="fa-regular fa-bell"></i>
-                    </button>
-                </div>
             </div>
         `;
     }
 
     function renderTournamentGroup(grp, tournId, isCollapsed = false) {
-        const isFav = favoriteLeagues.has(grp.matches[0]?.leagueCode);
+        const lCode = grp.leagueCode || grp.matches[0]?.leagueCode || grp.meta?.code || '';
+        const isFav = Boolean(lCode && favoriteLeagues.has(lCode));
         const hasValidLogo = grp.meta.logo && grp.meta.logo !== './icon-192.png' && grp.meta.logo.startsWith('http');
         const hasValidFlag = grp.meta.flagImg && grp.meta.flagImg.startsWith('http');
         
@@ -2012,7 +1975,7 @@
         });
 
         return `
-            <div class="sofa-tournament-card ${isCollapsed ? 'is-collapsed' : ''}" id="${tournId}">
+            <div class="sofa-tournament-card ${isFav ? 'is-favorite-league' : ''} ${isCollapsed ? 'is-collapsed' : ''}" id="${tournId}">
                 <div class="sofa-tourn-header" onclick="toggleTournGroup('${tournId}')" role="button" tabindex="0" aria-expanded="${!isCollapsed}" title="انقر لطي أو فتح مباريات هذه البطولة">
                     <div class="sofa-tourn-title-wrap">
                         ${logoImg}
@@ -2026,8 +1989,8 @@
                     <div class="sofa-tourn-meta">
                         <span class="sofa-tourn-count">${grp.matches.length} مباريات</span>
                         <button type="button" class="sofa-star-btn ${isFav ? 'is-fav' : ''}" 
-                                onclick="event.stopPropagation(); toggleFavoriteLeague('${grp.matches[0]?.leagueCode || tournId}')" 
-                                title="${isFav ? 'إزالة من المفضلة' : 'تثبيت في المفضلة'}">
+                                onclick="event.stopPropagation(); toggleFavoriteLeague('${lCode || tournId}')" 
+                                title="${isFav ? 'إلغاء تمييز الدوري من المفضلة' : 'تثبيت وتمييز هذا الدوري في المفضلة بالأعلى'}">
                             <i class="fa-${isFav ? 'solid' : 'regular'} fa-star"></i>
                         </button>
                         <i class="fa-solid fa-chevron-down sofa-tourn-chevron"></i>
