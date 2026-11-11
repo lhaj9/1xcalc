@@ -242,16 +242,24 @@ const htmlEl = document.documentElement;
         // فتح وإغلاق نافذة دليل الاستخدام (علامة الاستفهام)
         const helpGuideModal = document.getElementById('helpGuideModal');
         const openHelpGuideModal = () => {
-            if (!helpGuideModal) return;
-            helpGuideModal.classList.add('open');
+            const modal = helpGuideModal || document.getElementById('helpGuideModal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+            modal.classList.add('open');
             loadAndRenderGuide();
             if (typeof window.pushModalHistory === 'function') {
                 window.pushModalHistory('helpGuideModal', () => closeHelpGuideModal(true));
             }
         };
         const closeHelpGuideModal = (fromPopState = false) => {
-            if (!helpGuideModal) return;
-            helpGuideModal.classList.remove('open');
+            const modal = helpGuideModal || document.getElementById('helpGuideModal');
+            if (!modal) return;
+            modal.classList.remove('open');
+            setTimeout(() => {
+                if (!modal.classList.contains('open')) {
+                    modal.style.display = 'none';
+                }
+            }, 250);
             if (!fromPopState && typeof window.popModalHistory === 'function') {
                 window.popModalHistory('helpGuideModal');
             }
@@ -438,6 +446,7 @@ const htmlEl = document.documentElement;
                 try {
                     if (tabId === 'tabHome') {
                         window.history.replaceState({ isRoot: true, tab: 'tabHome' }, '');
+                        window.history.pushState({ isRootSentinel: true, tab: 'tabHome' }, '');
                     } else if (previousTab === 'tabHome') {
                         window.history.pushState({ isRoot: false, tab: tabId }, '');
                     } else {
@@ -606,6 +615,30 @@ const htmlEl = document.documentElement;
             showToast('🔄 جاري تحديث النتائج والمباريات...');
         });
 
+        // ==================== إدارة إشعار تأكيد الخروج الخفيف (Double-Back to Exit) ====================
+        let exitConfirmToastTimer = null;
+        const showExitConfirmToast = () => {
+            const el = document.getElementById('exitConfirmToast');
+            if (el) {
+                el.classList.add('show');
+                clearTimeout(exitConfirmToastTimer);
+                exitConfirmToastTimer = setTimeout(() => {
+                    el.classList.remove('show');
+                }, 2200);
+            } else if (typeof showToast === 'function') {
+                showToast('🚪 اضغط رجوع مرة أخرى للخروج من التطبيق');
+            }
+        };
+
+        const hideExitConfirmToast = () => {
+            clearTimeout(exitConfirmToastTimer);
+            const el = document.getElementById('exitConfirmToast');
+            if (el) el.classList.remove('show');
+        };
+
+        window.showExitConfirmToast = showExitConfirmToast;
+        window.hideExitConfirmToast = hideExitConfirmToast;
+
         // ==================== مستمع أحداث الرجوع للخلف بالهاتف (Popstate & Mobile Back Navigation) ====================
         window.addEventListener('popstate', (e) => {
             if (window._isProgrammaticBack) {
@@ -613,7 +646,7 @@ const htmlEl = document.documentElement;
                 return;
             }
 
-            // 1. إذا كانت هناك نافذة منبثقة مفتوحة (مثل تفاصيل المباراة أو التقويم أو الفلاتر أو الإعدادات)، نقفلها فوراً دون الخروج من الموقع
+            // 1. إذا كانت هناك نافذة منبثقة مفتوحة (مثل تفاصيل المباراة أو الأخبار أو التقويم أو الفلاتر أو الإعدادات)، نقفلها فوراً دون الخروج من الموقع
             const stack = window.modalHistoryStack || [];
             if (stack.length > 0) {
                 const top = stack.pop();
@@ -644,15 +677,35 @@ const htmlEl = document.documentElement;
             // 4. إذا كان المستخدم في تبويب فرعي وليس في الرئيسية، يعود للرئيسية كأي تطبيق هاتف
             if (e.state && e.state.tab && e.state.tab !== 'tabHome') {
                 switchTab(e.state.tab, true);
+                try {
+                    window.history.pushState({ isRootSentinel: true, tab: 'tabHome' }, '');
+                } catch (_) {}
                 return;
             }
             const currentActiveTab = document.querySelector('.tab-panel.active')?.id;
             if (currentActiveTab && currentActiveTab !== 'tabHome') {
                 switchTab('tabHome', true);
+                try {
+                    window.history.pushState({ isRootSentinel: true, tab: 'tabHome' }, '');
+                } catch (_) {}
                 return;
             }
 
-            // إذا كان أصلاً في الصفحة الرئيسية ولا توجد أي نوافذ، يخرج المتصفح بشكل طبيعي
+            // 5. المستخدم في الصفحة الرئيسية دون أي نوافذ مفتوحة: تطبيق ميزة تأكيد الخروج المزدوج (Double-Back to Exit)
+            const now = Date.now();
+            if (window._lastExitBackPressTime && (now - window._lastExitBackPressTime < 2200)) {
+                // ضغطتين متتاليتين خلال ثانيتين: السماح بالخروج الفعلي من التطبيق
+                hideExitConfirmToast();
+                window._lastExitBackPressTime = 0;
+                window.history.back();
+            } else {
+                // الضغطة الأولى: إظهار إشعار تأكيد الخروج الخفيف وإعادة وضع الحارس في السجل
+                window._lastExitBackPressTime = now;
+                showExitConfirmToast();
+                try {
+                    window.history.pushState({ isRootSentinel: true, tab: 'tabHome' }, '');
+                } catch (_) {}
+            }
         });
 
         // ==================== دورة التهيئة الشاملة للتطبيق (Master App Initialization) ====================
@@ -662,19 +715,22 @@ const htmlEl = document.documentElement;
                 window.modalHistoryStack.length = 0;
             }
             window._isProgrammaticBack = false;
+            window._lastExitBackPressTime = 0;
 
             if (window.history && window.history.replaceState) {
                 try {
                     window.history.replaceState({ isRoot: true, tab: 'tabHome' }, '', window.location.pathname + window.location.search);
+                    window.history.pushState({ isRootSentinel: true, tab: 'tabHome' }, '');
                 } catch (_) {}
             }
 
             // التأكد من إغلاق جميع النوافذ المنبثقة عند بداية التشغيل دون استرجاع أي نافذة قديمة
-            ['matchStatsModal', 'setPeriodModal', 'matchesFilterSheetModal', 'settingsModal', 'helpGuideModal', 'iosInstallModal'].forEach(id => {
+            ['matchStatsModal', 'setPeriodModal', 'matchesFilterSheetModal', 'settingsModal', 'helpGuideModal', 'iosInstallModal', 'newsDetailModal'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) {
                     el.classList.remove('open');
                     el.setAttribute('aria-hidden', 'true');
+                    el.style.display = 'none';
                 }
             });
             document.body.style.overflow = '';

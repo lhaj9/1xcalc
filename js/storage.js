@@ -368,6 +368,35 @@
             showToast(nextTheme === 'dark' ? '🌙 تم تفعيل الوضع الداكن' : '☀️ تم تفعيل الوضع الفاتح');
         };
 
+        window.toggleAppTheme = () => {
+            const currentTheme = localStorage.getItem('arb_theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setAppTheme(newTheme);
+        };
+
+        window.openHelpGuideModal = window.openHelpGuideModal || function() {
+            const modal = document.getElementById('helpGuideModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.classList.add('open');
+            }
+            if (typeof loadAndRenderGuide === 'function') {
+                loadAndRenderGuide();
+            }
+        };
+
+        window.closeHelpGuideModal = window.closeHelpGuideModal || function(fromPopState = false) {
+            const modal = document.getElementById('helpGuideModal');
+            if (modal) {
+                modal.classList.remove('open');
+                setTimeout(() => {
+                    if (!modal.classList.contains('open')) {
+                        modal.style.display = 'none';
+                    }
+                }, 250);
+            }
+        };
+
         const quickThemeBtn = document.getElementById('themeQuickBtn');
         if (quickThemeBtn) quickThemeBtn.addEventListener('click', toggleTheme);
 
@@ -536,7 +565,10 @@
         window.openSettingsModal = openSettingsModal;
         window.closeSettingsModal = closeSettingsModal;
 
-        document.getElementById('openSettingsBtn').addEventListener('click', openSettingsModal);
+        const openSettingsBtn = document.getElementById('openSettingsBtn');
+        if (openSettingsBtn) {
+            openSettingsBtn.addEventListener('click', openSettingsModal);
+        }
         document.getElementById('closeSettingsBtn').addEventListener('click', () => closeSettingsModal(false));
         settingsModal.addEventListener('click', (e) => {
             if (e.target === settingsModal) closeSettingsModal(false);

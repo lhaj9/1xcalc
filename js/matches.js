@@ -2641,7 +2641,7 @@
                         <span>قراءة التقرير الكامل على ESPN</span>
                     </a>
                 ` : ''}
-                <button type="button" class="news-modal-close-btn" onclick="closeNewsDetailModal()">
+                <button type="button" class="news-modal-close-btn" onclick="closeNewsDetailModal(false)">
                     <i class="fa-solid fa-xmark"></i>
                     <span>إغلاق النافذة</span>
                 </button>
@@ -2654,14 +2654,24 @@
             modal.setAttribute('aria-hidden', 'false');
             document.body.classList.add('news-modal-open');
         });
+
+        // تسجيل النافذة في سجل التاريخ لدعم زر الرجوع بالهاتف
+        if (typeof window.pushModalHistory === 'function') {
+            window.pushModalHistory('newsDetailModal', () => closeNewsDetailModal(true));
+        }
     };
 
-    const closeNewsDetailModal = () => {
+    const closeNewsDetailModal = (fromPopState = false) => {
         const modal = document.getElementById('newsDetailModal');
         if (!modal) return;
         modal.classList.remove('open');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('news-modal-open');
+
+        if (!fromPopState && typeof window.popModalHistory === 'function') {
+            window.popModalHistory('newsDetailModal');
+        }
+
         setTimeout(() => {
             if (!modal.classList.contains('open')) {
                 modal.style.display = 'none';
@@ -2675,11 +2685,11 @@
         const closeX = document.getElementById('closeNewsModalX');
         const modal = document.getElementById('newsDetailModal');
 
-        if (closeBtn) closeBtn.addEventListener('click', closeNewsDetailModal);
-        if (closeX) closeX.addEventListener('click', closeNewsDetailModal);
+        if (closeBtn) closeBtn.addEventListener('click', () => closeNewsDetailModal(false));
+        if (closeX) closeX.addEventListener('click', () => closeNewsDetailModal(false));
         if (modal) {
             modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeNewsDetailModal();
+                if (e.target === modal) closeNewsDetailModal(false);
             });
         }
 

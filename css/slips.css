@@ -875,7 +875,7 @@
         }
 
         .modal-overlay.open {
-            display: flex;
+            display: flex !important;
         }
 
         .modal-sheet {
@@ -901,4 +901,4 @@
                 opacity: 1;
             }
         }
-
+
