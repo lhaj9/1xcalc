@@ -23,12 +23,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- تنسيقات المشروع المنظمة (Modular CSS Architecture) -->
-    <link rel="stylesheet" href="./css/variables.css?v=42">
-    <link rel="stylesheet" href="./css/base.css?v=42">
-    <link rel="stylesheet" href="./css/calculator.css?v=42">
-    <link rel="stylesheet" href="./css/slips.css?v=42">
-    <link rel="stylesheet" href="./css/matches.css?v=42">
-    <link rel="stylesheet" href="./css/modals.css?v=42">
+    <link rel="stylesheet" href="./css/variables.css?v=43">
+    <link rel="stylesheet" href="./css/base.css?v=43">
+    <link rel="stylesheet" href="./css/calculator.css?v=43">
+    <link rel="stylesheet" href="./css/slips.css?v=43">
+    <link rel="stylesheet" href="./css/matches.css?v=43">
+    <link rel="stylesheet" href="./css/modals.css?v=43">
 </head>
 
 <body>
@@ -139,28 +139,76 @@
                 </div>
             </div>
 
-            <!-- 3. شريط اختيار الرياضة (Sports Bar: Soccer / Basketball) -->
-            <div class="sofa-sports-nav" id="sportsSwitchBar">
-                <button type="button" class="sofa-sport-item active" data-sport="soccer">
-                    <span class="sofa-sport-icon">⚽</span>
-                    <span class="sofa-sport-label">كرة القدم</span>
-                </button>
-                <button type="button" class="sofa-sport-item" data-sport="basketball">
-                    <span class="sofa-sport-icon">🏀</span>
-                    <span class="sofa-sport-label">كرة السلة</span>
-                </button>
-            </div>
+            <!-- 3. شريط التحكم المضغوط القابل للطي والفتح (يجمع خيارات الرياضة والعرض دون استهلاك مساحة) -->
+            <div class="sofa-nav-collapsible-wrapper" id="sofaNavCollapsible">
+                <!-- الشريط الموجز الدائم -->
+                <div class="sofa-nav-summary-bar" id="sofaNavSummaryBar" onclick="toggleNavCollapse()" role="button" tabindex="0" title="انقر لتعديل نوع الرياضة أو طريقة العرض">
+                    <div class="sofa-nav-summary-content">
+                        <span class="sofa-nav-chip-label">العرض الحالي:</span>
+                        <div class="sofa-nav-chips">
+                            <span class="sofa-nav-chip sport-chip" id="summarySportChip">
+                                <span id="summarySportIcon">⚽</span>
+                                <span id="summarySportText">كرة القدم</span>
+                            </span>
+                            <span class="sofa-nav-chip-sep">/</span>
+                            <span class="sofa-nav-chip view-chip" id="summaryViewChip">
+                                <span id="summaryViewIcon"><i class="fa-solid fa-futbol"></i></span>
+                                <span id="summaryViewText">المباريات</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="sofa-nav-summary-action">
+                        <span class="sofa-nav-action-text" id="navToggleHintText">تغيير</span>
+                        <i class="fa-solid fa-chevron-down sofa-nav-chevron" id="navCollapseChevron"></i>
+                    </div>
+                </div>
 
-            <!-- 4. مفتاح التبديل المزدوج بين المباريات والبطولات (SofaScore View Switcher: GAMES / LEAGUES) -->
-            <div class="sofa-view-switch">
-                <button type="button" class="sofa-view-btn active" data-view="games" id="sofaViewGamesBtn">
-                    <i class="fa-solid fa-futbol"></i>
-                    <span>المباريات</span>
-                </button>
-                <button type="button" class="sofa-view-btn" data-view="leagues" id="sofaViewLeaguesBtn">
-                    <i class="fa-solid fa-trophy"></i>
-                    <span>البطولات</span>
-                </button>
+                <!-- اللوحة المنسدلة القابلة للطي لاختيار الرياضة والعرض -->
+                <div class="sofa-nav-expand-panel" id="sofaNavExpandBody" style="display: none;">
+                    <div class="sofa-nav-expand-header">
+                        <div class="sofa-nav-expand-title">
+                            <i class="fa-solid fa-sliders"></i>
+                            <span>تخصيص الرياضة ونوع المحتوى</span>
+                        </div>
+                        <button type="button" class="btn-close-nav-mini" onclick="toggleNavCollapse(false)" title="إغلاق وطي">✕</button>
+                    </div>
+
+                    <!-- اختيار الرياضة -->
+                    <div class="sofa-nav-group-row">
+                        <span class="sofa-nav-group-label">نوع الرياضة:</span>
+                        <div class="sofa-sports-nav" id="sportsSwitchBar">
+                            <button type="button" class="sofa-sport-item active" data-sport="soccer">
+                                <span class="sofa-sport-icon">⚽</span>
+                                <span class="sofa-sport-label">كرة القدم</span>
+                            </button>
+                            <button type="button" class="sofa-sport-item" data-sport="basketball">
+                                <span class="sofa-sport-icon">🏀</span>
+                                <span class="sofa-sport-label">كرة السلة</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- اختيار طريقة العرض -->
+                    <div class="sofa-nav-group-row">
+                        <span class="sofa-nav-group-label">طريقة العرض:</span>
+                        <div class="sofa-view-switch" id="viewSwitchBar">
+                            <button type="button" class="sofa-view-btn active" data-view="games" id="sofaViewGamesBtn">
+                                <i class="fa-solid fa-futbol"></i>
+                                <span>المباريات اليومية</span>
+                            </button>
+                            <button type="button" class="sofa-view-btn" data-view="leagues" id="sofaViewLeaguesBtn">
+                                <i class="fa-solid fa-trophy"></i>
+                                <span>دليل البطولات</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- زر التأكيد والطي -->
+                    <button type="button" class="btn-nav-confirm" onclick="toggleNavCollapse(false)">
+                        <i class="fa-solid fa-check"></i>
+                        <span>تأكيد وطي القائمة</span>
+                    </button>
+                </div>
             </div>
 
             <!-- 5. شريط التحكم والتواريخ في سطر واحد مدمج: [تصفية] [مباشر] [< اليوم >] -->
@@ -1063,13 +1111,13 @@
     <div class="toast" id="toastMsg">تم الحفظ بنجاح!</div>
 
     <!-- الوحدات البرمجية المعيارية للتطبيق (Modular JavaScript Architecture) -->
-    <script src="./js/i18n.js?v=42"></script>
-    <script src="./js/storage.js?v=42"></script>
-    <script src="./js/calculator.js?v=42"></script>
-    <script src="./js/slips.js?v=42"></script>
-    <script src="./js/matches.js?v=42"></script>
-    <script src="./js/match-details.js?v=42"></script>
-    <script src="./js/calendar.js?v=42"></script>
-    <script src="./js/app.js?v=42"></script>
+    <script src="./js/i18n.js?v=43"></script>
+    <script src="./js/storage.js?v=43"></script>
+    <script src="./js/calculator.js?v=43"></script>
+    <script src="./js/slips.js?v=43"></script>
+    <script src="./js/matches.js?v=43"></script>
+    <script src="./js/match-details.js?v=43"></script>
+    <script src="./js/calendar.js?v=43"></script>
+    <script src="./js/app.js?v=43"></script>
 </body>
 </html>

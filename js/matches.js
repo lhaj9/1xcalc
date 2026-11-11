@@ -1073,12 +1073,66 @@
         showToast('🌐 تم عرض كل المواعيد المتاحة');
     };
 
+    // مزامنة شارات الشريط المضغوط للرياضة وطريقة العرض
+    function syncNavSummaryChips() {
+        const sportIcon = currentSport === 'basketball' ? '🏀' : '⚽';
+        const sportText = currentSport === 'basketball' ? 'كرة السلة' : 'كرة القدم';
+        const viewText = currentMainView === 'leagues' ? 'دليل البطولات' : 'المباريات اليومية';
+
+        const sIconEl = document.getElementById('summarySportIcon');
+        const sTextEl = document.getElementById('summarySportText');
+        const vIconEl = document.getElementById('summaryViewIcon');
+        const vTextEl = document.getElementById('summaryViewText');
+
+        if (sIconEl) sIconEl.textContent = sportIcon;
+        if (sTextEl) sTextEl.textContent = sportText;
+        if (vIconEl) vIconEl.innerHTML = currentMainView === 'leagues' ? '<i class="fa-solid fa-trophy"></i>' : '<i class="fa-solid fa-futbol"></i>';
+        if (vTextEl) vTextEl.textContent = viewText;
+    }
+
+    // فتح وإغلاق شريط الخيارات المنسدل
+    window.toggleNavCollapse = (forceOpen) => {
+        const expandBody = document.getElementById('sofaNavExpandBody');
+        const chevron = document.getElementById('navCollapseChevron');
+        const hintText = document.getElementById('navToggleHintText');
+        const bar = document.getElementById('sofaNavSummaryBar');
+        if (!expandBody) return;
+
+        const isCurrentlyOpen = expandBody.style.display !== 'none';
+        const willOpen = (forceOpen !== undefined) ? forceOpen : !isCurrentlyOpen;
+
+        if (willOpen) {
+            expandBody.style.display = 'block';
+            chevron?.classList.add('is-open');
+            if (hintText) hintText.textContent = 'إغلاق ✕';
+            bar?.classList.add('is-open');
+        } else {
+            expandBody.style.display = 'none';
+            chevron?.classList.remove('is-open');
+            if (hintText) hintText.textContent = 'تغيير';
+            bar?.classList.remove('is-open');
+        }
+    };
+
+    // إغلاق اللوحة عند النقر خارجها
+    document.addEventListener('click', (e) => {
+        const wrapper = document.getElementById('sofaNavCollapsible');
+        const expandBody = document.getElementById('sofaNavExpandBody');
+        if (wrapper && expandBody && expandBody.style.display !== 'none') {
+            if (!wrapper.contains(e.target)) {
+                window.toggleNavCollapse(false);
+            }
+        }
+    });
+
     // التبديل بين واجهة المباريات (GAMES) ودليل الدوريات (LEAGUES)
     window.switchMainView = (view) => {
         currentMainView = view;
         document.querySelectorAll('.sofa-view-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.view === view);
         });
+
+        syncNavSummaryChips();
 
         const gamesCtrl = document.getElementById('sofaGamesControlRow');
         if (gamesCtrl) {
@@ -1101,6 +1155,8 @@
         document.querySelectorAll('.sofa-sport-item').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.sport === sport);
         });
+
+        syncNavSummaryChips();
 
         const titleEl = document.getElementById('homeMatchesTitle');
         if (titleEl) {
@@ -2230,6 +2286,9 @@
         renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
     };
 
+    // مزامنة أولية لشريط الخيارات
+    syncNavSummaryChips();
+
     // الربط والتصدير الخارجي
     window.loadMatches = loadMatches;
     window.renderMatchesList = renderMatchesList;
@@ -2244,4 +2303,5 @@
     window.initLiveAutoFetch = initLiveAutoFetch;
     window.formatMatchTime = formatMatchTime;
     window.getTeamLogoUrl = getTeamLogoUrl;
+    window.syncNavSummaryChips = syncNavSummaryChips;
 })();
