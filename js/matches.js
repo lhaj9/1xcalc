@@ -11,12 +11,16 @@
         { code: 'uefa.europa', sport: 'soccer', name: 'الدوري الأوروبي (Europa League)', shortName: 'اليوروبا ليغ', country: 'أوروبا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2310.png', flagImg: 'https://flagcdn.com/w40/eu.png' },
         { code: 'uefa.europa.conf', sport: 'soccer', name: 'دوري المؤتمر الأوروبي (Conference League)', shortName: 'دوري المؤتمر', country: 'أوروبا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2288.png', flagImg: 'https://flagcdn.com/w40/eu.png' },
         { code: 'eng.1', sport: 'soccer', name: 'الدوري الإنجليزي الممتاز (Premier League)', shortName: 'البريميرليغ', country: 'إنجلترا', region: 'england', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png', flagImg: 'https://flagcdn.com/w40/gb-eng.png' },
+        { code: 'eng.2', sport: 'soccer', name: 'دوري البطولة الإنجليزية (Championship)', shortName: 'التشامبيونشيب', country: 'إنجلترا', region: 'england', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/24.png', flagImg: 'https://flagcdn.com/w40/gb-eng.png' },
         { code: 'eng.fa', sport: 'soccer', name: 'كأس الاتحاد الإنجليزي (FA Cup)', shortName: 'كأس إنجلترا', country: 'إنجلترا', region: 'england', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png', flagImg: 'https://flagcdn.com/w40/gb-eng.png' },
         { code: 'esp.1', sport: 'soccer', name: 'الدوري الإسباني (LaLiga)', shortName: 'لا ليغا', country: 'إسبانيا', region: 'spain', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png', flagImg: 'https://flagcdn.com/w40/es.png' },
         { code: 'esp.copa_del_rey', sport: 'soccer', name: 'كأس ملك إسبانيا (Copa del Rey)', shortName: 'كأس الملك', country: 'إسبانيا', region: 'spain', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png', flagImg: 'https://flagcdn.com/w40/es.png' },
         { code: 'ita.1', sport: 'soccer', name: 'الدوري الإيطالي (Serie A)', shortName: 'سيريا A', country: 'إيطاليا', region: 'italy', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/12.png', flagImg: 'https://flagcdn.com/w40/it.png' },
         { code: 'ger.1', sport: 'soccer', name: 'الدوري الألماني (Bundesliga)', shortName: 'البوندسليغا', country: 'ألمانيا', region: 'germany', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/10.png', flagImg: 'https://flagcdn.com/w40/de.png' },
+        { code: 'ger.2', sport: 'soccer', name: 'الدوري الألماني الدرجة الثانية (2. Bundesliga)', shortName: 'البوندسليغا 2', country: 'ألمانيا', region: 'germany', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/10.png', flagImg: 'https://flagcdn.com/w40/de.png' },
         { code: 'fra.1', sport: 'soccer', name: 'الدوري الفرنسي (Ligue 1)', shortName: 'ليغ 1', country: 'فرنسا', region: 'france', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/9.png', flagImg: 'https://flagcdn.com/w40/fr.png' },
+        { code: 'rus.1', sport: 'soccer', name: 'الدوري الروسي الممتاز (Russian Premier)', shortName: 'الدوري الروسي', country: 'روسيا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/3939.png', flagImg: 'https://flagcdn.com/w40/ru.png' },
+        { code: 'aus.1', sport: 'soccer', name: 'الدوري الأسترالي (A-League)', shortName: 'الدوري الأسترالي', country: 'أستراليا', region: 'asia', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1308.png', flagImg: 'https://flagcdn.com/w40/au.png' },
         { code: 'ksa.1', sport: 'soccer', name: 'دوري روشن السعودي (Roshn Saudi League)', shortName: 'دوري روشن', country: 'السعودية', region: 'saudi', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2488.png', flagImg: 'https://flagcdn.com/w40/sa.png' },
         { code: 'por.1', sport: 'soccer', name: 'الدوري البرتغالي (Primeira Liga)', shortName: 'البرتغالي', country: 'البرتغال', region: 'portugal', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/14.png', flagImg: 'https://flagcdn.com/w40/pt.png' },
         { code: 'ned.1', sport: 'soccer', name: 'الدوري الهولندي (Eredivisie)', shortName: 'الهولندي', country: 'هولندا', region: 'netherlands', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/11.png', flagImg: 'https://flagcdn.com/w40/nl.png' },
@@ -82,7 +86,9 @@
         'uruguay': { flag: 'https://flagcdn.com/w40/uy.png', ar: 'أوروغواي' },
         'chile': { flag: 'https://flagcdn.com/w40/cl.png', ar: 'تشيلي' },
         'ecuador': { flag: 'https://flagcdn.com/w40/ec.png', ar: 'الإكوادور' },
-        'peru': { flag: 'https://flagcdn.com/w40/pe.png', ar: 'بيرو' }
+        'peru': { flag: 'https://flagcdn.com/w40/pe.png', ar: 'بيرو' },
+        'russia': { flag: 'https://flagcdn.com/w40/ru.png', ar: 'روسيا' },
+        'australia': { flag: 'https://flagcdn.com/w40/au.png', ar: 'أستراليا' }
     };
 
     // الحالة العامة لقسم المباريات والفلاتر
@@ -155,6 +161,66 @@
         return list;
     };
 
+    // قاموس تحويل معرّفات ESPN الرقمية والسلاسل إلى الأكواد المعيارية للبطولات (Canonical League Mapper)
+    const ESPN_ID_TO_CODE = {
+        '700': 'eng.1',
+        '3914': 'eng.2',
+        '8097': 'eng.w.1',
+        '740': 'esp.1',
+        '20956': 'esp.w.1',
+        '730': 'ita.1',
+        '720': 'ger.1',
+        '3927': 'ger.2',
+        '710': 'fra.1',
+        '20922': 'uefa.nations',
+        '3946': 'tur.1',
+        '3906': 'por.1',
+        '3901': 'ned.1',
+        '3939': 'rus.1',
+        '2488': 'ksa.1',
+        '770': 'usa.1',
+        '1308': 'aus.1',
+        '20955': 'bra.1',
+        'nba': 'nba',
+        'mens-college-basketball': 'mens-college-basketball'
+    };
+
+    const resolveCanonicalCode = (rawCode, slug, name) => {
+        if (rawCode && ESPN_ID_TO_CODE[rawCode]) {
+            return ESPN_ID_TO_CODE[rawCode];
+        }
+
+        const t = `${rawCode || ''} ${slug || ''} ${name || ''}`.toLowerCase();
+        if (t.includes('premier-league') || t.includes('premier league') || t.includes('epl')) return 'eng.1';
+        if (t.includes('championship')) return 'eng.2';
+        if (t.includes('fa-cup') || t.includes('fa cup')) return 'eng.fa';
+        if (t.includes('laliga') || t.includes('la liga') || t.includes('primera division')) return 'esp.1';
+        if (t.includes('copa del rey') || t.includes('copa-del-rey')) return 'esp.copa_del_rey';
+        if (t.includes('serie a') || t.includes('serie-a')) return 'ita.1';
+        if (t.includes('2. bundesliga') || t.includes('2-bundesliga')) return 'ger.2';
+        if (t.includes('bundesliga')) return 'ger.1';
+        if (t.includes('ligue 1') || t.includes('ligue-1')) return 'fra.1';
+        if (t.includes('champions league') || t.includes('champions-league') || t.includes('ucl')) return 'uefa.champions';
+        if (t.includes('europa league') || t.includes('europa-league') || t.includes('uel')) return 'uefa.europa';
+        if (t.includes('conference league') || t.includes('conference-league') || t.includes('uecl')) return 'uefa.europa.conf';
+        if (t.includes('nations league') || t.includes('nations-league')) return 'uefa.nations';
+        if (t.includes('roshn') || t.includes('saudi')) return 'ksa.1';
+        if (t.includes('primeira liga') || t.includes('primeira-liga') || t.includes('portuguese')) return 'por.1';
+        if (t.includes('eredivisie') || t.includes('dutch')) return 'ned.1';
+        if (t.includes('super lig') || t.includes('süper lig') || t.includes('super-lig') || t.includes('turkish')) return 'tur.1';
+        if (t.includes('russian premier') || t.includes('russian') || t.includes('russia')) return 'rus.1';
+        if (t.includes('a-league') || t.includes('australian')) return 'aus.1';
+        if (t.includes('colombian') || t.includes('dimayor')) return 'col.1';
+        if (t.includes('brasileirao') || t.includes('brazilian')) return 'bra.1';
+        if (t.includes('argentine') || t.includes('argentina')) return 'arg.1';
+        if (t.includes('mexican') || t.includes('liga mx') || t.includes('bbva mx')) return 'mex.1';
+        if (t.includes('major league soccer') || t.includes('mls')) return 'usa.1';
+        if (t.includes('libertadores')) return 'conmebol.libertadores';
+        if (t.includes('sudamericana')) return 'conmebol.sudamericana';
+
+        return rawCode || 'other';
+    };
+
     // جلب جدول مباريات دوري محدد عبر واجهة ESPN العامة
     const fetchLeagueScoreboard = async (sport, leagueCode, dateStr = null) => {
         const cacheKey = `${sport}_${leagueCode}_${dateStr || 'default'}`;
@@ -189,30 +255,33 @@
 
             const events = (data.events || []).map(ev => {
                 const comp = ev.competitions?.[0] || {};
-                let leagueMeta = knownMeta;
 
-                // استخراج كود الدوري الحقيقي من ESPN بدقة (من UID أو كائن البطولة)
-                let realLeagueCode = (leagueCode !== 'all') ? leagueCode : '';
-                if (!realLeagueCode) {
+                // 1. استخراج كود أو معرّف الدوري الأولي من ESPN
+                let rawCode = (leagueCode !== 'all') ? leagueCode : '';
+                if (!rawCode) {
                     const uidMatch = (ev.uid || '').match(/~l:([^~]+)/);
                     if (uidMatch && uidMatch[1]) {
-                        realLeagueCode = uidMatch[1];
+                        rawCode = uidMatch[1];
                     } else if (ev.league?.slug) {
-                        realLeagueCode = ev.league.slug;
+                        rawCode = ev.league.slug;
                     } else if (comp.league?.slug) {
-                        realLeagueCode = comp.league.slug;
+                        rawCode = comp.league.slug;
                     } else if (data.leagues?.[0]?.slug) {
-                        realLeagueCode = data.leagues[0].slug;
+                        rawCode = data.leagues[0].slug;
                     }
                 }
 
-                if (!leagueMeta && realLeagueCode) {
-                    leagueMeta = MAJOR_LEAGUES.find(l => l.code === realLeagueCode && l.sport === sport);
-                }
+                const rawSlug = ev.season?.slug || ev.league?.slug || comp.league?.slug || '';
+                const rawName = comp.altGameNote || ev.league?.name || comp.league?.name || ev.name || '';
 
-                // إذا كانت من الخلاصة العالمية الشاملة (soccer/all) ولم نجد بطولة سابقة، استخرج اسم وهوية البطولة
-                if (!leagueMeta || leagueCode === 'all') {
-                    const rawNote = (comp.altGameNote || ev.season?.slug || ev.league?.name || '').toLowerCase();
+                // 2. توحيد ومطابقة كود البطولة المعياري
+                const canonicalCode = resolveCanonicalCode(rawCode, rawSlug, rawName);
+
+                // 3. البحث عن البطولة من القائمة المعيارية
+                let leagueMeta = MAJOR_LEAGUES.find(l => l.code === canonicalCode && l.sport === sport);
+
+                if (!leagueMeta) {
+                    const rawNote = `${rawName} ${rawSlug}`.toLowerCase();
                     let mapped = null;
                     for (const [key, val] of Object.entries(TOURNAMENT_NAME_MAP)) {
                         if (rawNote.includes(key) || key.includes(rawNote)) {
@@ -224,15 +293,17 @@
                     const rawCountry = (comp.venue?.address?.country || '').toLowerCase();
                     const cInfo = COUNTRY_FLAG_MAP[rawCountry];
 
-                    const resolvedName = mapped ? mapped.name : (comp.altGameNote || ev.season?.slug || ev.league?.name || 'بطولة رياضية دولية');
+                    const resolvedName = mapped ? mapped.name : (comp.altGameNote || ev.season?.slug || ev.league?.name || 'بطولة رياضية');
                     const resolvedCountry = mapped ? mapped.country : (cInfo ? cInfo.ar : (comp.venue?.address?.country || 'دولي'));
                     const resolvedFlag = mapped ? mapped.flag : (cInfo ? cInfo.flag : 'https://flagcdn.com/w40/un.png');
 
                     leagueMeta = {
+                        code: canonicalCode,
+                        sport,
                         name: resolvedName,
                         shortName: resolvedName,
                         country: resolvedCountry,
-                        logo: leagueMeta?.logo || './icon-192.png',
+                        logo: './icon-192.png',
                         flagImg: resolvedFlag
                     };
                 }
@@ -240,7 +311,7 @@
                 return {
                     ...ev,
                     sport,
-                    leagueCode: realLeagueCode || ev.leagueCode || leagueCode,
+                    leagueCode: canonicalCode,
                     leagueMeta
                 };
             });
@@ -615,12 +686,39 @@
 
         const selectEl = document.getElementById('filterLeagueSelect');
         if (selectEl) {
-            const sportLeagues = MAJOR_LEAGUES.filter(l => l.sport === currentSport);
-            let opts = '';
-            sportLeagues.forEach(l => {
-                opts += `<option value="${l.code}" ${l.code === currentLeague ? 'selected' : ''}>${l.name}</option>`;
+            // حساب عدد مباريات كل دوري في الذاكرة الحالية
+            const counts = new Map();
+            const events = loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []);
+            events.forEach(ev => {
+                const code = ev.leagueCode || 'other';
+                counts.set(code, (counts.get(code) || 0) + 1);
             });
+
+            const sportLeagues = MAJOR_LEAGUES.filter(l => l.sport === currentSport);
+            let opts = `<option value="all">🌐 جميع البطولات والدوريات (${events.length} مباراة)</option>`;
+            
+            // إضافة الدوريات المصنفة مع عدد مبارياتها
+            sportLeagues.forEach(l => {
+                if (l.code === 'all') return;
+                const c = counts.get(l.code) || 0;
+                const countBadge = c > 0 ? ` (${c} مباريات)` : ' (0)';
+                opts += `<option value="${l.code}" ${l.code === currentLeague ? 'selected' : ''}>${l.name}${countBadge}</option>`;
+            });
+
+            // إضافة أي بطولات أخرى إضافية موجودة في اليوم الحالي ولم تكن ضمن القائمة الثابتة
+            const seenCodes = new Set(sportLeagues.map(l => l.code));
+            events.forEach(ev => {
+                const cCode = ev.leagueCode;
+                if (cCode && !seenCodes.has(cCode) && cCode !== 'other') {
+                    seenCodes.add(cCode);
+                    const lName = ev.leagueMeta?.name || cCode;
+                    const c = counts.get(cCode) || 0;
+                    opts += `<option value="${cCode}" ${cCode === currentLeague ? 'selected' : ''}>🏆 ${lName} (${c} مباريات)</option>`;
+                }
+            });
+
             selectEl.innerHTML = opts;
+            selectEl.value = currentLeague || 'all';
         }
 
         modal.classList.add('open');
@@ -652,6 +750,7 @@
         const activeStatusBtn = modal.querySelector('.filter-status-btn.active');
         const selectLeague = document.getElementById('filterLeagueSelect');
 
+        const prevTime = currentTimeFilter;
         if (activeTimeBtn) currentTimeFilter = activeTimeBtn.dataset.time;
         if (activeStatusBtn) currentStatusMode = activeStatusBtn.dataset.status;
         if (selectLeague) {
@@ -659,16 +758,15 @@
             window.currentLeague = currentLeague;
         }
 
-        const dot = document.getElementById('filterActiveDot');
-        const isCustom = currentTimeFilter !== 'day' || currentStatusMode !== 'all' || currentLeague !== 'all';
-        if (dot) dot.style.display = isCustom ? 'inline-block' : 'none';
-
-        const liveBtn = document.getElementById('statusBtnLive');
-        if (liveBtn) liveBtn.classList.toggle('active', currentStatusMode === 'live');
-
         closeFilterSheet();
-        updateDateNavDisplay();
-        loadMatches(false);
+        syncFilterControlsUI();
+
+        // إذا تغيرت الفترة الزمنية نعيد جلب البيانات من المصدر، وإلا نحدث العرض فورياً من الذاكرة
+        if (prevTime !== currentTimeFilter) {
+            loadMatches(false);
+        } else {
+            renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
+        }
         showToast('✓ تم تطبيق الفلاتر بنجاح');
     };
 
@@ -679,14 +777,8 @@
         currentLeague = 'all';
         window.currentLeague = 'all';
 
-        const dot = document.getElementById('filterActiveDot');
-        if (dot) dot.style.display = 'none';
-
-        const liveBtn = document.getElementById('statusBtnLive');
-        if (liveBtn) liveBtn.classList.remove('active');
-
         closeFilterSheet();
-        updateDateNavDisplay();
+        syncFilterControlsUI();
         loadMatches(false);
         showToast('↺ تم إعادة ضبط الفلاتر');
     };
@@ -734,8 +826,21 @@
                     tasks.push(fetchLeagueScoreboard('soccer', 'all', null));
                 }
                 tasks.push(fetchLeagueScoreboard('soccer', 'all', dStr));
-            } else if (currentTimeFilter === 'all' || currentTimeFilter === '6h' || currentTimeFilter === '12h' || currentTimeFilter === '24h') {
+            } else if (currentTimeFilter === '24h' || currentTimeFilter === '48h') {
+                const today = new Date();
+                const d1 = toESPNDate(today);
+                const tmr = new Date(today); tmr.setDate(tmr.getDate() + 1);
+                const d2 = toESPNDate(tmr);
                 tasks.push(fetchLeagueScoreboard('soccer', 'all', null));
+                tasks.push(fetchLeagueScoreboard('soccer', 'all', d1));
+                tasks.push(fetchLeagueScoreboard('soccer', 'all', d2));
+                if (currentTimeFilter === '48h') {
+                    const afterTmr = new Date(today); afterTmr.setDate(afterTmr.getDate() + 2);
+                    tasks.push(fetchLeagueScoreboard('soccer', 'all', toESPNDate(afterTmr)));
+                }
+            } else if (currentTimeFilter === 'all' || currentTimeFilter === '6h' || currentTimeFilter === '12h') {
+                tasks.push(fetchLeagueScoreboard('soccer', 'all', null));
+                tasks.push(fetchLeagueScoreboard('soccer', 'all', toESPNDate(new Date())));
             }
         } else if (currentSport === 'basketball') {
             tasks.push(fetchLeagueScoreboard('basketball', 'nba', null));
@@ -902,23 +1007,95 @@
         }
     };
 
+    // مزامنة حالة عناصر التحكم والشارات ونقطة التصفية في كل واجهات التطبيق
+    const syncFilterControlsUI = () => {
+        // 1. زر المباشر في الترويسة العلوية
+        const liveCount = (loadedMatchesEvents || []).filter(ev => ev.status?.type?.state === 'in').length;
+        const liveBadge = document.getElementById('liveStatusBadge');
+        const livePulse = document.getElementById('homeLivePulse');
+        const liveBtn = document.getElementById('statusBtnLive');
+        if (liveBadge) liveBadge.textContent = liveCount;
+        if (livePulse) livePulse.style.display = liveCount > 0 ? 'inline-block' : 'none';
+        if (liveBtn) liveBtn.classList.toggle('active', currentStatusMode === 'live');
+
+        // 2. نقطة التصفية النشطة على زر "تصفية"
+        const dot = document.getElementById('filterActiveDot');
+        const hasActiveFilter = (currentStatusMode !== 'all') || (currentLeague !== 'all') || (currentTimeFilter !== 'day');
+        if (dot) dot.style.display = hasActiveFilter ? 'inline-block' : 'none';
+
+        // 3. تحديث شريط عرض التاريخ
+        updateDateNavDisplay();
+
+        // 4. مزامنة أزرار نافذة الفلاتر المنبثقة
+        const modal = document.getElementById('matchesFilterSheetModal');
+        if (modal) {
+            modal.querySelectorAll('.filter-chip-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.time === currentTimeFilter);
+            });
+            modal.querySelectorAll('.filter-status-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.status === currentStatusMode);
+            });
+            const selectEl = document.getElementById('filterLeagueSelect');
+            if (selectEl && selectEl.value !== currentLeague) {
+                selectEl.value = currentLeague;
+            }
+        }
+    };
+
     // عرض دليل الدوريات والبطولات (SofaScore LEAGUES Tab)
     const renderLeaguesDirectory = () => {
         const container = document.getElementById('homeMatchesContainer');
         if (!container) return;
 
-        const sportLeagues = MAJOR_LEAGUES.filter(l => l.sport === currentSport && l.code !== 'all');
+        // 1. جمع كافة الدوريات المعروفة + أي دوريات إضافية نشطة تحتوي على مباريات في هذا التاريخ
+        const allKnownSportLeagues = MAJOR_LEAGUES.filter(l => l.sport === currentSport && l.code !== 'all');
+        const knownCodes = new Set(allKnownSportLeagues.map(l => l.code));
+
+        const extraActiveLeagues = [];
+        (loadedMatchesEvents || []).forEach(ev => {
+            const c = ev.leagueCode;
+            if (c && !knownCodes.has(c) && !extraActiveLeagues.some(l => l.code === c)) {
+                extraActiveLeagues.push({
+                    code: c,
+                    sport: currentSport,
+                    name: ev.leagueMeta?.name || c,
+                    shortName: ev.leagueMeta?.shortName || c,
+                    country: ev.leagueMeta?.country || 'دولي',
+                    logo: ev.leagueMeta?.logo || './icon-192.png',
+                    flagImg: ev.leagueMeta?.flagImg || 'https://flagcdn.com/w40/un.png'
+                });
+                knownCodes.add(c);
+            }
+        });
+
+        const combinedLeagues = [...allKnownSportLeagues, ...extraActiveLeagues];
+
+        // ترتيب الدوريات: المفضلة أولاً، ثم التي بها مباريات في هذا التاريخ مرتبة تنازلياً حسب عدد المباريات
+        combinedLeagues.sort((a, b) => {
+            const favA = favoriteLeagues.has(a.code) ? 1 : 0;
+            const favB = favoriteLeagues.has(b.code) ? 1 : 0;
+            if (favA !== favB) return favB - favA;
+
+            const countA = tournamentMatchCounts.get(a.code) || 0;
+            const countB = tournamentMatchCounts.get(b.code) || 0;
+            if (countA !== countB) return countB - countA;
+
+            return (a.name || '').localeCompare(b.name || '', 'ar');
+        });
+
+        const totalMatchesCount = loadedMatchesEvents.length;
 
         let html = `
             <div class="sofa-leagues-dir">
                 <div class="sofa-leagues-header">
                     <div style="font-weight:900; font-size:0.92rem; color:var(--text-main); display:flex; align-items:center; gap:7px;">
                         <i class="fa-solid fa-trophy" style="color:var(--accent-primary);"></i>
-                        <span>قائمة الدوريات والبطولات</span>
+                        <span>قائمة الدوريات والبطولات المتاحة</span>
                     </div>
-                    <span style="font-size:0.74rem; color:var(--text-muted); font-weight:800;">${sportLeagues.length} بطولة</span>
+                    <span style="font-size:0.75rem; color:var(--text-muted); font-weight:800;">${combinedLeagues.length} بطولة</span>
                 </div>
 
+                <!-- خيار جميع البطولات والدوريات -->
                 <div class="sofa-league-row ${currentLeague === 'all' ? 'active' : ''}" onclick="selectLeagueFromDirectory('all')">
                     <div class="sofa-league-info">
                         <span class="sofa-country-icon">🌐</span>
@@ -928,13 +1105,13 @@
                         </div>
                     </div>
                     <div class="sofa-league-meta">
-                        <span class="sofa-league-count-badge">${loadedMatchesEvents.length}</span>
+                        <span class="sofa-league-count-badge" style="background:var(--accent-bg); color:var(--accent-primary); font-weight:900;">${totalMatchesCount}</span>
                         <i class="fa-solid fa-chevron-left sofa-league-arrow"></i>
                     </div>
                 </div>
         `;
 
-        sportLeagues.forEach(league => {
+        combinedLeagues.forEach(league => {
             const count = tournamentMatchCounts.get(league.code) || 0;
             const isFav = favoriteLeagues.has(league.code);
             const isSelected = currentLeague === league.code;
@@ -956,7 +1133,7 @@
                         </div>
                     </div>
                     <div class="sofa-league-meta">
-                        <span class="sofa-league-count-badge">${count}</span>
+                        <span class="sofa-league-count-badge ${count > 0 ? 'has-matches' : ''}">${count}</span>
                         <button type="button" class="sofa-star-btn ${isFav ? 'is-fav' : ''}" 
                                 onclick="event.stopPropagation(); toggleFavoriteLeague('${league.code}')" 
                                 title="${isFav ? 'إزالة من المفضلة' : 'تثبيت في المفضلة'}">
@@ -976,7 +1153,8 @@
         currentLeague = leagueCode;
         window.currentLeague = leagueCode;
         switchMainView('games');
-        loadMatches(false);
+        syncFilterControlsUI();
+        renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
     };
 
     window.toggleFavoriteLeague = (leagueCode) => {
@@ -1047,40 +1225,30 @@
         }
 
         if (filtered.length === 0) {
-            if (currentStatusMode === 'live') {
-                container.innerHTML = `
-                    <div class="match-loading-card" style="padding: 24px 16px;">
-                        <div style="font-size: 2rem; margin-bottom: 8px;">🔴</div>
-                        <div style="font-weight: 800; font-size: 0.92rem; color: var(--text-main);">لا توجد مباريات جارية الآن مباشرة (LIVE)</div>
-                        <div style="font-size: 0.74rem; color: var(--text-muted); margin: 6px auto 14px auto; max-width: 320px; line-height: 1.5;">
-                            لا توجد مباريات ملعوبة في هذه اللحظة، يمكنك تصفح جدول مباريات اليوم أو المواعيد القادمة.
-                        </div>
-                        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-                            <button type="button" class="match-refresh-btn" onclick="toggleLiveFilter('all')" style="padding: 7px 14px;">
-                                <i class="fa-solid fa-calendar-day"></i> عرض جميع مباريات اليوم
-                            </button>
-                            <button type="button" class="match-refresh-btn" onclick="showAllAvailableMatches()" style="padding: 7px 14px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);">
-                                <i class="fa-solid fa-list-ul"></i> كل المواعيد المتاحة
-                            </button>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
+            let emptyMsg = 'لا توجد مباريات مطابقة للخيارات المحددة';
+            if (currentStatusMode === 'live') emptyMsg = 'لا توجد مباريات جارية الآن مباشرة (LIVE)';
+            else if (currentLeague !== 'all') emptyMsg = 'لا توجد مباريات مطابقة لهذه البطولة في هذا التاريخ';
 
             container.innerHTML = `
                 <div class="match-loading-card" style="padding: 24px 16px;">
-                    <div style="font-size: 2rem; margin-bottom: 8px;">⚽</div>
-                    <div style="font-weight: 800; font-size: 0.92rem; color: var(--text-main);">لا توجد مباريات مطابقة للخيارات المحددة</div>
+                    <div style="font-size: 2rem; margin-bottom: 8px;">${currentStatusMode === 'live' ? '🔴' : '⚽'}</div>
+                    <div style="font-weight: 800; font-size: 0.92rem; color: var(--text-main);">${emptyMsg}</div>
                     <div style="font-size: 0.74rem; color: var(--text-muted); margin: 6px auto 14px auto; max-width: 320px; line-height: 1.5;">
-                        ${query ? 'جرب البحث باسم فريق آخر أو مسح حقل البحث' : 'يمكنك التبديل إلى يوم آخر بالأسهم في الأعلى أو استعراض كل المواعيد المتاحة.'}
+                        ${query ? 'جرب البحث باسم فريق آخر أو مسح حقل البحث' : 'يمكنك إلغاء التصفية أو التبديل إلى تاريخ آخر بالأسهم في الأعلى.'}
                     </div>
                     <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
-                        <button type="button" class="match-refresh-btn" onclick="showAllAvailableMatches()" style="padding: 7px 14px;">
-                            <i class="fa-solid fa-list-ul"></i> عرض كل المواعيد المتاحة
-                        </button>
-                        <button type="button" class="match-refresh-btn" onclick="jumpToToday()" style="padding: 7px 14px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);">
-                            <i class="fa-solid fa-calendar-day"></i> الانتقال إلى اليوم
+                        ${currentLeague !== 'all' ? `
+                            <button type="button" class="match-refresh-btn" onclick="selectLeagueFromDirectory('all')" style="padding: 7px 14px;">
+                                <i class="fa-solid fa-list-ul"></i> عرض كل البطولات
+                            </button>
+                        ` : ''}
+                        ${currentStatusMode === 'live' ? `
+                            <button type="button" class="match-refresh-btn" onclick="toggleLiveFilter('all')" style="padding: 7px 14px;">
+                                <i class="fa-solid fa-calendar-day"></i> كل مباريات اليوم
+                            </button>
+                        ` : ''}
+                        <button type="button" class="match-refresh-btn" onclick="showAllAvailableMatches()" style="padding: 7px 14px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);">
+                            <i class="fa-solid fa-globe"></i> كل المواعيد المتاحة
                         </button>
                         <button type="button" class="match-refresh-btn" onclick="resetFilterSheet()" style="padding: 7px 14px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);">
                             <i class="fa-solid fa-rotate-left"></i> إعادة ضبط الفلاتر
@@ -1093,7 +1261,23 @@
 
         let html = '';
 
-        // 1. إذا تم اختيار فلتر "مباشر" حصراً، نعرض المباريات المباشرة مقسمة حسب الدوريات بقوائم مفتوحة
+        // شريط تنبيه وجود تصفية ببطولة محددة
+        if (currentLeague !== 'all') {
+            const activeLeagueMeta = MAJOR_LEAGUES.find(l => l.code === currentLeague) || { name: currentLeague };
+            html += `
+                <div class="active-league-banner">
+                    <div style="display:flex; align-items:center; gap:7px;">
+                        <i class="fa-solid fa-trophy" style="color:var(--accent-primary);"></i>
+                        <span>تصفية ببطولة: <b>${activeLeagueMeta.name}</b> (${filtered.length} مباراة)</span>
+                    </div>
+                    <button type="button" class="btn-clear-league-filter" onclick="selectLeagueFromDirectory('all')">
+                        ✕ إلغاء وإظهار الكل
+                    </button>
+                </div>
+            `;
+        }
+
+        // إذا تم اختيار فلتر "مباشر" حصراً، نعرض لافتة المباشر
         if (currentStatusMode === 'live') {
             html += `
                 <div class="live-section-banner" style="margin-bottom: 10px;">
@@ -1104,161 +1288,110 @@
                     <span style="direction:ltr;">${filtered.length} Live</span>
                 </div>
             `;
-
-            const liveLeagueGroups = {};
-            filtered.forEach(ev => {
-                const lKey = ev.leagueMeta?.name || ev.leagueCode || 'unknown';
-                if (!liveLeagueGroups[lKey]) {
-                    liveLeagueGroups[lKey] = {
-                        meta: ev.leagueMeta || { name: 'بطولة رياضية', country: 'دولي' },
-                        matches: []
-                    };
-                }
-                liveLeagueGroups[lKey].matches.push(ev);
-            });
-
-            let tIdx = 0;
-            for (const grp of Object.values(liveLeagueGroups)) {
-                html += renderTournamentGroup(grp, `liveTournCard_${tIdx++}`, false);
-            }
-            container.innerHTML = html;
-            return;
         }
 
-        // 2. عرض المباريات في اليوم المحدد مقسمة حسب الدوريات والبلدان بقوائم منسدلة مفتوحة
-        if (currentTimeFilter === 'day') {
-            const leagueGroups = {};
-            filtered.forEach(ev => {
-                const lKey = ev.leagueMeta?.name || ev.leagueCode || 'unknown';
-                if (!leagueGroups[lKey]) {
-                    leagueGroups[lKey] = {
-                        meta: ev.leagueMeta || { name: 'بطولة رياضية', country: 'دولي' },
-                        matches: []
-                    };
-                }
-                leagueGroups[lKey].matches.push(ev);
-            });
+        // تجميع المباريات حسب التاريخ مع نظام الطي والفتح الذكي وتثبيت التاريخ أثناء التمرير (Sticky Date Headers)
+        const dayGroups = {};
+        filtered.forEach(ev => {
+            const d = new Date(ev.date);
+            const dayKey = d.toLocaleDateString('ar-MA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            if (!dayGroups[dayKey]) dayGroups[dayKey] = [];
+            dayGroups[dayKey].push(ev);
+        });
 
-            const tournEntries = Object.entries(leagueGroups);
+        const dayEntries = Object.entries(dayGroups);
 
-            if (tournEntries.length > 1) {
-                html += `
-                    <div class="tourn-groups-toolbar">
-                        <span class="tourn-summary">
-                            <i class="fa-solid fa-trophy"></i> ${tournEntries.length} دوريات (${filtered.length} مباراة)
-                        </span>
-                        <div class="tourn-toggle-btns">
-                            <button type="button" class="btn-group-toggle" onclick="toggleAllTournGroups(false)" title="فتح وتوسيع جميع الدوريات">
-                                <i class="fa-solid fa-angles-down"></i> توسيع الكل
-                            </button>
-                            <button type="button" class="btn-group-toggle" onclick="toggleAllTournGroups(true)" title="طي جميع الدوريات">
-                                <i class="fa-solid fa-angles-up"></i> طي الكل
-                            </button>
-                        </div>
+        // شريط ملخص التصفية وأزرار الطي/التوسيع العام
+        if (dayEntries.length > 0) {
+            const isSingleDay = dayEntries.length === 1;
+            const summaryIcon = isSingleDay ? 'fa-solid fa-trophy' : 'fa-regular fa-calendar-days';
+            const uniqueLeaguesCount = new Set(filtered.map(ev => ev.leagueMeta?.name || ev.leagueCode)).size;
+            const summaryText = isSingleDay
+                ? `${uniqueLeaguesCount} دوريات (${filtered.length} مباراة)`
+                : `${dayEntries.length} أيام (${filtered.length} مباراة)`;
+
+            html += `
+                <div class="day-groups-toolbar">
+                    <span class="day-groups-summary">
+                        <i class="${summaryIcon}"></i> ${summaryText}
+                    </span>
+                    <div class="day-groups-toggle-btns">
+                        <button type="button" class="btn-group-toggle" onclick="toggleAllDayGroups(false)" title="فتح وتوسيع جميع القوائم">
+                            <i class="fa-solid fa-angles-down"></i> توسيع الكل
+                        </button>
+                        <button type="button" class="btn-group-toggle" onclick="toggleAllDayGroups(true)" title="طي جميع القوائم">
+                            <i class="fa-solid fa-angles-up"></i> طي الكل
+                        </button>
                     </div>
-                `;
-            }
+                </div>
+            `;
+        }
 
-            let tIdx = 0;
-            for (const [, grp] of tournEntries) {
-                html += renderTournamentGroup(grp, `tournCard_${tIdx++}`, false);
-            }
-        } else {
-            // 3. وضع التواريخ المتعددة مع نظام الطي والفتح الذكي وتقسيم الدوريات داخل كل يوم
-            const dayGroups = {};
-            filtered.forEach(ev => {
-                const d = new Date(ev.date);
-                const dayKey = d.toLocaleDateString('ar-MA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                if (!dayGroups[dayKey]) dayGroups[dayKey] = [];
-                dayGroups[dayKey].push(ev);
-            });
+        const DEFAULT_MATCHES_THRESHOLD = 20;
+        let accumulatedOpenMatches = 0;
+        const hasActiveSearch = Boolean(query);
 
-            const dayEntries = Object.entries(dayGroups);
+        dayEntries.forEach(([dayTitle, matches], index) => {
+            const dayId = `dayGroup_${index}`;
+            let isCollapsed = false;
 
-            if (dayEntries.length > 1) {
-                html += `
-                    <div class="day-groups-toolbar">
-                        <span class="day-groups-summary">
-                            <i class="fa-regular fa-calendar-days"></i> ${dayEntries.length} أيام (${filtered.length} مباراة)
-                        </span>
-                        <div class="day-groups-toggle-btns">
-                            <button type="button" class="btn-group-toggle" onclick="toggleAllDayGroups(false)" title="فتح وتوسيع جميع الأيام">
-                                <i class="fa-solid fa-angles-down"></i> توسيع الكل
-                            </button>
-                            <button type="button" class="btn-group-toggle" onclick="toggleAllDayGroups(true)" title="طي جميع الأيام">
-                                <i class="fa-solid fa-angles-up"></i> طي الكل
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }
-
-            const DEFAULT_MATCHES_THRESHOLD = 15;
-            let accumulatedOpenMatches = 0;
-            const hasActiveSearch = Boolean(query);
-
-            dayEntries.forEach(([dayTitle, matches], index) => {
-                const dayId = `dayGroup_${index}`;
-                let isCollapsed = false;
-
-                if (hasActiveSearch) {
-                    isCollapsed = false;
-                } else if (index === 0) {
+            if (dayEntries.length === 1 || hasActiveSearch) {
+                isCollapsed = false;
+            } else if (index === 0) {
+                isCollapsed = false;
+                accumulatedOpenMatches += matches.length;
+            } else {
+                if (accumulatedOpenMatches < DEFAULT_MATCHES_THRESHOLD) {
                     isCollapsed = false;
                     accumulatedOpenMatches += matches.length;
                 } else {
-                    if (accumulatedOpenMatches < DEFAULT_MATCHES_THRESHOLD) {
-                        isCollapsed = false;
-                        accumulatedOpenMatches += matches.length;
-                    } else {
-                        isCollapsed = true;
-                    }
+                    isCollapsed = true;
                 }
+            }
 
-                // تقسيم مباريات كل يوم حسب البطولات والدوريات بقوائم منسدلة
-                const dayLeagueGroups = {};
-                matches.forEach(ev => {
-                    const lKey = ev.leagueMeta?.name || ev.leagueCode || 'unknown';
-                    if (!dayLeagueGroups[lKey]) {
-                        dayLeagueGroups[lKey] = {
-                            meta: ev.leagueMeta || { name: 'بطولة رياضية', country: 'دولي' },
-                            matches: []
-                        };
-                    }
-                    dayLeagueGroups[lKey].matches.push(ev);
-                });
-
-                let dayCardsHtml = '';
-                let dTournIdx = 0;
-                for (const grp of Object.values(dayLeagueGroups)) {
-                    dayCardsHtml += renderTournamentGroup(grp, `dayTournCard_${index}_${dTournIdx++}`, false);
+            // تقسيم مباريات هذا اليوم حسب البطولات والدوريات بقوائم منسدلة داخل اليوم
+            const dayLeagueGroups = {};
+            matches.forEach(ev => {
+                const lKey = ev.leagueMeta?.name || ev.leagueCode || 'unknown';
+                if (!dayLeagueGroups[lKey]) {
+                    dayLeagueGroups[lKey] = {
+                        meta: ev.leagueMeta || { name: 'بطولة رياضية', country: 'دولي' },
+                        matches: []
+                    };
                 }
+                dayLeagueGroups[lKey].matches.push(ev);
+            });
 
-                html += `
-                    <div class="day-group-section ${isCollapsed ? 'is-collapsed' : ''}" id="${dayId}">
-                        <div class="day-group-header" 
-                             onclick="toggleDayGroup('${dayId}')" 
-                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDayGroup('${dayId}');}"
-                             role="button" 
-                             tabindex="0" 
-                             aria-expanded="${!isCollapsed}"
-                             title="انقر لطي أو فتح مباريات هذا التاريخ">
-                            <div class="day-group-title">
-                                <span class="day-group-icon">📅</span>
-                                <span>${dayTitle}</span>
-                            </div>
-                            <div class="day-group-meta">
-                                <span class="day-group-badge">${matches.length} مباريات</span>
-                                <i class="fa-solid fa-chevron-down day-group-chevron"></i>
-                            </div>
+            let dayCardsHtml = '';
+            let dTournIdx = 0;
+            for (const grp of Object.values(dayLeagueGroups)) {
+                dayCardsHtml += renderTournamentGroup(grp, `dayTournCard_${index}_${dTournIdx++}`, false);
+            }
+
+            html += `
+                <div class="day-group-section ${isCollapsed ? 'is-collapsed' : ''}" id="${dayId}">
+                    <div class="day-group-header" 
+                         onclick="toggleDayGroup('${dayId}')" 
+                         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDayGroup('${dayId}');}"
+                         role="button" 
+                         tabindex="0" 
+                         aria-expanded="${!isCollapsed}"
+                         title="انقر لطي أو فتح مباريات هذا التاريخ">
+                        <div class="day-group-title">
+                            <span class="day-group-icon">📅</span>
+                            <span>${dayTitle}</span>
                         </div>
-                        <div class="day-group-body">
-                            ${dayCardsHtml}
+                        <div class="day-group-meta">
+                            <span class="day-group-badge">${matches.length} مباريات</span>
+                            <i class="fa-solid fa-chevron-down day-group-chevron"></i>
                         </div>
                     </div>
-                `;
-            });
-        }
+                    <div class="day-group-body">
+                        ${dayCardsHtml}
+                    </div>
+                </div>
+            `;
+        });
 
         container.innerHTML = html;
     };
