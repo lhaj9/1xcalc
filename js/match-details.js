@@ -361,6 +361,8 @@
                 renderCommentaryTab(data, sheetBody);
             } else if (currentActiveStatsTab === 'statsTabLineups') {
                 renderLineupsTab(data, sheetBody);
+            } else if (currentActiveStatsTab === 'statsTabH2H') {
+                renderH2HTab(data, sheetBody);
             } else if (currentActiveStatsTab === 'statsTabStandings') {
                 renderStandingsTab(data, sheetBody);
             } else if (currentActiveStatsTab === 'statsTabInfo') {
@@ -607,7 +609,17 @@
             `;
         };
 
-        // التبويب 4: التشكيلة والخطط التكتيكية (Lineups & Formations)
+        // إدارة الفريق المعروض على أرضية الملعب التكتيكية
+        let activePitchTeamIdx = 0;
+        window.switchPitchTeam = (idx) => {
+            activePitchTeamIdx = idx;
+            const sheetBody = document.getElementById('statsSheetBody');
+            if (sheetBody && currentActiveStatsData) {
+                renderLineupsTab(currentActiveStatsData, sheetBody);
+            }
+        };
+
+        // التبويب 4: التشكيلة والخطط التكتيكية على أرضية الملعب (Tactical Pitch & Lineups)
         const renderLineupsTab = (data, container) => {
             const rosters = data.rosters || [];
             if (!Array.isArray(rosters) || rosters.length < 2) {
@@ -628,54 +640,111 @@
             const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
             const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
 
-            let homeRoster = rosters.find(r => r.team?.id === home.id || r.team?.id === home.team?.id) || rosters[0];
-            let awayRoster = rosters.find(r => r.team?.id === away.id || r.team?.id === away.team?.id) || rosters[1];
+            const homeRoster = rosters.find(r => r.team?.id === home.id || r.team?.id === home.team?.id) || rosters[0];
+            const awayRoster = rosters.find(r => r.team?.id === away.id || r.team?.id === away.team?.id) || rosters[1];
 
-            const renderTeamRosterSection = (teamRoster, teamMeta, color) => {
-                const formation = teamRoster.formation || 'غير محدد';
-                const players = teamRoster.roster || [];
-                const starters = players.filter(p => p.starter !== false && !p.subbedIn);
-                const subs = players.filter(p => p.starter === false || p.subbedIn);
-                const coach = teamRoster.coach?.[0]?.displayName || 'غير متوفر';
+            const currentRoster = (activePitchTeamIdx === 0) ? homeRoster : awayRoster;
+            const currentMeta = (activePitchTeamIdx === 0) ? home : away;
+            const currentTeamName = currentMeta.team?.displayName || (activePitchTeamIdx === 0 ? 'المضيف' : 'الضيف');
+            const teamColor = (activePitchTeamIdx === 0) ? '#3b82f6' : '#10b981';
 
-                return `
+            const formation = currentRoster.formation || '4-3-3';
+            const allPlayers = currentRoster.roster || [];
+            const starters = allPlayers.filter(p => p.starter !== false && !p.subbedIn);
+            const activeStarters = starters.length >= 11 ? starters.slice(0, 11) : allPlayers.slice(0, 11);
+            const subs = allPlayers.filter(p => p.starter === false || p.subbedIn);
+            const coach = currentRoster.coach?.[0]?.displayName || 'غير متوفر';
+
+            // تفكيك خطة اللعب وتوزيع اللاعبين في خطوط الملعب عمودياً (GK -> DEF -> MID -> ATT)
+            let formationParts = formation.split('-').map(n => parseInt(n.trim(), 10)).filter(n => !isNaN(n) && n > 0);
+            if (formationParts.length === 0) formationParts = [4, 3, 3];
+
+            // حارس المرمى
+            const gkPlayer = activeStarters.find(p => {
+                const pos = (p.position?.abbreviation || p.position?.name || '').toUpperCase();
+                return pos.includes('G') || pos.includes('حارس');
+            }) || activeStarters[0];
+
+            const outfieldPlayers = activeStarters.filter(p => p !== gkPlayer);
+
+            // تقسيم باقي اللاعبين حسب خطوط الخطة
+            const pitchLines = [];
+            pitchLines.push([gkPlayer]); // الخط 0: الحارس
+
+            let outfieldIdx = 0;
+            formationParts.forEach(lineCount => {
+                const linePlayers = [];
+                for (let i = 0; i < lineCount && outfieldIdx < outfieldPlayers.length; i++) {
+                    linePlayers.push(outfieldPlayers[outfieldIdx++]);
+                }
+                if (linePlayers.length > 0) {
+                    pitchLines.push(linePlayers);
+                }
+            });
+
+            // رسم اللاعبين على أرضية الملعب الأخضر
+            let pitchLinesHtml = '';
+            pitchLines.forEach(line => {
+                let nodesHtml = '';
+                line.forEach(p => {
+                    if (!p) return;
+                    const ath = p.athlete || {};
+                    const name = ath.displayName || ath.shortName || 'لاعب';
+                    const num = ath.jersey || p.jersey || '–';
+                    nodesHtml += `
+                        <div class="pitch-player-node" title="${name} (#${num})">
+                            <div class="pitch-player-shirt" style="border-color:${teamColor};">${num}</div>
+                            <span class="pitch-player-name">${name}</span>
+                        </div>
+                    `;
+                });
+                pitchLinesHtml += `<div class="pitch-formation-line">${nodesHtml}</div>`;
+            });
+
+            container.innerHTML = `
+                <div class="pitch-container-wrap">
+                    <!-- أزرار التبديل التفاعلية بين تشكيلة الفريقين -->
+                    <div class="pitch-team-switch-row">
+                        <button type="button" class="pitch-team-tab-btn ${activePitchTeamIdx === 0 ? 'active' : ''}" onclick="switchPitchTeam(0)">
+                            <span style="color:#3b82f6;">●</span>
+                            <span>${home.team?.displayName || 'المضيف'}</span>
+                            <span style="font-size:0.68rem; opacity:0.8;">(${homeRoster.formation || '4-3-3'})</span>
+                        </button>
+                        <button type="button" class="pitch-team-tab-btn ${activePitchTeamIdx === 1 ? 'active' : ''}" onclick="switchPitchTeam(1)">
+                            <span style="color:#10b981;">●</span>
+                            <span>${away.team?.displayName || 'الضيف'}</span>
+                            <span style="font-size:0.68rem; opacity:0.8;">(${awayRoster.formation || '4-3-3'})</span>
+                        </button>
+                    </div>
+
+                    <!-- أرضية الملعب الخضراء الواقعية (Soccer Pitch) -->
+                    <div class="tactical-pitch">
+                        <div class="pitch-penalty-area-top"></div>
+                        <div class="pitch-half-line"></div>
+                        <div class="pitch-center-circle"></div>
+                        <div class="pitch-penalty-area-bottom"></div>
+                        ${pitchLinesHtml}
+                    </div>
+
+                    <!-- بطاقة معلومات التشكيلة وقائمة البدلاء -->
                     <div class="lineup-starters-card">
                         <div class="lineup-team-section-title">
-                            <span style="color:${color};">● ${teamMeta.team?.displayName || 'الفريق'}</span>
+                            <span style="color:${teamColor};">● ${currentTeamName}</span>
                             <span class="formation-pill">خطة اللعب: ${formation}</span>
                         </div>
 
-                        <div style="font-size:0.72rem; font-weight:800; color:var(--text-muted); margin:6px 0 4px 0;">اللاعبون الأساسيون (Starting XI):</div>
-                        <div class="lineup-players-list">
-                            ${(starters.length > 0 ? starters : players.slice(0, 11)).map(p => {
-                                const athlete = p.athlete || {};
-                                const name = athlete.displayName || 'لاعب';
-                                const num = athlete.jersey || '–';
-                                const pos = athlete.position?.abbreviation || athlete.position?.name || 'PL';
-                                return `
-                                    <div class="player-row">
-                                        <div class="player-num-pos">
-                                            <span class="player-num-badge">${num}</span>
-                                            <span>${name}</span>
-                                        </div>
-                                        <span class="player-pos-badge">${pos}</span>
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-
                         ${subs.length > 0 ? `
-                            <div style="font-size:0.72rem; font-weight:800; color:var(--text-muted); margin:10px 0 4px 0;">دكة البدلاء (Substitutes):</div>
+                            <div style="font-size:0.72rem; font-weight:800; color:var(--text-muted); margin:8px 0 6px 0;">دكة البدلاء (Substitutes):</div>
                             <div class="lineup-players-list">
                                 ${subs.map(p => {
-                                    const athlete = p.athlete || {};
-                                    const name = athlete.displayName || 'لاعب';
-                                    const num = athlete.jersey || '–';
-                                    const pos = athlete.position?.abbreviation || 'SUB';
+                                    const ath = p.athlete || {};
+                                    const name = ath.displayName || 'لاعب';
+                                    const num = ath.jersey || p.jersey || '–';
+                                    const pos = ath.position?.abbreviation || 'SUB';
                                     return `
-                                        <div class="player-row" style="opacity:0.85;">
+                                        <div class="player-row" style="opacity:0.88;">
                                             <div class="player-num-pos">
-                                                <span class="player-num-badge" style="opacity:0.8;">${num}</span>
+                                                <span class="player-num-badge">${num}</span>
                                                 <span>${name}</span>
                                             </div>
                                             <span class="player-pos-badge" style="background:var(--bg-card); color:var(--text-muted);">${pos}</span>
@@ -690,14 +759,160 @@
                             <span>المدير الفني: <b>${coach}</b></span>
                         </div>
                     </div>
+                </div>
+
+                <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
+                </button>
+            `;
+        };
+
+        // التبويب 5: المواجهات المباشرة التاريخية (Head-to-Head - H2H)
+        const renderH2HTab = (data, container) => {
+            const series = data.seasonseries?.[0] || {};
+            const h2hEvents = series.events || [];
+            const lastFive = data.lastFiveGames || [];
+
+            const comp = data.header?.competitions?.[0] || {};
+            const competitors = comp.competitors || [];
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+            const homeName = home.team?.displayName || 'المضيف';
+            const awayName = away.team?.displayName || 'الضيف';
+
+            if (h2hEvents.length === 0 && lastFive.length === 0) {
+                container.innerHTML = `
+                    <div class="stats-empty-state">
+                        <div class="stats-empty-icon">🤝</div>
+                        <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">لا توجد سجلات مواجهات تاريخية مباشرة كافية</div>
+                        <div style="font-size: 0.73rem; max-width: 320px; line-height: 1.4;">
+                            تتوفر المواجهات المباشرة المجمعة للبطولات الكبرى عند وجود لقاءات سابقة مسجلة بين الفريقين.
+                        </div>
+                    </div>
                 `;
-            };
+                return;
+            }
+
+            let homeWins = 0, awayWins = 0, draws = 0, totalGoals = 0;
+            h2hEvents.forEach(ev => {
+                const comps = ev.competitors || [];
+                const c1 = comps[0] || {};
+                const c2 = comps[1] || {};
+                const s1 = parseInt(c1.score, 10) || 0;
+                const s2 = parseInt(c2.score, 10) || 0;
+                totalGoals += (s1 + s2);
+                if (s1 === s2) {
+                    draws++;
+                } else if (c1.winner) {
+                    if (c1.team?.id === home.id || c1.team?.id === home.team?.id) homeWins++;
+                    else awayWins++;
+                } else if (c2.winner) {
+                    if (c2.team?.id === home.id || c2.team?.id === home.team?.id) homeWins++;
+                    else awayWins++;
+                }
+            });
+
+            const avgGoals = h2hEvents.length > 0 ? (totalGoals / h2hEvents.length).toFixed(1) : '–';
+
+            let h2hHistoryHtml = '';
+            if (h2hEvents.length > 0) {
+                h2hEvents.forEach(ev => {
+                    const c1 = ev.competitors?.[0] || {};
+                    const c2 = ev.competitors?.[1] || {};
+                    const dateStr = ev.date ? new Date(ev.date).toLocaleDateString('ar-MA', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+                    h2hHistoryHtml += `
+                        <div class="h2h-history-row">
+                            <div style="display:flex; flex-direction:column; gap:2px; max-width:65%;">
+                                <div style="display:flex; align-items:center; gap:6px; font-weight:800;">
+                                    <span>${c1.team?.displayName || 'فريق'}</span>
+                                    <span style="font-size:0.75rem; color:var(--text-muted);">ضد</span>
+                                    <span>${c2.team?.displayName || 'فريق'}</span>
+                                </div>
+                                <span style="font-size:0.67rem; color:var(--text-muted);">${ev.competitionName || 'مباراة سابقة'} • ${dateStr}</span>
+                            </div>
+                            <div style="font-weight:900; font-size:0.95rem; background:var(--bg-input); padding:3px 10px; border-radius:8px;">
+                                ${c1.score || 0} - ${c2.score || 0}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            let formHtml = '';
+            if (lastFive.length >= 2) {
+                const renderTeamRecentForm = (tf) => {
+                    const tName = tf.team?.displayName || 'فريق';
+                    const evs = tf.events || [];
+                    return `
+                        <div style="margin-top:10px;">
+                            <div style="font-weight:800; font-size:0.78rem; margin-bottom:6px; color:var(--text-main); display:flex; justify-content:space-between; align-items:center;">
+                                <span>${tName}</span>
+                                <div style="display:flex; gap:4px;">
+                                    ${evs.map(e => {
+                                        const res = (e.gameResult || 'D').toUpperCase();
+                                        const cls = res === 'W' ? 'form-w' : (res === 'L' ? 'form-l' : 'form-d');
+                                        const resAr = res === 'W' ? 'ف' : (res === 'L' ? 'خ' : 'ت');
+                                        return `<span class="form-badge-pill ${cls}" title="${res === 'W' ? 'فوز' : (res === 'L' ? 'خسارة' : 'تعادل')}">${resAr}</span>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                };
+                formHtml = `
+                    <div class="h2h-summary-card" style="margin-top:12px;">
+                        <div style="font-weight:900; font-size:0.84rem; color:var(--text-main); margin-bottom:8px;">
+                            <i class="fa-solid fa-chart-line" style="color:var(--accent-primary);"></i>
+                            <span>سجل المباريات الأخيرة (Recent Form)</span>
+                        </div>
+                        ${renderTeamRecentForm(lastFive[0])}
+                        ${renderTeamRecentForm(lastFive[1])}
+                    </div>
+                `;
+            }
 
             container.innerHTML = `
-                <div class="lineups-wrap">
-                    ${renderTeamRosterSection(homeRoster, home, '#3b82f6')}
-                    ${renderTeamRosterSection(awayRoster, away, '#10b981')}
+                <div class="h2h-summary-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="font-weight:900; font-size:0.86rem; color:var(--text-main);">
+                            <i class="fa-solid fa-handshake" style="color:var(--accent-primary);"></i>
+                            <span>ملخص المواجهات السابقة (${h2hEvents.length} لقاءات)</span>
+                        </div>
+                        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:800;">${series.summary || ''}</span>
+                    </div>
+
+                    <div class="h2h-stats-grid">
+                        <div class="h2h-stat-box">
+                            <div class="h2h-stat-num" style="color:#3b82f6;">${homeWins}</div>
+                            <div class="h2h-stat-label">فوز ${homeName}</div>
+                        </div>
+                        <div class="h2h-stat-box">
+                            <div class="h2h-stat-num" style="color:#f59e0b;">${draws}</div>
+                            <div class="h2h-stat-label">تعادل</div>
+                        </div>
+                        <div class="h2h-stat-box">
+                            <div class="h2h-stat-num" style="color:#10b981;">${awayWins}</div>
+                            <div class="h2h-stat-label">فوز ${awayName}</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:8px; font-size:0.72rem; color:var(--text-muted); text-align:center; font-weight:700;">
+                        معدل الأهداف في المواجهات: <b style="color:var(--text-main); font-size:0.8rem;">${avgGoals}</b> هدف / مباراة
+                    </div>
                 </div>
+
+                ${h2hHistoryHtml ? `
+                    <div class="h2h-summary-card" style="padding:0; overflow:hidden;">
+                        <div style="padding:10px 14px; background:var(--bg-input); font-weight:900; font-size:0.8rem; border-bottom:1px solid var(--border-color);">
+                            نتائج آخر المواجهات التاريخية المباشرة
+                        </div>
+                        ${h2hHistoryHtml}
+                    </div>
+                ` : ''}
+
+                ${formHtml}
+
                 <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
                     <i class="fa-solid fa-xmark"></i>
                     <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>

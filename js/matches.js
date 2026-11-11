@@ -129,6 +129,41 @@
         } catch {}
     };
 
+    // إدارة المباريات المفضلة والمثبتة في الأعلى (Pinned Matches)
+    let favoriteMatches = new Set();
+    try {
+        const savedPinned = JSON.parse(localStorage.getItem('arb_pinned_matches') || '[]');
+        if (Array.isArray(savedPinned)) {
+            savedPinned.forEach(id => favoriteMatches.add(String(id)));
+        }
+    } catch {}
+
+    const saveFavoriteMatches = () => {
+        try {
+            localStorage.setItem('arb_pinned_matches', JSON.stringify(Array.from(favoriteMatches)));
+        } catch {}
+    };
+
+    window.toggleFavoriteMatch = (matchId) => {
+        const sId = String(matchId);
+        if (favoriteMatches.has(sId)) {
+            favoriteMatches.delete(sId);
+            showToast('📌 تم إلغاء تثبيت المباراة');
+        } else {
+            favoriteMatches.add(sId);
+            showToast('📌 تم تثبيت المباراة في الأعلى');
+        }
+        saveFavoriteMatches();
+        renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
+    };
+
+    window.clearAllFavoriteMatches = () => {
+        favoriteMatches.clear();
+        saveFavoriteMatches();
+        renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
+        showToast('📌 تم إلغاء تثبيت جميع المباريات');
+    };
+
     const toESPNDate = (d) => {
         const y = d.getFullYear();
         const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -420,19 +455,202 @@
         }, 10000); // تحديث فوري دوري كل 10 ثوانٍ لضمان استجابة وتزامن عداد الدقائق محلياً
     };
 
-    // التحديث الدوري الخلفي التلقائي للمباريات الحية (Silent Background Live Scoreboard Refresh)
+    // استخراج عدد البطاقات الحمراء للفريق من تفاصيل المباراة
+    const getTeamRedCardCount = (ev, teamId) => {
+        if (!ev) return 0;
+        const comp = ev.competitions?.[0] || {};
+        let count = 0;
+
+        // 1. من خلال competitor statistics / redCards
+        const competitors = comp.competitors || [];
+        const competitor = competitors.find(c => String(c.id) === String(teamId) || String(c.team?.id) === String(teamId));
+        if (competitor && competitor.redCards) {
+            return parseInt(competitor.redCards, 10) || 0;
+        }
+
+        // 2. من خلال تفاصيل الأحداث details
+        const details = comp.details || [];
+        if (Array.isArray(details)) {
+            details.forEach(det => {
+                const isRed = det.redCard === true || 
+                              (det.type?.text && det.type.text.toLowerCase().includes('red card')) ||
+                              (det.type?.id && String(det.type.id) === '2');
+                const matchTeam = String(det.team?.id) === String(teamId);
+                if (isRed && matchTeam) {
+                    count++;
+                }
+            });
+        }
+        return count;
+    };
+
+    // فحص وجود تذكرة/صفقة نشطة في حاسبة الأرباح تطابق أحد الفريقين (In-Play Hedge Linker)
+    const getActiveHedgeSlip = (homeName, awayName) => {
+        try {
+            const raw1 = localStorage.getItem('arb_slips_tab1');
+            const slips = raw1 ? JSON.parse(raw1) : [];
+            if (!Array.isArray(slips) || slips.length === 0) return null;
+
+            const hLow = (homeName || '').toLowerCase().trim();
+            const aLow = (awayName || '').toLowerCase().trim();
+
+            return slips.find(s => {
+                const name = (s.slipName || s.matchTitle || '').toLowerCase();
+                return (hLow && name.includes(hLow)) || (aLow && name.includes(aLow));
+            }) || null;
+        } catch {
+            return null;
+        }
+    };
+
+    window.openInPlayHedge = (matchTitle) => {
+        window.transferMatchToCalc(matchTitle, 'delayed');
+    };
+
+    // التحديث الموضعي السلس لعناصر الـ DOM دون وميض ودون إعادة بناء القائمة (In-Place DOM Live Updates)
+    const updateMatchesDOMInPlace = (events) => {
+        const container = document.getElementById('homeMatchesContainer');
+        if (!container) return;
+
+        events.forEach(ev => {
+            const row = container.querySelector(`.sofa-match-row[data-event-id="${ev.id}"]`);
+            if (!row) return;
+
+            const comp = ev.competitions?.[0] || {};
+            const competitors = comp.competitors || [];
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+
+            const homeScore = parseInt(home.score, 10);
+            const awayScore = parseInt(away.score, 10);
+            const hasScores = !isNaN(homeScore) && !isNaN(awayScore);
+
+            // 1. مقارنة الأهداف واكتشاف تسجيل هدف جديد لإطلاق الوميض والتنبيه
+            const scoreEls = row.querySelectorAll('.sofa-row-scores-col .sofa-row-score');
+            if (scoreEls.length >= 2 && hasScores) {
+                const oldHomeScore = parseInt(scoreEls[0].textContent, 10);
+                const oldAwayScore = parseInt(scoreEls[1].textContent, 10);
+
+                if (!isNaN(oldHomeScore) && !isNaN(oldAwayScore)) {
+                    if (homeScore > oldHomeScore || awayScore > oldAwayScore) {
+                        // تفعيل تأثير الوميض الأخضر على بطاقة المباراة
+                        row.classList.remove('goal-flash-highlight');
+                        void row.offsetWidth; // force reflow
+                        row.classList.add('goal-flash-highlight');
+                        setTimeout(() => row.classList.remove('goal-flash-highlight'), 3800);
+
+                        // استخراج مسجل الهدف إن وُجد
+                        let scorerInfo = '';
+                        const details = comp.details || [];
+                        const lastGoal = details.filter(d => d.scoringPlay === true || d.scoreValue === 1).pop();
+                        if (lastGoal && lastGoal.athletesInvolved && lastGoal.athletesInvolved[0]) {
+                            scorerInfo = ` (${lastGoal.athletesInvolved[0].displayName})`;
+                        }
+
+                        const scoringTeam = (homeScore > oldHomeScore)
+                            ? (home.team?.displayName || 'المضيف')
+                            : (away.team?.displayName || 'الضيف');
+
+                        showToast(`⚽ هدف! ${scoringTeam}${scorerInfo} - [${homeScore} - ${awayScore}]`);
+                    }
+                }
+
+                scoreEls[0].textContent = homeScore;
+                scoreEls[1].textContent = awayScore;
+                if (ev.status?.type?.state === 'in') {
+                    scoreEls[0].classList.add('score-live');
+                    scoreEls[1].classList.add('score-live');
+                }
+            }
+
+            // 2. تحديث عداد الدقائق الحية في الواجهة
+            const statusEl = row.querySelector('.sofa-row-status');
+            if (statusEl && ev.status?.type?.state === 'in') {
+                const rawDetail = ev.status?.type?.detail || '';
+                const statusDetail = parseMinuteDetail(ev.id, rawDetail, ev.date);
+                const liveMinEl = statusEl.querySelector('.sofa-row-live-min');
+                if (liveMinEl) {
+                    liveMinEl.textContent = statusDetail || 'مباشر';
+                } else {
+                    statusEl.innerHTML = `<span class="sofa-row-live-min">${statusDetail || 'مباشر'}</span>`;
+                }
+                row.classList.add('is-live-row');
+            }
+
+            // 3. تحديث شارات البطاقات الحمراء
+            const homeRed = getTeamRedCardCount(ev, home.id || home.team?.id);
+            const awayRed = getTeamRedCardCount(ev, away.id || away.team?.id);
+            const teamEls = row.querySelectorAll('.sofa-row-teams-col .sofa-row-team-name');
+            if (teamEls.length >= 2) {
+                let homeBadge = teamEls[0].querySelector('.red-card-badge');
+                if (homeRed > 0) {
+                    if (!homeBadge) {
+                        homeBadge = document.createElement('span');
+                        homeBadge.className = 'red-card-badge';
+                        homeBadge.title = 'بطاقة حمراء';
+                        teamEls[0].appendChild(homeBadge);
+                    }
+                    homeBadge.textContent = `🟥${homeRed > 1 ? ` ${homeRed}` : ''}`;
+                } else if (homeBadge) {
+                    homeBadge.remove();
+                }
+
+                let awayBadge = teamEls[1].querySelector('.red-card-badge');
+                if (awayRed > 0) {
+                    if (!awayBadge) {
+                        awayBadge = document.createElement('span');
+                        awayBadge.className = 'red-card-badge';
+                        awayBadge.title = 'بطاقة حمراء';
+                        teamEls[1].appendChild(awayBadge);
+                    }
+                    awayBadge.textContent = `🟥${awayRed > 1 ? ` ${awayRed}` : ''}`;
+                } else if (awayBadge) {
+                    awayBadge.remove();
+                }
+            }
+        });
+
+        syncFilterControlsUI();
+    };
+
+    // التحديث الدوري الخلفي الذكي للمباريات الحية (Smart Polling & Visibility API)
     let liveAutoFetchInterval = null;
     const initLiveAutoFetch = () => {
-        if (liveAutoFetchInterval) clearInterval(liveAutoFetchInterval);
+        if (liveAutoFetchInterval) {
+            clearInterval(liveAutoFetchInterval);
+            liveAutoFetchInterval = null;
+        }
 
+        const hasLive = (loadedMatchesEvents || []).some(ev => ev.status?.type?.state === 'in');
+        const shouldPoll = hasLive || currentStatusMode === 'live';
+
+        if (!shouldPoll) return;
+
+        // تردد 28 ثانية يتوافق مع كاش Akamai/Cloudflare لسيرفرات ESPN دون استنزاف البطارية أو الشبكة
         liveAutoFetchInterval = setInterval(() => {
-            if (document.hidden) return; // الحفاظ على الموارد والبطارية إذا كان التبويب غير نشط
-            const hasLive = (loadedMatchesEvents || []).some(ev => ev.status?.type?.state === 'in');
-            if (hasLive || currentStatusMode === 'live') {
-                // تحديث هادئ بدون لودينغ سبينر لجلب النتائج والأهداف الجديدة من السيرفر
+            if (document.hidden) return; // توقف تلقائي عند مغادرة التبويب لتوفير الطاقة
+            const stillHasLive = (loadedMatchesEvents || []).some(ev => ev.status?.type?.state === 'in');
+            if (stillHasLive || currentStatusMode === 'live') {
                 loadMatches(false, false);
+            } else {
+                clearInterval(liveAutoFetchInterval);
+                liveAutoFetchInterval = null;
             }
-        }, 50000); // فحص كل 50 ثانية
+        }, 28000);
+
+        // مراقبة Visibility API لتحديث النتائج فوراً عند رجوع المستخدم للتطبيق
+        if (!window._visibilityListenerAdded) {
+            window._visibilityListenerAdded = true;
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    const activeLive = (loadedMatchesEvents || []).some(ev => ev.status?.type?.state === 'in');
+                    if (activeLive || currentStatusMode === 'live') {
+                        loadMatches(false, false);
+                        initLiveAutoFetch();
+                    }
+                }
+            });
+        }
     };
 
     // تحليل وتتبع الدقيقة محلياً من مزود البيانات أو حسابها من توقيت انطلاق المباراة
@@ -1009,7 +1227,11 @@
                 return;
             }
 
-            renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
+            if (!showLoading && container.querySelector('.sofa-match-row')) {
+                updateMatchesDOMInPlace(loadedMatchesEvents);
+            } else {
+                renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
+            }
             initLiveMinuteTicker();
             initLiveAutoFetch();
         } catch (e) {
@@ -1325,9 +1547,47 @@
             `;
         }
 
+        // فصل المباريات المفضلة والمثبتة في الأعلى (Pinned Matches)
+        const pinnedMatches = [];
+        const unpinnedMatches = [];
+
+        filtered.forEach(ev => {
+            if (favoriteMatches.has(String(ev.id))) {
+                pinnedMatches.push(ev);
+            } else {
+                unpinnedMatches.push(ev);
+            }
+        });
+
+        if (pinnedMatches.length > 0) {
+            let pinnedCardsHtml = '';
+            pinnedMatches.forEach(ev => {
+                pinnedCardsHtml += buildMatchCardHTML(ev, true);
+            });
+
+            html += `
+                <div class="pinned-matches-section">
+                    <div class="pinned-matches-header">
+                        <div style="display:flex; align-items:center; gap:7px;">
+                            <i class="fa-solid fa-thumbtack"></i>
+                            <span>المباريات المثبتة</span>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="pinned-count-badge">${pinnedMatches.length}</span>
+                            <button type="button" onclick="clearAllFavoriteMatches()" style="background:transparent; border:none; color:var(--text-muted); font-size:0.72rem; cursor:pointer;" title="إلغاء تثبيت كل المباريات">✕ إلغاء الكل</button>
+                        </div>
+                    </div>
+                    <div class="pinned-matches-body">
+                        ${pinnedCardsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
         // تجميع المباريات حسب التاريخ مع نظام الطي والفتح الذكي وتثبيت التاريخ أثناء التمرير (Sticky Date Headers)
         const dayGroups = {};
-        filtered.forEach(ev => {
+        const matchesToGroup = unpinnedMatches.length > 0 ? unpinnedMatches : (pinnedMatches.length === 0 ? filtered : []);
+        matchesToGroup.forEach(ev => {
             const d = new Date(ev.date);
             const dayKey = d.toLocaleDateString('ar-MA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             if (!dayGroups[dayKey]) dayGroups[dayKey] = [];
@@ -1431,7 +1691,7 @@
         container.innerHTML = html;
     };
 
-    function buildMatchCardHTML(ev) {
+    function buildMatchCardHTML(ev, isPinnedView = false) {
         const comp = ev.competitions?.[0] || {};
         const competitors = comp.competitors || [];
         const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
@@ -1502,6 +1762,19 @@
         }
 
         const safeHomeName = (homeName || '').replace(/'/g, "\\'");
+        const safeAwayName = (awayName || '').replace(/'/g, "\\'");
+
+        // 3. فحص البطاقات الحمراء وحالة التثبيت وربط الحاسبة بالصفقات النشطة (In-Play Hedge)
+        const isPinned = favoriteMatches.has(String(ev.id));
+        const homeRed = getTeamRedCardCount(ev, home.id || home.team?.id);
+        const awayRed = getTeamRedCardCount(ev, away.id || away.team?.id);
+        const homeRedHtml = homeRed > 0 ? `<span class="red-card-badge" title="بطاقة حمراء">🟥${homeRed > 1 ? ` ${homeRed}` : ''}</span>` : '';
+        const awayRedHtml = awayRed > 0 ? `<span class="red-card-badge" title="بطاقة حمراء">🟥${awayRed > 1 ? ` ${awayRed}` : ''}</span>` : '';
+
+        const hedgeSlip = getActiveHedgeSlip(homeName, awayName);
+        const hedgePillHtml = hedgeSlip
+            ? `<span class="hedge-active-pill" onclick="event.stopPropagation(); openInPlayHedge('${safeHomeName} vs ${safeAwayName}')" title="تأمين وفتح حاسبة الهيدج المباشر (Hedge O₂)"><i class="fa-solid fa-bolt"></i> صفقة نشطة O₂</span>`
+            : '';
 
         return `
             <div class="sofa-match-row ${isLive ? 'is-live-row' : ''}" 
@@ -1521,12 +1794,13 @@
                 <div class="sofa-row-teams-col">
                     <div class="sofa-row-team ${homeWon ? 'is-winner' : (awayWon ? 'is-loser' : '')}">
                         <img src="${homeLogo}" alt="" class="sofa-row-crest" loading="lazy" onerror="this.onerror=null; this.src='${defaultTeamShield}';">
-                        <span class="sofa-row-team-name">${homeName}</span>
+                        <span class="sofa-row-team-name">${homeName} ${homeRedHtml}</span>
                     </div>
                     <div class="sofa-row-team ${awayWon ? 'is-winner' : (homeWon ? 'is-loser' : '')}">
                         <img src="${awayLogo}" alt="" class="sofa-row-crest" loading="lazy" onerror="this.onerror=null; this.src='${defaultTeamShield}';">
-                        <span class="sofa-row-team-name">${awayName}</span>
+                        <span class="sofa-row-team-name">${awayName} ${awayRedHtml}</span>
                     </div>
+                    ${hedgePillHtml ? `<div style="margin-top:2px;">${hedgePillHtml}</div>` : ''}
                 </div>
 
                 <!-- عمود النتيجة (يمين) -->
@@ -1535,8 +1809,13 @@
                     ${awayScoreHtml}
                 </div>
 
-                <!-- أيقونة التنبيهات (أقصى اليمين) -->
+                <!-- عمود الإجراءات والتثبيت والتنبيهات (أقصى اليمين) -->
                 <div class="sofa-row-action-col">
+                    <button type="button" class="sofa-row-pin-btn ${isPinned ? 'is-pinned' : ''}" 
+                            title="${isPinned ? 'إلغاء تثبيت المباراة' : 'تثبيت المباراة في الأعلى'}" 
+                            onclick="event.stopPropagation(); toggleFavoriteMatch('${ev.id}')">
+                        <i class="fa-solid fa-thumbtack"></i>
+                    </button>
                     <button type="button" class="sofa-row-bell-btn" title="تنبيهات المباراة" onclick="event.stopPropagation(); showToast('🔔 تم ضبط التنبيه لمباراة ${safeHomeName}');">
                         <i class="fa-regular fa-bell"></i>
                     </button>
@@ -1699,6 +1978,9 @@
     // الربط والتصدير الخارجي
     window.loadMatches = loadMatches;
     window.renderMatchesList = renderMatchesList;
+    window.updateMatchesDOMInPlace = updateMatchesDOMInPlace;
+    window.toggleFavoriteMatch = toggleFavoriteMatch;
+    window.getTeamRedCardCount = getTeamRedCardCount;
     window.buildMatchCardHTML = buildMatchCardHTML;
     window.MAJOR_LEAGUES = MAJOR_LEAGUES;
     window.getSelectedDate = () => selectedDate;
