@@ -79,7 +79,23 @@
         'french ligue 1': { name: 'الدوري الفرنسي (Ligue 1)', country: 'فرنسا', flag: 'https://flagcdn.com/w40/fr.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/9.png' },
         'uefa nations league': { name: 'دوري الأمم الأوروبية (Nations League)', country: 'أوروبا', flag: 'https://flagcdn.com/w40/eu.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2395.png' },
         'uefa champions league': { name: 'دوري أبطال أوروبا (Champions League)', country: 'أوروبا', flag: 'https://flagcdn.com/w40/eu.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2.png' },
-        'saudi professional league': { name: 'دوري روشن السعودي (Roshn Saudi League)', country: 'السعودية', flag: 'https://flagcdn.com/w40/sa.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2488.png' }
+        'saudi professional league': { name: 'دوري روشن السعودي (Roshn Saudi League)', country: 'السعودية', flag: 'https://flagcdn.com/w40/sa.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2488.png' },
+        'women\'s champions league': { name: 'دوري أبطال أوروبا للسيدات (UWCL)', country: 'أوروبا', flag: 'https://flagcdn.com/w40/eu.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/19483.png' },
+        'women\'s europa cup': { name: 'كأس الدوري الأوروبي للسيدات (Women\'s Europa Cup)', country: 'أوروبا', flag: 'https://flagcdn.com/w40/eu.png', logo: '' },
+        'wsl players cup': { name: 'كأس الدوري الإنجليزي للسيدات (WSL Players Cup)', country: 'إنجلترا', flag: 'https://flagcdn.com/w40/gb-eng.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png' },
+        'club friendly': { name: 'مباريات ودية للأندية (Club Friendly)', country: 'دولي', flag: 'https://flagcdn.com/w40/un.png', logo: '' },
+        'international friendly': { name: 'مباريات دولية ودية (International Friendly)', country: 'دولي', flag: 'https://flagcdn.com/w40/un.png', logo: 'https://flagcdn.com/w40/un.png' },
+        'men\'s international friendly': { name: 'مباريات دولية ودية (International Friendly)', country: 'دولي', flag: 'https://flagcdn.com/w40/un.png', logo: 'https://flagcdn.com/w40/un.png' },
+        'liga mx femenil': { name: 'الدوري المكسيكي للسيدات (Liga MX Femenil)', country: 'المكسيك', flag: 'https://flagcdn.com/w40/mx.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/22.png' },
+        'première ligue': { name: 'الدوري الفرنسي للسيدات (Première Ligue)', country: 'فرنسا', flag: 'https://flagcdn.com/w40/fr.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/9.png' },
+        'premiere ligue': { name: 'الدوري الفرنسي للسيدات (Première Ligue)', country: 'فرنسا', flag: 'https://flagcdn.com/w40/fr.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/9.png' },
+        'usl super league': { name: 'دوري السوبر الأمريكي للسيدات (USL Super League)', country: 'الولايات المتحدة', flag: 'https://flagcdn.com/w40/us.png', logo: '' },
+        'efl trophy': { name: 'كأس دوري البطولة الإنجليزية (EFL Trophy)', country: 'إنجلترا', flag: 'https://flagcdn.com/w40/gb-eng.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/24.png' },
+        'liga de expansión mx': { name: 'دوري الدرجة الثانية المكسيكي (Liga de Expansión MX)', country: 'المكسيك', flag: 'https://flagcdn.com/w40/mx.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/22.png' },
+        'brazil serie b': { name: 'الدوري البرازيلي الدرجة الثانية (Serie B)', country: 'البرازيل', flag: 'https://flagcdn.com/w40/br.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/85.png' },
+        'copa bolivia': { name: 'كأس بوليفيا (Copa Bolivia)', country: 'بوليفيا', flag: 'https://flagcdn.com/w40/bo.png', logo: '' },
+        'salvadoran primera': { name: 'الدوري السلفادوري (Primera División)', country: 'السلفادور', flag: 'https://flagcdn.com/w40/sv.png', logo: '' },
+        'saff championship': { name: 'بطولة اتحاد جنوب آسيا (SAFF Championship)', country: 'آسيا', flag: 'https://flagcdn.com/w40/un.png', logo: '' }
     };
 
     // قاموس مطابقة الدول لأعلامها وأسمائها بالعربية
@@ -107,6 +123,7 @@
         'portugal': { flag: 'https://flagcdn.com/w40/pt.png', ar: 'البرتغال' },
         'netherlands': { flag: 'https://flagcdn.com/w40/nl.png', ar: 'هولندا' },
         'turkey': { flag: 'https://flagcdn.com/w40/tr.png', ar: 'تركيا' },
+        'türkiye': { flag: 'https://flagcdn.com/w40/tr.png', ar: 'تركيا' },
         'saudi arabia': { flag: 'https://flagcdn.com/w40/sa.png', ar: 'السعودية' },
         'costa rica': { flag: 'https://flagcdn.com/w40/cr.png', ar: 'كوستاريكا' },
         'jamaica': { flag: 'https://flagcdn.com/w40/jm.png', ar: 'جامايكا' },
@@ -116,7 +133,11 @@
         'ecuador': { flag: 'https://flagcdn.com/w40/ec.png', ar: 'الإكوادور' },
         'peru': { flag: 'https://flagcdn.com/w40/pe.png', ar: 'بيرو' },
         'russia': { flag: 'https://flagcdn.com/w40/ru.png', ar: 'روسيا' },
-        'australia': { flag: 'https://flagcdn.com/w40/au.png', ar: 'أستراليا' }
+        'australia': { flag: 'https://flagcdn.com/w40/au.png', ar: 'أستراليا' },
+        'el salvador': { flag: 'https://flagcdn.com/w40/sv.png', ar: 'السلفادور' },
+        'india': { flag: 'https://flagcdn.com/w40/in.png', ar: 'الهند' },
+        'bangladesh': { flag: 'https://flagcdn.com/w40/bd.png', ar: 'بنغلاديش' },
+        'vietnam': { flag: 'https://flagcdn.com/w40/vn.png', ar: 'فيتنام' }
     };
 
     // الحالة العامة لقسم المباريات والفلاتر
@@ -171,7 +192,7 @@
         } catch {}
     };
 
-    window.toggleFavoriteMatch = (matchId) => {
+    const toggleFavoriteMatch = (matchId) => {
         const sId = String(matchId);
         if (favoriteMatches.has(sId)) {
             favoriteMatches.delete(sId);
@@ -183,13 +204,15 @@
         saveFavoriteMatches();
         renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
     };
+    window.toggleFavoriteMatch = toggleFavoriteMatch;
 
-    window.clearAllFavoriteMatches = () => {
+    const clearAllFavoriteMatches = () => {
         favoriteMatches.clear();
         saveFavoriteMatches();
         renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
         showToast('📌 تم إلغاء تثبيت جميع المباريات');
     };
+    window.clearAllFavoriteMatches = clearAllFavoriteMatches;
 
     const toESPNDate = (d) => {
         const y = d.getFullYear();
@@ -261,7 +284,6 @@
         '770': 'usa.1',
         '19': 'usa.1',
         '1308': 'aus.1',
-        '20955': 'bra.1',
         '85': 'bra.1',
         '1': 'arg.1',
         '22': 'mex.1',
@@ -282,100 +304,22 @@
         '45': 'sco.1',
         '3950': 'esp.2',
         '107': 'esp.2',
+        '19483': 'uefa.w.champions',
+        '24079': 'uefa.w.europa',
+        '23390': 'eng.w.cup',
+        '19834': 'friendly.club',
+        '3922': 'friendly.intl',
+        '23541': 'mex.w.1',
+        '20955': 'fra.w.1',
+        '23633': 'usa.w.usl',
+        '18481': 'eng.trophy',
+        '5487': 'usa.ncaam',
+        '5499': 'usa.ncaaw',
         'nba': 'nba',
         'mens-college-basketball': 'mens-college-basketball'
     };
 
-    // خريطة كبرى لأشهر أندية العالم لربط مبارياتها بالدوري الصحيح فوراً حتى لو جاءت من خلاصة عامة
-    const KNOWN_CLUBS = {
-        // الدوري الإنجليزي الممتاز (Premier League)
-        'manchester city': 'eng.1', 'man city': 'eng.1', 'arsenal': 'eng.1', 'liverpool': 'eng.1',
-        'aston villa': 'eng.1', 'tottenham': 'eng.1', 'tottenham hotspur': 'eng.1', 'chelsea': 'eng.1',
-        'newcastle': 'eng.1', 'newcastle united': 'eng.1', 'manchester united': 'eng.1', 'man utd': 'eng.1',
-        'west ham': 'eng.1', 'west ham united': 'eng.1', 'brighton': 'eng.1', 'brighton & hove albion': 'eng.1',
-        'bournemouth': 'eng.1', 'afc bournemouth': 'eng.1', 'fulham': 'eng.1', 'wolverhampton': 'eng.1',
-        'wolves': 'eng.1', 'everton': 'eng.1', 'brentford': 'eng.1', 'crystal palace': 'eng.1',
-        'nottingham forest': 'eng.1', 'nottingham': 'eng.1', 'leicester city': 'eng.1', 'leicester': 'eng.1',
-        'ipswich town': 'eng.1', 'ipswich': 'eng.1', 'southampton': 'eng.1', 'leeds united': 'eng.1',
-        'sunderland': 'eng.1', 'coventry city': 'eng.1',
-
-        // الدوري الإسباني (LaLiga)
-        'real madrid': 'esp.1', 'barcelona': 'esp.1', 'fc barcelona': 'esp.1', 'atletico madrid': 'esp.1',
-        'atlético madrid': 'esp.1', 'athletic club': 'esp.1', 'athletic bilbao': 'esp.1', 'real sociedad': 'esp.1',
-        'real betis': 'esp.1', 'villarreal': 'esp.1', 'valencia': 'esp.1', 'sevilla': 'esp.1',
-        'girona': 'esp.1', 'celta vigo': 'esp.1', 'mallorca': 'esp.1', 'osasuna': 'esp.1',
-        'rayo vallecano': 'esp.1', 'getafe': 'esp.1', 'alaves': 'esp.1', 'deportivo alaves': 'esp.1',
-        'las palmas': 'esp.1', 'leganes': 'esp.1', 'valladolid': 'esp.1', 'espanyol': 'esp.1',
-
-        // الدوري الإيطالي (Serie A)
-        'inter milan': 'ita.1', 'inter': 'ita.1', 'internazionale': 'ita.1', 'ac milan': 'ita.1',
-        'milan': 'ita.1', 'juventus': 'ita.1', 'napoli': 'ita.1', 'roma': 'ita.1', 'as roma': 'ita.1',
-        'lazio': 'ita.1', 'atalanta': 'ita.1', 'fiorentina': 'ita.1', 'bologna': 'ita.1', 'torino': 'ita.1',
-        'monza': 'ita.1', 'genoa': 'ita.1', 'udinese': 'ita.1', 'cagliari': 'ita.1', 'verona': 'ita.1',
-        'hellas verona': 'ita.1', 'empoli': 'ita.1', 'parma': 'ita.1', 'como': 'ita.1', 'venezia': 'ita.1',
-        'lecce': 'ita.1',
-
-        // الدوري الألماني (Bundesliga)
-        'bayern munich': 'ger.1', 'bayern münchen': 'ger.1', 'borussia dortmund': 'ger.1', 'dortmund': 'ger.1',
-        'bayer leverkusen': 'ger.1', 'leverkusen': 'ger.1', 'rb leipzig': 'ger.1', 'leipzig': 'ger.1',
-        'eintracht frankfurt': 'ger.1', 'frankfurt': 'ger.1', 'vfb stuttgart': 'ger.1', 'stuttgart': 'ger.1',
-        'borussia mönchengladbach': 'ger.1', 'gladbach': 'ger.1', 'wolfsburg': 'ger.1', 'freiburg': 'ger.1',
-        'werder bremen': 'ger.1', 'augsburg': 'ger.1', 'heidenheim': 'ger.1', 'mainz': 'ger.1',
-        'union berlin': 'ger.1', 'st. pauli': 'ger.1', 'holstein kiel': 'ger.1', 'bochum': 'ger.1',
-        'hoffenheim': 'ger.1',
-
-        // الدوري الفرنسي (Ligue 1)
-        'paris saint-germain': 'fra.1', 'psg': 'fra.1', 'monaco': 'fra.1', 'as monaco': 'fra.1',
-        'marseille': 'fra.1', 'olympique marseille': 'fra.1', 'lille': 'fra.1', 'lyon': 'fra.1',
-        'olympique lyonnais': 'fra.1', 'lens': 'fra.1', 'rennes': 'fra.1', 'nice': 'fra.1',
-
-        // دوري روشن السعودي (Saudi Pro League)
-        'al hilal': 'ksa.1', 'al-hilal': 'ksa.1', 'al nassr': 'ksa.1', 'al-nassr': 'ksa.1',
-        'al ittihad': 'ksa.1', 'al-ittihad': 'ksa.1', 'al ahli': 'ksa.1', 'al-ahli': 'ksa.1',
-        'al shabab': 'ksa.1', 'al ettifaq': 'ksa.1', 'al qadsiah': 'ksa.1',
-
-        // الأندية المغربية (Moroccan Clubs)
-        'raja casablanca': 'caf.confed', 'raja': 'caf.confed', 'raja club athletic': 'caf.confed',
-        'wydad': 'caf.champions', 'wydad ac': 'caf.champions', 'wydad casablanca': 'caf.champions',
-        'as far': 'caf.confed', 'far rabat': 'caf.confed', 'asfar': 'caf.confed',
-        'rs berkane': 'caf.champions', 'rsb berkane': 'caf.champions', 'berkane': 'caf.champions',
-        'maghreb as de fes': 'caf.champions', 'maghreb de fes': 'caf.champions', 'mas fes': 'caf.champions',
-        'fus rabat': 'caf.confed', 'ittihad tanger': 'caf.confed', 'hassania agadir': 'caf.confed', 'olympic safi': 'caf.confed',
-
-        // الأندية العربية والإفريقية (Arab & African Giants)
-        'al ahly': 'caf.confed', 'zamalek': 'caf.champions', 'pyramids fc': 'caf.champions', 'pyramids': 'caf.champions',
-        'esperance': 'caf.champions', 'es tunis': 'caf.champions', 'club africain': 'caf.champions', 'club sportif sfaxien': 'caf.confed',
-        'mc alger': 'caf.champions', 'usm alger': 'caf.confed', 'cr belouizdad': 'caf.champions',
-        'al hilal omdurman': 'caf.champions', 'al ahli tripoli': 'caf.confed',
-
-        // الدوري الاسكتلندي (Scottish Premiership)
-        'celtic': 'sco.1', 'rangers': 'sco.1', 'aberdeen': 'sco.1', 'hearts': 'sco.1', 'hibernian': 'sco.1',
-
-        // دوري الدرجة الثانية الإسباني (LaLiga 2 / Segunda)
-        'espanyol': 'esp.2', 'real zaragoza': 'esp.2', 'levante': 'esp.2', 'sporting gijon': 'esp.2',
-        'cadiz': 'esp.2', 'malaga': 'esp.2', 'elche': 'esp.2', 'real oviedo': 'esp.2', 'albacete': 'esp.2',
-
-        // دوري أستراليا (A-League)
-        'central coast mariners': 'aus.1', 'perth glory': 'aus.1', 'brisbane roar': 'aus.1',
-        'sydney fc': 'aus.1', 'melbourne victory': 'aus.1', 'melbourne city': 'aus.1',
-        'adelaide united': 'aus.1', 'western united': 'aus.1', 'wellington phoenix': 'aus.1',
-
-        // الدوري الروسي (Russian Premier)
-        'gazovik orenburg': 'rus.1', 'orenburg': 'rus.1', 'fc baltika': 'rus.1', 'akron tolyatti': 'rus.1',
-        'fakel voronezh': 'rus.1', 'rubin kazan': 'rus.1', 'zenit': 'rus.1', 'spartak moscow': 'rus.1',
-        'cska moscow': 'rus.1', 'dynamo moscow': 'rus.1', 'lokomotiv moscow': 'rus.1', 'krasnodar': 'rus.1',
-
-        // كرة السلة NBA
-        'celtics': 'nba', 'boston celtics': 'nba', 'lakers': 'nba', 'los angeles lakers': 'nba',
-        'warriors': 'nba', 'golden state warriors': 'nba', 'miami heat': 'nba', 'bulls': 'nba',
-        'chicago bulls': 'nba', 'nuggets': 'nba', 'denver nuggets': 'nba', 'bucks': 'nba',
-        'milwaukee bucks': 'nba', 'suns': 'nba', 'phoenix suns': 'nba', 'mavericks': 'nba',
-        'dallas mavericks': 'nba', 'knicks': 'nba', 'new york knicks': 'nba', 'clippers': 'nba',
-        '76ers': 'nba', 'philadelphia 76ers': 'nba', 'timberwolves': 'nba', 'cavaliers': 'nba',
-        'thunder': 'nba', 'pacers': 'nba', 'rockets': 'nba', 'grizzlies': 'nba', 'magic': 'nba'
-    };
-
-    const resolveCanonicalCode = (rawCode, slug, name, competitors = []) => {
+    const resolveCanonicalCode = (rawCode, slug, name, sport = 'soccer') => {
         const rawTrimmed = String(rawCode || '').trim();
         if (rawTrimmed && MAJOR_LEAGUES.some(l => l.code === rawTrimmed)) {
             return rawTrimmed;
@@ -389,55 +333,64 @@
         }
 
         const t = `${rawCode || ''} ${slug || ''} ${name || ''}`.toLowerCase();
+
+        // 1. فحص المسابقات الخاصة (سيدات، وديات، كؤوس فرعية) لمنع الخلط مع الدوريات الرجالية الكبرى
+        if (t.includes("women's champions") || t.includes('uwcl')) return 'uefa.w.champions';
+        if (t.includes("women's europa") || t.includes('europa cup')) return 'uefa.w.europa';
+        if (t.includes('wsl players cup') || t.includes('wsl cup')) return 'eng.w.cup';
+        if (t.includes('club friendly') || t.includes('club-friendly')) return 'friendly.club';
+        if (t.includes('international friendly')) return 'friendly.intl';
+        if (t.includes('liga mx femenil')) return 'mex.w.1';
+        if (t.includes('première ligue') || t.includes('premiere ligue')) return 'fra.w.1';
+        if (t.includes('usl super league')) return 'usa.w.usl';
+        if (t.includes('efl trophy')) return 'eng.trophy';
+        if (t.includes('saff championship')) return 'asia.saff';
+
+        if (sport === 'soccer' && (t.includes('ncaam') || t.includes('ncaaw') || t.includes('ncaa soccer') || t.includes('college soccer'))) {
+            return t.includes('ncaaw') ? 'usa.ncaaw' : 'usa.ncaam';
+        }
+
+        // 2. بطولات قارية ودولية كبرى
         if (t.includes('caf champions') || t.includes('caf-champions')) return 'caf.champions';
         if (t.includes('caf confed') || t.includes('caf-confed') || t.includes('caf confederation')) return 'caf.confed';
         if (t.includes('africa cup of nations') || t.includes('caf nations') || t.includes('afcon')) return 'caf.nations';
         if (t.includes('afc champions') || t.includes('afc-champions') || t.includes('acl elite')) return 'afc.champions';
         if (t.includes('club world cup') || t.includes('fifa cwc')) return 'fifa.cwc';
         if (t.includes('fifa world cup') || (t.includes('world cup') && !t.includes('club') && !t.includes('qualifying'))) return 'fifa.world';
-        if (t.includes('premier-league') || t.includes('premier league') || t.includes('epl')) return 'eng.1';
-        if (t.includes('championship')) return 'eng.2';
+        if (t.includes('champions league') || t.includes('champions-league') || t.includes('ucl')) return 'uefa.champions';
+        if (t.includes('europa league') || t.includes('europa-league') || t.includes('uel')) return 'uefa.europa';
+        if (t.includes('conference league') || t.includes('conference-league') || t.includes('uecl')) return 'uefa.europa.conf';
+        if (t.includes('nations league') || t.includes('nations-league')) return 'uefa.nations';
+        if (t.includes('libertadores')) return 'conmebol.libertadores';
+        if (t.includes('sudamericana')) return 'conmebol.sudamericana';
+
+        // 3. الدوريات المحلية الكبرى
+        if (t.includes('russian premier') || t.includes('russian') || t.includes('russia')) return 'rus.1';
+        if ((t.includes('premier-league') || t.includes('premier league') || t.includes('epl')) && !t.includes('women') && !t.includes('wsl')) return 'eng.1';
+        if (t.includes('english league championship') || (t.includes('championship') && !t.includes('saff') && !t.includes('african') && !t.includes('concacaf'))) return 'eng.2';
         if (t.includes('fa-cup') || t.includes('fa cup')) return 'eng.fa';
         if (t.includes('laliga 2') || t.includes('segunda') || t.includes('hypermotion')) return 'esp.2';
-        if (t.includes('laliga') || t.includes('la liga') || t.includes('primera division')) return 'esp.1';
+        if ((t.includes('laliga') || t.includes('la liga') || t.includes('primera division')) && !t.includes('femenil') && !t.includes('women')) return 'esp.1';
         if (t.includes('copa del rey') || t.includes('copa-del-rey')) return 'esp.copa_del_rey';
         if (t.includes('serie a') || t.includes('serie-a')) return 'ita.1';
         if (t.includes('2. bundesliga') || t.includes('2-bundesliga')) return 'ger.2';
         if (t.includes('bundesliga')) return 'ger.1';
         if (t.includes('ligue 1') || t.includes('ligue-1')) return 'fra.1';
-        if (t.includes('champions league') || t.includes('champions-league') || t.includes('ucl')) return 'uefa.champions';
-        if (t.includes('europa league') || t.includes('europa-league') || t.includes('uel')) return 'uefa.europa';
-        if (t.includes('conference league') || t.includes('conference-league') || t.includes('uecl')) return 'uefa.europa.conf';
-        if (t.includes('nations league') || t.includes('nations-league')) return 'uefa.nations';
         if (t.includes('roshn') || t.includes('saudi')) return 'ksa.1';
         if (t.includes('primeira liga') || t.includes('primeira-liga') || t.includes('portuguese')) return 'por.1';
         if (t.includes('eredivisie') || t.includes('dutch')) return 'ned.1';
         if (t.includes('super lig') || t.includes('süper lig') || t.includes('super-lig') || t.includes('turkish')) return 'tur.1';
         if (t.includes('scottish premiership') || t.includes('spfl') || t.includes('scottish')) return 'sco.1';
-        if (t.includes('russian premier') || t.includes('russian') || t.includes('russia')) return 'rus.1';
         if (t.includes('a-league') || t.includes('australian')) return 'aus.1';
         if (t.includes('colombian') || t.includes('dimayor')) return 'col.1';
         if (t.includes('brasileirao') || t.includes('brazilian')) return 'bra.1';
         if (t.includes('argentine') || t.includes('argentina')) return 'arg.1';
         if (t.includes('mexican') || t.includes('liga mx') || t.includes('bbva mx')) return 'mex.1';
         if (t.includes('major league soccer') || t.includes('mls')) return 'usa.1';
-        if (t.includes('libertadores')) return 'conmebol.libertadores';
-        if (t.includes('sudamericana')) return 'conmebol.sudamericana';
         if (t.includes('nba')) return 'nba';
-        if (t.includes('college basketball') || t.includes('ncaa')) return 'mens-college-basketball';
+        if (sport === 'basketball' && (t.includes('college basketball') || t.includes('ncaa'))) return 'mens-college-basketball';
 
-        // مطابقة ذكية بناءً على أسماء الأندية الشهيرة إذا كانت البطولة تظهر كعامة
-        if (Array.isArray(competitors) && competitors.length > 0) {
-            for (const c of competitors) {
-                const teamName = (c.team?.displayName || c.team?.name || '').toLowerCase();
-                for (const [clubKey, leagueVal] of Object.entries(KNOWN_CLUBS)) {
-                    if (teamName.includes(clubKey)) {
-                        return leagueVal;
-                    }
-                }
-            }
-        }
-
+        // لا نقوم إطلاقاً بمطابقة البطولة باسم النادي تجنباً لخلط البطولات الودية وكؤوس السيدات بالدوريات الرجالية الكبرى
         return rawCode || 'other';
     };
 
@@ -532,8 +485,8 @@
                 const rawSlug = ev.season?.slug || ev.league?.slug || comp.league?.slug || '';
                 const rawName = comp.altGameNote || ev.league?.name || comp.league?.name || ev.name || '';
 
-                // 2. توحيد ومطابقة كود البطولة المعياري مع الاستعانة بأسماء الأندية الشهيرة
-                const canonicalCode = resolveCanonicalCode(rawCode, rawSlug, rawName, competitors);
+                // 2. توحيد ومطابقة كود البطولة المعياري
+                const canonicalCode = resolveCanonicalCode(rawCode, rawSlug, rawName, sport);
 
                 // 3. البحث عن البطولة من القائمة المعيارية
                 let leagueMeta = MAJOR_LEAGUES.find(l => l.code === canonicalCode && l.sport === sport);
@@ -552,7 +505,7 @@
                     const rawNote = `${rawName} ${rawSlug}`.toLowerCase();
                     let mapped = null;
                     for (const [key, val] of Object.entries(TOURNAMENT_NAME_MAP)) {
-                        if (rawNote.includes(key) || key.includes(rawNote)) {
+                        if (rawNote.includes(key)) {
                             mapped = val;
                             break;
                         }
