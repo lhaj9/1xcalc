@@ -340,10 +340,13 @@
             const state = comp.status?.type?.state || 'pre';
             const isLive = state === 'in';
             const isFinished = state === 'post';
-            const rawDetail = comp.status?.type?.detail || '';
-            const statusDetail = isLive && typeof window.parseMinuteDetail === 'function'
-                ? window.parseMinuteDetail(currentActiveStatsEventId, rawDetail, comp.date || header.date)
-                : (rawDetail || (isLive ? 'مباشر' : (isFinished ? 'انتهت' : 'قريباً')));
+            const rawClock = comp.status?.displayClock ? `${comp.status.displayClock} ${comp.status?.type?.detail || ''}` : (comp.status?.type?.detail || '');
+            const parsedMinute = isLive && typeof window.parseMinuteDetail === 'function'
+                ? window.parseMinuteDetail(currentActiveStatsEventId, rawClock, comp.date || header.date)
+                : rawClock;
+            const statusDetail = isLive && typeof window.formatLiveMinuteHTML === 'function'
+                ? window.formatLiveMinuteHTML(parsedMinute)
+                : (parsedMinute || (isLive ? 'مباشر' : (isFinished ? 'انتهت' : 'قريباً')));
 
             const homeScore = parseInt(home.score, 10);
             const awayScore = parseInt(away.score, 10);

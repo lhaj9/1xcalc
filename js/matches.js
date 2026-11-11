@@ -523,6 +523,8 @@
 
                     const elapsedMinutes = Math.floor((now - track.baseTime) / 60000);
                     let currentMinute = track.baseMinute + elapsedMinutes;
+                    let extraVal = track.extraMinute || 0;
+                    let isExtra = track.isExtra;
 
                     // في حال كانت الدقيقة محسوبة محلياً من بداية المباراة
                     if (track.calculatedFromKickoff && track.matchDate) {
@@ -531,29 +533,36 @@
                             track.isSpecial = true;
                             track.isHalftime = true;
                             const minEl = row.querySelector('.sofa-row-live-min');
-                            if (minEl && minEl.textContent !== 'استراحة') minEl.textContent = 'استراحة';
+                            if (minEl && minEl.textContent !== 'استراحة') minEl.innerHTML = 'استراحة';
                             return;
                         } else if (totalFromStart > 62) {
-                            currentMinute = Math.min(90, 45 + (totalFromStart - 62));
+                            const secondHalfElapsed = totalFromStart - 62;
+                            const totalCalculated = 45 + secondHalfElapsed;
+                            if (totalCalculated > 90) {
+                                currentMinute = 90;
+                                extraVal = totalCalculated - 90; // يستمر بالعد ولا يتوقف عند 90 أبداً!
+                                isExtra = true;
+                            } else {
+                                currentMinute = totalCalculated;
+                                extraVal = 0;
+                                isExtra = false;
+                            }
                         }
-                    }
-
-                    // القيود المنطقية لأوقات كرة القدم
-                    if (track.baseMinute <= 45 && currentMinute > 45 && !track.isExtra) {
-                        currentMinute = 45; // انتظار إعلان الوقت بدل الضائع أو الاستراحة
-                    } else if (track.baseMinute > 45 && currentMinute > 90 && !track.isExtra) {
+                    } else if (isExtra) {
+                        extraVal = track.extraMinute + elapsedMinutes;
+                    } else if (currentMinute > 90) {
+                        extraVal = currentMinute - 90;
                         currentMinute = 90;
+                        isExtra = true;
                     }
 
-                    let displayStr = `${currentMinute}'`;
-                    if (track.isExtra) {
-                        const extraElapsed = Math.floor((now - track.baseTime) / 60000);
-                        displayStr = `${track.baseMinute}+${track.extraMinute + extraElapsed}'`;
-                    }
+                    const displayHTML = isExtra
+                        ? `${currentMinute}+${extraVal}<span class="live-apostrophe">'</span>`
+                        : `${currentMinute}<span class="live-apostrophe">'</span>`;
 
                     const minEl = row.querySelector('.sofa-row-live-min');
-                    if (minEl && minEl.textContent !== displayStr) {
-                        minEl.textContent = displayStr;
+                    if (minEl && minEl.innerHTML !== displayHTML) {
+                        minEl.innerHTML = displayHTML;
                     }
                 });
             }
@@ -565,11 +574,22 @@
                 if (modalLiveTag && !track.isSpecial) {
                     const elapsedMinutes = Math.floor((now - track.baseTime) / 60000);
                     let curMin = track.baseMinute + elapsedMinutes;
-                    if (track.baseMinute <= 45 && curMin > 45 && !track.isExtra) curMin = 45;
-                    else if (track.baseMinute > 45 && curMin > 90 && !track.isExtra) curMin = 90;
+                    let extraVal = track.extraMinute || 0;
+                    let isExtra = track.isExtra;
 
-                    const disp = track.isExtra ? `${track.baseMinute}+${track.extraMinute}'` : `${curMin}'`;
-                    modalLiveTag.innerHTML = `<span class="live-dot-pulse"></span> ${disp}`;
+                    if (isExtra) {
+                        extraVal = track.extraMinute + elapsedMinutes;
+                    } else if (curMin > 90) {
+                        extraVal = curMin - 90;
+                        curMin = 90;
+                        isExtra = true;
+                    }
+
+                    const dispHtml = isExtra
+                        ? `${curMin}+${extraVal}<span class="live-apostrophe">'</span>`
+                        : `${curMin}<span class="live-apostrophe">'</span>`;
+
+                    modalLiveTag.innerHTML = `<span class="live-dot-pulse"></span> ${dispHtml}`;
                 }
             }
         }, 10000); // تحديث فوري دوري كل 10 ثوانٍ لضمان استجابة وتزامن عداد الدقائق محلياً
@@ -688,17 +708,12 @@
                 }
             }
 
-            // 2. تحديث عداد الدقائق الحية في الواجهة
+            // 2. تحديث عداد الدقائق الحية في الواجهة مع وميض الشرطة
             const statusEl = row.querySelector('.sofa-row-status');
             if (statusEl && ev.status?.type?.state === 'in') {
-                const rawDetail = ev.status?.type?.detail || '';
+                const rawDetail = ev.status?.displayClock ? `${ev.status.displayClock} ${ev.status?.type?.detail || ''}` : (ev.status?.type?.detail || '');
                 const statusDetail = parseMinuteDetail(ev.id, rawDetail, ev.date);
-                const liveMinEl = statusEl.querySelector('.sofa-row-live-min');
-                if (liveMinEl) {
-                    liveMinEl.textContent = statusDetail || 'مباشر';
-                } else {
-                    statusEl.innerHTML = `<span class="sofa-row-live-min">${statusDetail || 'مباشر'}</span>`;
-                }
+                statusEl.innerHTML = formatLiveMinuteHTML(statusDetail);
                 row.classList.add('is-live-row');
             }
 
@@ -799,12 +814,38 @@
             return raw;
         }
 
-        // 1. هل المزود وفر رقماً صريحاً للدقيقة؟ (مثلاً: 38 أو 38' أو 45+2')
-        const match = raw.match(/(\d+)(?:\+(\d+))?/);
-        if (match) {
-            const minNum = parseInt(match[1], 10);
-            const extraNum = match[2] ? parseInt(match[2], 10) : 0;
-            const isExtra = Boolean(match[2]);
+        // 1. هل المزود وفر رقماً صريحاً للدقيقة مع وقت إضافي؟ (مثلاً: 45+2 أو 90'+4' أو 90 +4)
+        const extraMatch = raw.match(/(\d+)\s*\'?\s*\+\s*(\d+)/);
+        if (extraMatch) {
+            const minNum = parseInt(extraMatch[1], 10);
+            const extraNum = parseInt(extraMatch[2], 10);
+
+            matchMinutesMap.set(eventId, {
+                baseMinute: minNum,
+                extraMinute: extraNum,
+                isExtra: true,
+                baseTime: now,
+                originalStr: raw,
+                isSpecial: false,
+                matchDate: matchDate ? new Date(matchDate).getTime() : null,
+                calculatedFromKickoff: false
+            });
+
+            return `${minNum}+${extraNum}'`;
+        }
+
+        // 2. هل المزود وفر رقماً مفرداً للدقيقة؟ (مثلاً: 38 أو 38' أو 92')
+        const singleMatch = raw.match(/(\d+)/);
+        if (singleMatch) {
+            let minNum = parseInt(singleMatch[1], 10);
+            let extraNum = 0;
+            let isExtra = false;
+
+            if (minNum > 90) {
+                extraNum = minNum - 90;
+                minNum = 90;
+                isExtra = true;
+            }
 
             matchMinutesMap.set(eventId, {
                 baseMinute: minNum,
@@ -820,23 +861,39 @@
             return isExtra ? `${minNum}+${extraNum}'` : `${minNum}'`;
         }
 
-        // 2. إذا لم يوفر المزود الدقيقة (أو كان النص عاماً مثل "مباشر" أو "Live"):
-        // يتم حساب الدقيقة لحظياً وتتبعها محلياً على جهاز المستخدم بناءً على موعد انطلاق المباراة
+        // 3. إذا لم يوفر المزود الدقيقة صراحة: يتم حساب الدقيقة لحظياً وتتبعها محلياً على جهاز المستخدم
+        // مع عدم التوقف عند 90 أبداً واستمرار العد في الوقت الإضافي
         if (matchDate) {
             const startTime = new Date(matchDate).getTime();
             const elapsedFromStart = Math.max(0, Math.floor((now - startTime) / 60000));
 
             let calcMin = 1;
+            let extraMin = 0;
             let isHt = false;
+            let isExtra = false;
 
             if (elapsedFromStart <= 0) {
                 calcMin = 1;
             } else if (elapsedFromStart <= 47) {
-                calcMin = Math.min(45, elapsedFromStart);
+                if (elapsedFromStart > 45) {
+                    calcMin = 45;
+                    extraMin = elapsedFromStart - 45;
+                    isExtra = true;
+                } else {
+                    calcMin = elapsedFromStart;
+                }
             } else if (elapsedFromStart <= 62) {
                 isHt = true;
             } else {
-                calcMin = Math.min(90, 45 + (elapsedFromStart - 62));
+                const secondHalfElapsed = elapsedFromStart - 62;
+                const totalCalculated = 45 + secondHalfElapsed;
+                if (totalCalculated > 90) {
+                    calcMin = 90;
+                    extraMin = totalCalculated - 90; // يستمر بالعد في الوقت الإضافي ولا يتوقف عند 90 أبداً!
+                    isExtra = true;
+                } else {
+                    calcMin = totalCalculated;
+                }
             }
 
             if (isHt) {
@@ -846,21 +903,53 @@
 
             matchMinutesMap.set(eventId, {
                 baseMinute: calcMin,
-                extraMinute: 0,
-                isExtra: false,
+                extraMinute: extraMin,
+                isExtra,
                 baseTime: now,
-                originalStr: `${calcMin}'`,
+                originalStr: isExtra ? `${calcMin}+${extraMin}'` : `${calcMin}'`,
                 isSpecial: false,
                 matchDate: startTime,
                 calculatedFromKickoff: true
             });
 
-            return `${calcMin}'`;
+            return isExtra ? `${calcMin}+${extraMin}'` : `${calcMin}'`;
         }
 
         matchMinutesMap.set(eventId, { isSpecial: true, originalStr: raw || 'مباشر' });
         return raw || 'مباشر';
     };
+
+    // تنسيق وعرض الدقيقة مع الشرطة الوماضة (Flashing Live Apostrophe) والوقت بدل الضائع (+4)
+    const formatLiveMinuteHTML = (minStr) => {
+        if (!minStr) return '<span class="sofa-row-live-min">مباشر</span>';
+        const str = String(minStr).trim();
+        if (str.includes('استراحة') || str.toLowerCase().includes('ht')) {
+            return `<span class="sofa-row-live-min">استراحة</span>`;
+        }
+        if (str.toLowerCase().includes('ft') || str.includes('انتهت')) {
+            return `<span class="sofa-row-post-text">انتهت</span>`;
+        }
+
+        // مطابقة نمط الدقيقة والوقت الإضافي مثلاً 90+4 أو 90'+4' أو 45+2 أو 38' أو 38
+        const extraMatch = str.match(/(\d+)\s*\'?\s*\+\s*(\d+)/);
+        if (extraMatch) {
+            const base = extraMatch[1];
+            const added = extraMatch[2];
+            return `<span class="sofa-row-live-min">${base}+${added}<span class="live-apostrophe">'</span></span>`;
+        }
+
+        const singleMatch = str.match(/(\d+)/);
+        if (singleMatch) {
+            const num = parseInt(singleMatch[1], 10);
+            if (num > 90) {
+                return `<span class="sofa-row-live-min">90+${num - 90}<span class="live-apostrophe">'</span></span>`;
+            }
+            return `<span class="sofa-row-live-min">${num}<span class="live-apostrophe">'</span></span>`;
+        }
+
+        return `<span class="sofa-row-live-min">${str}</span>`;
+    };
+    window.formatLiveMinuteHTML = formatLiveMinuteHTML;
 
     // تنسيق وعرض التاريخ في شريط تصفح الأيام بأسلوب SofaScore (< اليوم >)
     const formatDateNavLabel = (d) => {
@@ -1835,7 +1924,7 @@
         container.innerHTML = html;
     };
 
-    function buildMatchCardHTML(ev, isPinnedView = false) {
+    function buildMatchCardHTML(ev) {
         const comp = ev.competitions?.[0] || {};
         const competitors = comp.competitors || [];
         const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
@@ -1844,7 +1933,7 @@
         const state = ev.status?.type?.state; // 'pre', 'in', 'post'
         const isLive = state === 'in';
         const isFinished = state === 'post';
-        const rawDetail = ev.status?.type?.detail || '';
+        const rawDetail = ev.status?.displayClock ? `${ev.status.displayClock} ${ev.status?.type?.detail || ''}` : (ev.status?.type?.detail || '');
         const statusDetail = isLive ? parseMinuteDetail(ev.id, rawDetail, ev.date) : rawDetail;
 
         const homeScore = parseInt(home.score, 10);
@@ -1876,12 +1965,12 @@
         const homeName = home.team?.displayName || home.team?.name || 'المضيف';
         const awayName = away.team?.displayName || away.team?.name || 'الضيف';
 
-        // 1. عمود التوقيت والدقائق (يسار)
+        // 1. عمود التوقيت والدقائق (يسار) مع وميض الشرطة في المباريات المباشرة
         const matchTime = formatMatchTime(ev.date);
         let statusBottomHtml = '';
 
         if (isLive) {
-            statusBottomHtml = `<span class="sofa-row-live-min">${statusDetail || 'مباشر'}</span>`;
+            statusBottomHtml = formatLiveMinuteHTML(statusDetail);
         } else if (isFinished) {
             statusBottomHtml = `<span class="sofa-row-post-text">${postStatusText}</span>`;
         } else if (preStatusText !== '-') {
