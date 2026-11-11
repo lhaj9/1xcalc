@@ -257,15 +257,15 @@
                 const activeSport = window.currentSport || 'soccer';
                 if (activeSport === 'basketball') {
                     const bLeague = (currentActiveStatsLeague === 'mens-college-basketball') ? 'mens-college-basketball' : 'nba';
-                    url = `https://site.api.espn.com/apis/site/v2/sports/basketball/${bLeague}/summary?event=${eventId}`;
+                    url = `https://site.web.api.espn.com/apis/site/v2/sports/basketball/${bLeague}/summary?event=${eventId}`;
                 } else {
                     const sLeague = (currentActiveStatsLeague === 'all' || !currentActiveStatsLeague) ? 'all' : currentActiveStatsLeague;
-                    url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${sLeague}/summary?event=${eventId}`;
+                    url = `https://site.web.api.espn.com/apis/site/v2/sports/soccer/${sLeague}/summary?event=${eventId}`;
                 }
 
                 let res = await fetch(url);
                 if (!res.ok && currentActiveStatsLeague !== 'all') {
-                    const altRes = await fetch(`https://site.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=${eventId}`).catch(() => null);
+                    const altRes = await fetch(`https://site.web.api.espn.com/apis/site/v2/sports/soccer/all/summary?event=${eventId}`).catch(() => null);
                     if (altRes && altRes.ok) res = altRes;
                 }
 
@@ -540,6 +540,8 @@
                 renderStandingsTab(data, sheetBody);
             } else if (currentActiveStatsTab === 'statsTabInfo') {
                 renderInfoTab(data, sheetBody);
+            } else if (currentActiveStatsTab === 'statsTabNews') {
+                renderNewsTab(data, sheetBody);
             }
         };
 
@@ -1134,9 +1136,13 @@
                 entries = standingsCache.get(leagueCode);
             } else {
                 try {
-                    const url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${leagueCode}/standings`;
-                    const res = await fetch(url);
-                    if (res.ok) {
+                    let url = `https://site.web.api.espn.com/apis/v2/sports/soccer/${leagueCode}/standings`;
+                    let res = await fetch(url).catch(() => null);
+                    if (!res || !res.ok) {
+                        url = `https://site.web.api.espn.com/apis/site/v2/sports/soccer/${leagueCode}/standings`;
+                        res = await fetch(url).catch(() => null);
+                    }
+                    if (res && res.ok) {
                         const sData = await res.json();
                         entries = sData.children?.[0]?.standings?.entries || sData.standings?.[0]?.entries || [];
                         standingsCache.set(leagueCode, entries);
@@ -1290,6 +1296,145 @@
                     </div>
                 </div>
 
+                ${renderTabBottomActions(matchTitle, isLive)}
+            `;
+        };
+
+        const formatMatchNewsTime = (dateStr) => {
+            if (!dateStr) return '';
+            try {
+                const d = new Date(dateStr);
+                if (isNaN(d.getTime())) return '';
+                const diffMs = Date.now() - d.getTime();
+                const diffSec = Math.floor(diffMs / 1000);
+                if (diffSec < 60) return 'الآن';
+                const diffMin = Math.floor(diffSec / 60);
+                if (diffMin < 60) return `منذ ${diffMin} دقيقة`;
+                const diffHour = Math.floor(diffMin / 60);
+                if (diffHour < 24) return `منذ ${diffHour} ساعة`;
+                const diffDay = Math.floor(diffHour / 24);
+                if (diffDay === 1) return 'أمس';
+                if (diffDay < 7) return `منذ ${diffDay} أيام`;
+                return d.toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' });
+            } catch {
+                return '';
+            }
+        };
+
+        const escapeHtmlDetails = (str) => {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        };
+
+        // التبويب 8: تقارير وأخبار اللقاء (Match Reports & News)
+        const renderNewsTab = (data, container) => {
+            const comp = data.header?.competitions?.[0] || {};
+            const competitors = comp.competitors || [];
+            const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+            const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+            const homeName = home.team?.displayName || 'المضيف';
+            const awayName = away.team?.displayName || 'الضيف';
+            const matchTitle = `${homeName} ضد ${awayName}`;
+            const isLive = comp.status?.type?.state === 'in';
+
+            const article = data.article;
+            const relatedArticles = (data.news?.articles || []).filter(a => a && (a.headline || a.description));
+
+            if (!article && relatedArticles.length === 0) {
+                container.innerHTML = `
+                    <div class="stats-empty-state">
+                        <div class="stats-empty-icon">📰</div>
+                        <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">لا توجد تقارير أو أخبار منشورة لهذه المباراة حالياً</div>
+                        <div style="font-size: 0.73rem;">تُنشر تقارير المباريات والتحليلات عادةً قبل انطلاق المباريات الكبرى ومباشرةً بعد نهايتها.</div>
+                    </div>
+                    ${renderTabBottomActions(matchTitle, isLive)}
+                `;
+                return;
+            }
+
+            let recapHTML = '';
+            if (article) {
+                const recapHeadline = escapeHtmlDetails(article.headline || article.description || '');
+                const recapImg = article.images?.[0]?.url || '';
+                const recapTime = formatMatchNewsTime(article.published);
+                const recapByline = article.byline ? escapeHtmlDetails(article.byline) : '';
+                const recapHref = article.links?.web?.href || '';
+                const recapStory = article.story || (article.description ? `<p>${escapeHtmlDetails(article.description)}</p>` : '');
+
+                recapHTML = `
+                    <div class="match-recap-card">
+                        <div class="match-recap-badge-header">
+                            <span><i class="fa-solid fa-file-lines"></i> تقرير ومجريات اللقاء (Match Recap)</span>
+                            ${recapTime ? `<span>${recapTime}</span>` : ''}
+                        </div>
+                        ${recapImg ? `<img src="${recapImg}" class="match-recap-img" alt="${recapHeadline}" onerror="this.style.display='none'">` : ''}
+                        <div class="match-recap-body">
+                            <h3 class="match-recap-headline">${recapHeadline}</h3>
+                            ${recapByline ? `
+                                <div style="font-size: 0.72rem; color: var(--text-muted); display:flex; align-items:center; gap:5px;">
+                                    <i class="fa-solid fa-pen-nib"></i> <span>${recapByline}</span>
+                                </div>
+                            ` : ''}
+                            <div class="match-recap-story" dir="ltr">
+                                ${recapStory}
+                            </div>
+                            ${recapHref ? `
+                                <a href="${recapHref}" target="_blank" rel="noopener noreferrer" class="news-source-btn" style="margin-top: 8px;">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    <span>قراءة التقرير الكامل على ESPN</span>
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            let relatedHTML = '';
+            if (relatedArticles.length > 0) {
+                const items = relatedArticles.map((art) => {
+                    const artHeadline = escapeHtmlDetails(art.headline || art.description || '');
+                    const artDesc = escapeHtmlDetails(art.description || '');
+                    const artThumb = art.images?.[0]?.url || '';
+                    const artTime = formatMatchNewsTime(art.published);
+                    const artHref = art.links?.web?.href || '';
+                    const artDataAttr = encodeURIComponent(JSON.stringify(art));
+
+                    return `
+                        <div class="match-article-card" data-article-json="${artDataAttr}" onclick="if (window.openNewsDetailModal) { try { window.openNewsDetailModal(JSON.parse(decodeURIComponent(this.dataset.articleJson))); } catch { window.open('${artHref || '#'}', '_blank'); } } else { window.open('${artHref || '#'}', '_blank'); }" role="button" tabindex="0">
+                            ${artThumb ? `<img src="${artThumb}" class="match-article-thumb" alt="${artHeadline}" onerror="this.style.display='none'">` : ''}
+                            <div class="match-article-info">
+                                <div class="match-article-headline">${artHeadline}</div>
+                                ${artDesc && artDesc !== artHeadline ? `<div class="match-article-desc">${artDesc}</div>` : ''}
+                                <div class="match-article-meta">
+                                    ${artTime ? `<span><i class="fa-regular fa-clock"></i> ${artTime}</span>` : ''}
+                                    <span>• ESPN</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                relatedHTML = `
+                    <div class="match-related-news-section">
+                        <div class="match-related-title">
+                            <i class="fa-solid fa-newspaper" style="color:var(--accent-primary);"></i>
+                            <span>أخبار ومقالات مرتبطة باللقاء (${relatedArticles.length})</span>
+                        </div>
+                        ${items}
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="match-news-tab-container">
+                    ${recapHTML}
+                    ${relatedHTML}
+                </div>
                 ${renderTabBottomActions(matchTitle, isLive)}
             `;
         };

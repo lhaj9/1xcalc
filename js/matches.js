@@ -481,10 +481,10 @@
             let url = '';
             if (sport === 'basketball') {
                 const sub = (leagueCode === 'all' || leagueCode === 'nba') ? 'nba' : leagueCode;
-                url = `https://site.api.espn.com/apis/site/v2/sports/basketball/${sub}/scoreboard`;
+                url = `https://site.web.api.espn.com/apis/site/v2/sports/basketball/${sub}/scoreboard`;
             } else {
                 const sub = leagueCode === 'all' ? 'all' : leagueCode;
-                url = `https://site.api.espn.com/apis/site/v2/sports/soccer/${sub}/scoreboard`;
+                url = `https://site.web.api.espn.com/apis/site/v2/sports/soccer/${sub}/scoreboard`;
             }
 
             if (dateStr) {
@@ -1415,6 +1415,7 @@
         }
 
         updateDateNavDisplay();
+        fetchAndRenderNewsTicker(currentSport, currentLeague);
 
         if (currentMainView === 'leagues') {
             renderLeaguesDirectory();
@@ -2438,6 +2439,265 @@
         renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
     };
 
+    // ==================== نظام شريط الأخبار الرياضية العاجلة والنافذة المنبثقة ====================
+    const newsCache = new Map(); // key -> { articles: Array, timestamp: number }
+    const NEWS_CACHE_TTL = 15 * 60 * 1000; // 15 دقيقة
+    let currentTickerArticles = [];
+
+    const escapeHtml = (str) => {
+        if (str == null) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    };
+
+    const formatRelativeNewsTime = (dateStr) => {
+        if (!dateStr) return '';
+        try {
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return '';
+            const diffMs = Date.now() - d.getTime();
+            const diffSec = Math.floor(diffMs / 1000);
+            if (diffSec < 60) return 'الآن';
+            const diffMin = Math.floor(diffSec / 60);
+            if (diffMin < 60) return `منذ ${diffMin} د`;
+            const diffHour = Math.floor(diffMin / 60);
+            if (diffHour < 24) return `منذ ${diffHour} س`;
+            const diffDay = Math.floor(diffHour / 24);
+            if (diffDay === 1) return 'أمس';
+            if (diffDay < 7) return `منذ ${diffDay} أيام`;
+            return d.toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' });
+        } catch {
+            return '';
+        }
+    };
+
+    const fetchLeagueNews = async (sport = currentSport, leagueCode = currentLeague) => {
+        let targetCode = leagueCode;
+        if (sport === 'basketball') {
+            targetCode = 'nba';
+        } else {
+            if (!targetCode || targetCode === 'all') {
+                targetCode = 'eng.1';
+            }
+        }
+
+        const cacheKey = `${sport}_${targetCode}`;
+        const now = Date.now();
+        if (newsCache.has(cacheKey)) {
+            const entry = newsCache.get(cacheKey);
+            if (now - entry.timestamp < NEWS_CACHE_TTL && entry.articles?.length > 0) {
+                return entry.articles;
+            }
+        }
+
+        try {
+            let url = '';
+            if (sport === 'basketball') {
+                url = 'https://site.web.api.espn.com/apis/site/v2/sports/basketball/nba/news';
+            } else {
+                url = `https://site.web.api.espn.com/apis/site/v2/sports/soccer/${targetCode}/news`;
+            }
+
+            let res = await fetch(url);
+            let data = null;
+            if (res.ok) {
+                data = await res.json();
+            }
+
+            let articles = data?.articles || [];
+
+            // إذا لم يتوفر أي خبر لهذا الدوري وكان كرة قدم، نستخدم الدوري الإنجليزي الممتاز كبديل احترافي
+            if ((!articles || articles.length === 0) && sport === 'soccer' && targetCode !== 'eng.1') {
+                const fallbackRes = await fetch('https://site.web.api.espn.com/apis/site/v2/sports/soccer/eng.1/news').catch(() => null);
+                if (fallbackRes && fallbackRes.ok) {
+                    const fbData = await fallbackRes.json();
+                    articles = fbData?.articles || [];
+                }
+            }
+
+            articles = (articles || []).filter(a => a && (a.headline || a.description));
+
+            if (articles.length > 0) {
+                newsCache.set(cacheKey, { articles, timestamp: now });
+            }
+
+            return articles;
+        } catch (err) {
+            console.warn('[NewsTicker] Error loading news:', err);
+            return [];
+        }
+    };
+
+    const renderNewsTicker = (articles) => {
+        const container = document.getElementById('newsTickerContainer');
+        const track = document.getElementById('newsTickerTrack');
+        if (!container || !track) return;
+
+        if (!articles || articles.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+
+        currentTickerArticles = articles;
+
+        const segmentHTML = articles.map((art, idx) => {
+            const headline = escapeHtml(art.headline || art.description || '');
+            const relTime = formatRelativeNewsTime(art.published);
+            return `
+                <div class="news-ticker-item" onclick="openNewsDetailModal(${idx})" role="button" tabindex="0" title="${headline}">
+                    <span class="news-ticker-dot">●</span>
+                    <span class="news-ticker-text">${headline}</span>
+                    ${relTime ? `<span class="news-ticker-time">${relTime}</span>` : ''}
+                    <span class="news-ticker-sep">•</span>
+                </div>
+            `;
+        }).join('');
+
+        // تكرار الأخبار مرتين لضمان حلقة شريط مستمرة وسلسة دون أي فواصل
+        track.innerHTML = `
+            <div class="news-ticker-segment">${segmentHTML}</div>
+            <div class="news-ticker-segment" aria-hidden="true">${segmentHTML}</div>
+        `;
+
+        container.style.display = 'flex';
+    };
+
+    const fetchAndRenderNewsTicker = async (sport = currentSport, leagueCode = currentLeague) => {
+        const articles = await fetchLeagueNews(sport, leagueCode);
+        renderNewsTicker(articles);
+    };
+
+    const openNewsDetailModal = (articleOrIndex) => {
+        let article = null;
+        if (typeof articleOrIndex === 'number') {
+            article = currentTickerArticles[articleOrIndex];
+        } else if (articleOrIndex && typeof articleOrIndex === 'object') {
+            article = articleOrIndex;
+        }
+
+        if (!article) return;
+
+        const modal = document.getElementById('newsDetailModal');
+        const body = document.getElementById('newsModalBody');
+        if (!modal || !body) return;
+
+        const headline = escapeHtml(article.headline || article.description || 'تفاصيل الخبر الرياضي');
+        const imgUrl = article.images?.[0]?.url || (typeof article.image === 'string' ? article.image : '');
+        const relTime = formatRelativeNewsTime(article.published);
+        const byline = article.byline ? escapeHtml(article.byline) : '';
+        const webHref = article.links?.web?.href || article.link || '';
+
+        // استخراج وتنسيق محتوى الخبر
+        let storyContent = '';
+        if (article.story) {
+            storyContent = article.story;
+        } else if (article.description) {
+            storyContent = `<p>${escapeHtml(article.description)}</p>`;
+        } else {
+            storyContent = `<p>${headline}</p>`;
+        }
+
+        body.innerHTML = `
+            ${imgUrl ? `
+                <div class="news-modal-hero-img-wrap">
+                    <img src="${imgUrl}" class="news-modal-hero-img" alt="${headline}" onerror="this.parentElement.style.display='none'">
+                </div>
+            ` : ''}
+
+            <h2 class="news-modal-headline">${headline}</h2>
+
+            <div class="news-modal-meta">
+                ${relTime ? `
+                    <div class="news-modal-meta-item">
+                        <i class="fa-regular fa-clock"></i>
+                        <span>${relTime}</span>
+                    </div>
+                ` : ''}
+                ${byline ? `
+                    <div class="news-modal-meta-item">
+                        <i class="fa-solid fa-pen-nib"></i>
+                        <span>${byline}</span>
+                    </div>
+                ` : ''}
+                <div class="news-modal-meta-item">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    <span>ESPN Global Sports</span>
+                </div>
+            </div>
+
+            <!-- حاوية نص الخبر مع ضبطها بالكامل dir="ltr" ومحاذاة يسار text-align: left للحفاظ على جمالية الإنجليزية -->
+            <div class="news-modal-story-wrap" dir="ltr">
+                ${storyContent}
+            </div>
+
+            <div class="news-modal-actions">
+                ${webHref ? `
+                    <a href="${webHref}" target="_blank" rel="noopener noreferrer" class="news-source-btn">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        <span>قراءة التقرير الكامل على ESPN</span>
+                    </a>
+                ` : ''}
+                <button type="button" class="news-modal-close-btn" onclick="closeNewsDetailModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span>إغلاق النافذة</span>
+                </button>
+            </div>
+        `;
+
+        modal.style.display = 'flex';
+        requestAnimationFrame(() => {
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('news-modal-open');
+        });
+    };
+
+    const closeNewsDetailModal = () => {
+        const modal = document.getElementById('newsDetailModal');
+        if (!modal) return;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('news-modal-open');
+        setTimeout(() => {
+            if (!modal.classList.contains('open')) {
+                modal.style.display = 'none';
+            }
+        }, 250);
+    };
+
+    // ربط أحداث نافذة الأخبار المنبثقة
+    const initNewsModalEvents = () => {
+        const closeBtn = document.getElementById('closeNewsModalBtn');
+        const closeX = document.getElementById('closeNewsModalX');
+        const modal = document.getElementById('newsDetailModal');
+
+        if (closeBtn) closeBtn.addEventListener('click', closeNewsDetailModal);
+        if (closeX) closeX.addEventListener('click', closeNewsDetailModal);
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeNewsDetailModal();
+            });
+        }
+
+        const trackWrap = document.getElementById('newsTickerTrackWrap');
+        const track = document.getElementById('newsTickerTrack');
+        if (trackWrap && track) {
+            trackWrap.addEventListener('touchstart', () => track.classList.add('paused'), { passive: true });
+            trackWrap.addEventListener('touchend', () => track.classList.remove('paused'), { passive: true });
+        }
+    };
+
+    // تهيئة مبدئية لأحداث الأخبار
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNewsModalEvents);
+    } else {
+        initNewsModalEvents();
+    }
+
     // مزامنة أولية لشريط الخيارات
     syncNavSummaryChips();
 
@@ -2456,4 +2716,8 @@
     window.formatMatchTime = formatMatchTime;
     window.getTeamLogoUrl = getTeamLogoUrl;
     window.syncNavSummaryChips = syncNavSummaryChips;
+    window.openNewsDetailModal = openNewsDetailModal;
+    window.closeNewsDetailModal = closeNewsDetailModal;
+    window.fetchAndRenderNewsTicker = fetchAndRenderNewsTicker;
+    window.fetchLeagueNews = fetchLeagueNews;
 })();
