@@ -7,6 +7,19 @@ let currentActiveStatsSport = 'soccer';
 let currentActiveStatsTab = 'statsTabSummary';
 let currentActiveStatsData = null;
 
+// ترتيب التبويبات للتنقل المتسلسل بالسحب يميناً ويساراً
+const STATS_TABS_LIST = [
+    'statsTabSummary',
+    'statsTabOverview',
+    'statsTabEvents',
+    'statsTabCommentary',
+    'statsTabLineups',
+    'statsTabH2H',
+    'statsTabStandings',
+    'statsTabInfo',
+    'statsTabNews'
+];
+
 // دالة إضافة المباراة مباشرة إلى القسائم كصفقة نشطة O₂ مع التحديث اللحظي
 window.addMatchToSavedSlips = (matchTitle, mode = 'delayed') => {
     try {
@@ -49,19 +62,16 @@ window.addMatchToSavedSlips = (matchTitle, mode = 'delayed') => {
         try { if (typeof savedSlips !== 'undefined') savedSlips = slipsList; } catch {}
         window.savedSlips = slipsList;
 
-        // 1. تحديث زر الحفظ في المودال فوراً وبشكل لحظي
         const btnHero = document.getElementById('btnHeroSaveSlip');
         if (btnHero) {
             btnHero.classList.add('is-saved');
             btnHero.innerHTML = '<i class="fa-solid fa-check"></i> <span>مضافة للقسائم O₂</span>';
         }
 
-        // 2. تحديث تبويب القسائم فورياً
         if (typeof window.renderSlips === 'function') {
             window.renderSlips();
         }
 
-        // 3. تحديث قائمة المباريات فورياً لإظهار شارة الصفقة النشطة O2 دون الحاجة لإعادة تحميل
         if (typeof window.renderMatchesList === 'function' && window.loadedMatchesEvents) {
             window.renderMatchesList(window.loadedMatchesEvents);
         }
@@ -81,7 +91,7 @@ window.addMatchToSavedSlips = (matchTitle, mode = 'delayed') => {
     }
 };
 
-// نسخ تفاصيل المباراة الشاملة إلى الحافظة (الملخص الكامل)
+// نسخ تفاصيل المباراة الشاملة إلى الحافظة
 window.copyMatchDetails = () => {
     const data = currentActiveStatsData;
     const comp = data?.header?.competitions?.[0] || {};
@@ -157,7 +167,7 @@ const renderTabBottomActions = (matchTitle, isLive) => {
     `;
 };
 
-// شريط النتيجة المصغر بالأعلى للتبويبات الفرعية (للحفاظ على سياق النتيجة مع إعطاء مساحة كاملة للمحتوى)
+// شريط النتيجة المصغر بالأعلى للتبويبات الفرعية
 const renderMiniScoreStrip = (data) => {
     if (!data) return '';
     const comp = data.header?.competitions?.[0] || {};
@@ -370,6 +380,181 @@ const renderHeroBannerHTML = (data) => {
     `;
 };
 
+// استخراج أو توليد رابط صورة وجه اللاعب (Player Headshot)
+const getPlayerHeadshotUrl = (player) => {
+    const ath = player?.athlete || {};
+    if (ath.headshot?.href) return ath.headshot.href;
+    if (ath.id) {
+        return `https://a.espncdn.com/combiner/i?img=/i/headshots/soccer/players/full/${ath.id}.png&w=96&h=96&scale=crop`;
+    }
+    return '';
+};
+
+// ترجمة مراكز اللاعبين للعربية
+const translatePosition = (name) => {
+    if (!name) return 'لاعب';
+    const n = name.toLowerCase();
+    if (n.includes('goal') || n.includes('gk') || n.includes('حارس')) return 'حارس مرمى';
+    if (n.includes('center back') || n.includes('central defender')) return 'قلب دفاع';
+    if (n.includes('left back') || n.includes('lb')) return 'ظهير أيسر';
+    if (n.includes('right back') || n.includes('rb')) return 'ظهير أيمن';
+    if (n.includes('defender') || n.includes('def')) return 'مدافع';
+    if (n.includes('defensive midfield')) return 'وسط مدافع (ارتكاز)';
+    if (n.includes('attacking midfield')) return 'وسط مهاجم (صانع ألعاب)';
+    if (n.includes('midfield') || n.includes('mid')) return 'لاعب خط وسط';
+    if (n.includes('forward') || n.includes('striker')) return 'مهاجم صريح';
+    if (n.includes('left wing')) return 'جناح أيسر';
+    if (n.includes('right wing')) return 'جناح أيمن';
+    if (n.includes('wing')) return 'جناح هجومي';
+    return name;
+};
+
+// فتح بطاقة تفاصيل اللاعب المنبثقة التفاعلية (Player Detail Modal)
+window.openPlayerDetailModal = (athleteId, teamId) => {
+    const modal = document.getElementById('playerDetailModal');
+    const body = document.getElementById('playerModalBody');
+    if (!modal || !body || !currentActiveStatsData) return;
+
+    const rosters = currentActiveStatsData.rosters || [];
+    let foundPlayer = null;
+    let foundTeam = null;
+
+    for (const r of rosters) {
+        if (teamId && String(r.team?.id) !== String(teamId)) continue;
+        const pl = (r.roster || []).find(p => String(p.athlete?.id) === String(athleteId) || String(p.jersey) === String(athleteId));
+        if (pl) {
+            foundPlayer = pl;
+            foundTeam = r.team;
+            break;
+        }
+    }
+
+    if (!foundPlayer) {
+        for (const r of rosters) {
+            const pl = (r.roster || []).find(p => String(p.athlete?.id) === String(athleteId));
+            if (pl) {
+                foundPlayer = pl;
+                foundTeam = r.team;
+                break;
+            }
+        }
+    }
+
+    if (!foundPlayer) return;
+
+    const ath = foundPlayer.athlete || {};
+    const name = ath.displayName || ath.fullName || 'لاعب';
+    const jersey = foundPlayer.jersey || ath.jersey || '–';
+    const pos = translatePosition(foundPlayer.position?.displayName || foundPlayer.position?.name);
+    const headshot = getPlayerHeadshotUrl(foundPlayer);
+    const teamName = foundTeam?.displayName || 'الفريق';
+    const defaultShield = 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/default-team-logo-500.png';
+    const teamLogo = (typeof window.getTeamLogoUrl === 'function' ? window.getTeamLogoUrl(foundTeam, currentActiveStatsSport) : foundTeam?.logo) || defaultShield;
+
+    const isStarter = foundPlayer.starter !== false;
+    const isSubbedIn = foundPlayer.subbedIn;
+    const isSubbedOut = foundPlayer.subbedOut;
+    let statusText = isStarter ? 'لاعب أساسي' : 'لاعب بديل';
+    if (isSubbedIn) statusText = 'بديل شارك باللقاء';
+    if (isSubbedOut) statusText = 'تم استبداله أثناء اللقاء';
+
+    // استخراج إحصائيات اللاعب في المباراة
+    const statsList = [];
+    if (Array.isArray(foundPlayer.stats)) {
+        const statLabels = {
+            totalGoals: { label: 'الأهداف', icon: '⚽' },
+            goalAssists: { label: 'صناعة الأهداف', icon: '👟' },
+            shotsOnTarget: { label: 'تسديدات على المرمى', icon: '🎯' },
+            totalShots: { label: 'إجمالي التسديدات', icon: '⚡' },
+            saves: { label: 'التصديات الناجحة', icon: '🧤' },
+            goalsConceded: { label: 'أهداف استقبلها', icon: '🥅' },
+            foulsCommitted: { label: 'أخطاء ارتكبها', icon: '⚠️' },
+            yellowCards: { label: 'بطاقات صفراء', icon: '🟨' },
+            redCards: { label: 'بطاقات حمراء', icon: '🟥' }
+        };
+        foundPlayer.stats.forEach(s => {
+            if (statLabels[s.name] && s.displayValue && s.displayValue !== '0') {
+                statsList.push({ ...statLabels[s.name], value: s.displayValue });
+            }
+        });
+    }
+
+    const espnLink = ath.links?.[0]?.href || '';
+
+    body.innerHTML = `
+        <div class="player-card-hero">
+            <div class="player-card-avatar-wrap">
+                ${headshot ? `
+                    <img src="${headshot}" alt="${name}" class="player-card-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                ` : ''}
+                <div class="pitch-player-fallback-num" style="${headshot ? 'display:none;' : 'display:flex; font-size:1.4rem;'}">${jersey}</div>
+            </div>
+            <div class="player-card-meta">
+                <div class="player-card-name">${name}</div>
+                <div class="player-card-tags">
+                    <span class="player-tag-pill pos">${pos}</span>
+                    <span class="player-tag-pill">قميص #${jersey}</span>
+                    <span class="player-tag-pill">${statusText}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; margin-top:4px; font-size:0.75rem; color:var(--text-muted); font-weight:800;">
+                    <img src="${teamLogo}" alt="" style="width:16px; height:16px; object-fit:contain;" onerror="this.onerror=null; this.src='${defaultShield}';">
+                    <span>${teamName}</span>
+                </div>
+            </div>
+        </div>
+
+        ${statsList.length > 0 ? `
+            <div style="font-size:0.78rem; font-weight:900; color:var(--text-main); margin-top:4px;">
+                📊 إحصائيات اللاعب خلال هذه المباراة:
+            </div>
+            <div class="player-stats-grid">
+                ${statsList.map(st => `
+                    <div class="player-stat-card">
+                        <span style="font-size:1.1rem;">${st.icon}</span>
+                        <span class="player-stat-val">${st.value}</span>
+                        <span class="player-stat-label">${st.label}</span>
+                    </div>
+                `).join('')}
+            </div>
+        ` : `
+            <div class="stats-empty-state" style="padding:16px 8px;">
+                <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700;">
+                    لم تُسجل أهداف أو تسديدات أو بطاقات لهذا اللاعب خلال المباراة بعد.
+                </div>
+            </div>
+        `}
+
+        ${espnLink ? `
+            <a href="${espnLink}" target="_blank" rel="noopener noreferrer" class="news-source-btn" style="margin-top:6px; justify-content:center;">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <span>عرض الملف الشخصي الكامل للاعب على ESPN</span>
+            </a>
+        ` : ''}
+    `;
+
+    modal.style.display = 'flex';
+    requestAnimationFrame(() => {
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+    });
+
+    if (typeof window.pushModalHistory === 'function') {
+        window.pushModalHistory('playerDetailModal', () => window.closePlayerDetailModal(true));
+    }
+};
+
+window.closePlayerDetailModal = (fromPopState = false) => {
+    const modal = document.getElementById('playerDetailModal');
+    if (modal) {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        setTimeout(() => { modal.style.display = 'none'; }, 220);
+    }
+    if (!fromPopState && typeof window.popModalHistory === 'function') {
+        window.popModalHistory('playerDetailModal');
+    }
+};
+
 // التبويب 1 (الرئيسي): الملخص الشامل للمباراة (Summary Tab)
 const renderSummaryTab = (data, container) => {
     const comp = data.header?.competitions?.[0] || {};
@@ -381,7 +566,6 @@ const renderSummaryTab = (data, container) => {
     const matchTitle = `${homeName} ضد ${awayName}`;
     const isLive = comp.status?.type?.state === 'in';
 
-    // 1. استخراج الأهداف ومسجليها إن وُجدت
     const rawEvents = data.keyEvents || data.plays || comp.details || [];
     const goalEvents = rawEvents.filter(e => {
         const text = e.text || e.shortText || '';
@@ -418,7 +602,6 @@ const renderSummaryTab = (data, container) => {
         `;
     }
 
-    // 2. مقارنة سريعة لـ 3 مؤشرات أداء رئيسية إن وُجدت
     const boxscoreTeams = data.boxscore?.teams || [];
     let quickDuelHtml = '';
     if (Array.isArray(boxscoreTeams) && boxscoreTeams.length >= 2) {
@@ -492,7 +675,6 @@ const renderSummaryTab = (data, container) => {
         }
     }
 
-    // 3. سجل آخر المباريات (Form) إن وُجد
     let formHtml = '';
     const lastFive = data.lastFiveGames || [];
     if (lastFive.length >= 2) {
@@ -523,7 +705,6 @@ const renderSummaryTab = (data, container) => {
         `;
     }
 
-    // 4. بطاقات الانتقال السريع للأقسام
     const shortcutsHtml = `
         <div class="summary-card">
             <div class="summary-card-title">
@@ -586,12 +767,10 @@ const openMatchStats = async (eventId, leagueCode) => {
     currentActiveStatsEventId = eventId;
     window.currentActiveStatsEventId = eventId;
     currentActiveStatsSport = window.currentSport || 'soccer';
-    currentActiveStatsTab = 'statsTabSummary'; // الافتراضي دائماً هو تبويب الملخص الشامل
+    currentActiveStatsTab = 'statsTabSummary';
 
-    // العثور على بيانات اللقاء من الذاكرة الحية أولاً
     const foundEv = (window.loadedMatchesEvents || []).find(e => e.id === eventId);
 
-    // استخراج كود الدوري الدقيق لتجنب طلب soccer/all/summary الذي قد يعيد 404
     let resolvedLeague = (leagueCode && leagueCode !== 'all' && leagueCode !== 'unknown') ? leagueCode : '';
     if (!resolvedLeague && foundEv) {
         const uidMatch = (foundEv.uid || '').match(/~l:([^~]+)/);
@@ -606,7 +785,6 @@ const openMatchStats = async (eventId, leagueCode) => {
     if (!resolvedLeague) resolvedLeague = 'all';
     currentActiveStatsLeague = resolvedLeague;
 
-    // تفعيل تبويب الملخص بالزر العلوي
     document.querySelectorAll('.stats-tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset?.tab === 'statsTabSummary');
     });
@@ -620,7 +798,6 @@ const openMatchStats = async (eventId, leagueCode) => {
         window.pushModalHistory('matchStatsModal', () => closeMatchStats(true));
     }
 
-    // إذا كانت المباراة متوفرة في الذاكرة، نعرض فوراً الهيدر والنتيجة اللحظية
     if (foundEv) {
         const initialData = {
             header: {
@@ -653,7 +830,7 @@ const openMatchStats = async (eventId, leagueCode) => {
             <div class="stats-loading-box" style="text-align:center; padding:35px 16px; color:var(--text-muted);">
                 <div class="match-spinner"></div>
                 <div style="font-size:0.85rem; font-weight:800; color:var(--text-main); margin-top:10px;">جاري استخراج تفاصيل وإحصائيات المباراة اللحظية...</div>
-                <div style="font-size:0.72rem; margin-top:4px; opacity:0.8;">الملخص • التشكيلات • أبرز الأحداث • التعليق المباشر</div>
+                <div style="font-size:0.72rem; margin-top:4px; opacity:0.8;">الملخص • التشكيلات • صور اللاعبين • أبرز الأحداث</div>
             </div>
         `;
     }
@@ -753,7 +930,6 @@ const renderMatchSummary = (data) => {
         ? window.formatLiveMinuteHTML(parsedMinute)
         : (parsedMinute || (isLive ? 'مباشر' : (isFinished ? 'انتهت' : 'قريباً')));
 
-    // تحديث ترويسة النافذة المنبثقة
     const leagueMeta = (typeof window.MAJOR_LEAGUES !== 'undefined' ? window.MAJOR_LEAGUES : (typeof MAJOR_LEAGUES !== 'undefined' ? MAJOR_LEAGUES : [])).find(l => l.code === currentActiveStatsLeague) || { name: 'رياضة', flag: '⚽' };
     const leagueLogoEl = document.getElementById('statsLeagueLogo');
     const leagueFlagEl = document.getElementById('statsLeagueFlag');
@@ -794,6 +970,10 @@ const renderActiveStatsTabPane = () => {
     const data = currentActiveStatsData;
     const sheetBody = document.getElementById('statsSheetBody');
     if (!sheetBody || !data) return;
+
+    sheetBody.classList.remove('tab-switching');
+    void sheetBody.offsetWidth;
+    sheetBody.classList.add('tab-switching');
 
     if (currentActiveStatsTab === 'statsTabSummary') {
         renderSummaryTab(data, sheetBody);
@@ -998,7 +1178,6 @@ const renderEventsTab = (data, container) => {
         return;
     }
 
-    // تصفية الأحداث لاستبعاد التأخيرات غير الهامة مثل تأخر الإصابة
     const filteredEvents = rawEvents.filter(e => {
         const text = (e.text || e.shortText || '').toLowerCase();
         const typeType = (e.type?.type || e.type?.text || '').toLowerCase();
@@ -1006,7 +1185,6 @@ const renderEventsTab = (data, container) => {
         return true;
     });
 
-    // ترجمة وتحديد علامات فترات المباراة (Period Markers)
     const getPeriodMarker = (e) => {
         const typeType = (e.type?.type || e.type?.text || '').toLowerCase();
         const text = (e.text || e.shortText || '').toLowerCase();
@@ -1065,13 +1243,11 @@ const renderEventsTab = (data, container) => {
             icon = '📺';
         }
 
-        // اسم اللاعب المستهدف
         const athleteName = e.participants?.[0]?.athlete?.displayName || '';
         if (athleteName && !eventHeadline.includes(athleteName)) {
             eventHeadline = `${athleteName} - ${eventHeadline}`;
         }
 
-        // تحديد الفريق: هل هو المضيف أم الضيف؟
         const teamIdStr = String(e.team?.id || '');
         const homeIdStr = String(home.id || home.team?.id || '');
         const awayIdStr = String(away.id || away.team?.id || '');
@@ -1087,10 +1263,9 @@ const renderEventsTab = (data, container) => {
         }
 
         if (!isHome && !isAway) {
-            // فحص من خلال النص
             if (text.toLowerCase().includes(homeName.toLowerCase())) isHome = true;
             else if (text.toLowerCase().includes(awayName.toLowerCase())) isAway = true;
-            else isHome = true; // افتراضي للجانب الأيمن
+            else isHome = true;
         }
 
         const homeEventHtml = isHome ? `
@@ -1127,7 +1302,6 @@ const renderEventsTab = (data, container) => {
     container.innerHTML = `
         ${miniStrip}
         <div class="split-timeline-container">
-            <!-- ترويسة الفريقين المثبتة بالأعلى لتحديد جانبي الشاشة -->
             <div class="split-timeline-header">
                 <div class="split-team-header home" title="${homeName}">
                     <img src="${homeLogo}" alt="" class="split-team-crest" onerror="this.onerror=null; this.src='${defaultTeamShield}';">
@@ -1142,7 +1316,6 @@ const renderEventsTab = (data, container) => {
                 </div>
             </div>
 
-            <!-- مجسم الخط الزمني المقسم يميناً ويساراً -->
             <div class="split-timeline-body">
                 <div class="split-timeline-axis-line"></div>
                 ${timelineRowsHtml}
@@ -1207,7 +1380,6 @@ const buildTeamPitchLines = (roster, isAway = false) => {
     const starters = allPlayers.filter(p => p.starter !== false && !p.subbedIn);
     const active = starters.length >= 11 ? starters.slice(0, 11) : allPlayers.slice(0, 11);
 
-    // البحث عن حارس المرمى
     const gk = active.find(p => {
         const pos = (p.position?.name || p.position?.abbreviation || '').toUpperCase();
         return pos.includes('GOAL') || pos.includes('GK') || pos.includes('حارس');
@@ -1234,15 +1406,13 @@ const buildTeamPitchLines = (roster, isAway = false) => {
     }
 
     if (isAway) {
-        // فريق الضيف: أعلى الملعب متجهاً للمنتصف (GK -> DEF -> MID -> ATT)
         return [[gk], ...lines];
     } else {
-        // فريق المضيف: أسفل الملعب متجهاً للمنتصف (ATT -> MID -> DEF -> GK)
         return [...lines.reverse(), [gk]];
     }
 };
 
-// التبويب 5: التشكيلة والخطط التكتيكية على ملعب كامل 11 ضد 11 (Full Tactical Pitch)
+// التبويب 5: التشكيلة والخطط التكتيكية على ملعب كامل 11 ضد 11 مع صور وجوه اللاعبين (Full Tactical Pitch & Player Headshots)
 const renderLineupsTab = (data, container) => {
     const comp = data.header?.competitions?.[0] || {};
     const competitors = comp.competitors || [];
@@ -1287,12 +1457,11 @@ const renderLineupsTab = (data, container) => {
     const homeSubs = (homeRoster.roster || []).filter(p => p.starter === false || p.subbedIn);
     const awaySubs = (awayRoster.roster || []).filter(p => p.starter === false || p.subbedIn);
 
-    // خطوط لاعبي الفريقين
-    const awayLines = buildTeamPitchLines(awayRoster, true);  // الضيف في النصف العلوي
-    const homeLines = buildTeamPitchLines(homeRoster, false); // المضيف في النصف السفلي
+    const awayLines = buildTeamPitchLines(awayRoster, true);
+    const homeLines = buildTeamPitchLines(homeRoster, false);
 
-    // توليد HTML عقد اللاعبين على الملعب
-    const renderLinesHtml = (lines, isAwayHalf) => {
+    // توليد HTML عقد اللاعبين على الملعب متضمنة صور الوجوه (Player Headshots) والشارات
+    const renderLinesHtml = (lines, isAwayHalf, teamId) => {
         return lines.map(line => {
             const nodes = line.map(p => {
                 if (!p) return '';
@@ -1302,13 +1471,19 @@ const renderLineupsTab = (data, container) => {
                 const pos = (p.position?.name || p.position?.abbreviation || '').toUpperCase();
                 const isGk = pos.includes('GOAL') || pos.includes('GK') || pos.includes('حارس');
                 const isCaptain = p.captain || false;
+                const headshot = getPlayerHeadshotUrl(p);
 
                 const shirtCls = isGk ? 'shirt-gk' : (isAwayHalf ? 'shirt-away' : 'shirt-home');
+                const safeAthId = ath.id || num;
 
                 return `
-                    <div class="pitch-player-node" title="${name} (#${num}) - ${p.position?.name || ''}">
-                        <div class="pitch-player-shirt ${shirtCls}">
-                            ${num}
+                    <div class="pitch-player-node" onclick="window.openPlayerDetailModal('${safeAthId}', '${teamId}')" title="${name} (#${num}) - انقر لعرض بطاقة وإحصائيات اللاعب">
+                        <div class="pitch-player-avatar-wrap ${shirtCls}">
+                            ${headshot ? `
+                                <img src="${headshot}" alt="${name}" class="pitch-player-headshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">
+                            ` : ''}
+                            <div class="pitch-player-fallback-num" style="${headshot ? 'display:none;' : 'display:flex;'}">${num}</div>
+                            <span class="pitch-player-jersey-pill">${num}</span>
                             ${isCaptain ? '<span class="pitch-captain-badge" title="قائد الفريق">C</span>' : ''}
                         </div>
                         <span class="pitch-player-name">${name}</span>
@@ -1319,13 +1494,12 @@ const renderLineupsTab = (data, container) => {
         }).join('');
     };
 
-    const awayHalfHtml = renderLinesHtml(awayLines, true);
-    const homeHalfHtml = renderLinesHtml(homeLines, false);
+    const awayHalfHtml = renderLinesHtml(awayLines, true, away.id || away.team?.id);
+    const homeHalfHtml = renderLinesHtml(homeLines, false, home.id || home.team?.id);
 
     container.innerHTML = `
         ${miniStrip}
         <div class="full-pitch-container-wrap">
-            <!-- ترويسة الفريقين والخطط التكتيكية -->
             <div class="full-pitch-header">
                 <div class="full-pitch-team-meta" title="${homeName}">
                     <img src="${homeLogo}" alt="" class="full-pitch-team-crest" onerror="this.onerror=null; this.src='${defaultTeamShield}';">
@@ -1340,9 +1514,7 @@ const renderLineupsTab = (data, container) => {
                 </div>
             </div>
 
-            <!-- ملعب كرة القدم الكامل (Full Soccer Pitch - 11 vs 11) -->
             <div class="full-tactical-pitch">
-                <!-- علامات وتخطيط الملعب الكامل -->
                 <div class="pitch-penalty-area-top"></div>
                 <div class="pitch-goal-area-top"></div>
                 <div class="pitch-penalty-spot-top"></div>
@@ -1357,20 +1529,16 @@ const renderLineupsTab = (data, container) => {
                 <div class="pitch-penalty-spot-bottom"></div>
                 <div class="pitch-penalty-arc-bottom"></div>
 
-                <!-- النصف العلوي: تشكيلة فريق الضيف (Away Team) متجهاً لأسفل -->
                 <div class="pitch-half-away">
                     ${awayHalfHtml}
                 </div>
 
-                <!-- النصف السفلي: تشكيلة فريق المضيف (Home Team) متجهاً لأعلى -->
                 <div class="pitch-half-home">
                     ${homeHalfHtml}
                 </div>
             </div>
 
-            <!-- دكة البدلاء المزدوجة جنباً إلى جنب والمديران الفنيان -->
             <div class="lineup-dual-bench">
-                <!-- دكة بدلاء المضيف (يمين) -->
                 <div class="bench-col">
                     <div class="bench-col-title">
                         <span style="color:#3b82f6;">● بدلاء ${homeName}</span>
@@ -1382,9 +1550,18 @@ const renderLineupsTab = (data, container) => {
                             const name = ath.displayName || 'لاعب';
                             const num = ath.jersey || p.jersey || '–';
                             const pos = ath.position?.abbreviation || 'SUB';
+                            const headshot = getPlayerHeadshotUrl(p);
+                            const safeAthId = ath.id || num;
+
                             return `
-                                <div class="bench-player-row">
+                                <div class="bench-player-row" onclick="window.openPlayerDetailModal('${safeAthId}', '${home.id || home.team?.id}')" title="انقر لعرض بطاقة وإحصائيات اللاعب">
                                     <div class="bench-player-info">
+                                        <div class="bench-player-thumb-wrap">
+                                            ${headshot ? `
+                                                <img src="${headshot}" class="bench-player-thumb" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">
+                                            ` : ''}
+                                            <span class="bench-player-fallback-icon" style="${headshot ? 'display:none;' : 'display:flex;'}"><i class="fa-solid fa-user"></i></span>
+                                        </div>
                                         <span class="bench-player-num">${num}</span>
                                         <span class="bench-player-name">${name}</span>
                                     </div>
@@ -1399,7 +1576,6 @@ const renderLineupsTab = (data, container) => {
                     </div>
                 </div>
 
-                <!-- دكة بدلاء الضيف (يسار) -->
                 <div class="bench-col">
                     <div class="bench-col-title">
                         <span style="color:#10b981;">● بدلاء ${awayName}</span>
@@ -1411,9 +1587,18 @@ const renderLineupsTab = (data, container) => {
                             const name = ath.displayName || 'لاعب';
                             const num = ath.jersey || p.jersey || '–';
                             const pos = ath.position?.abbreviation || 'SUB';
+                            const headshot = getPlayerHeadshotUrl(p);
+                            const safeAthId = ath.id || num;
+
                             return `
-                                <div class="bench-player-row">
+                                <div class="bench-player-row" onclick="window.openPlayerDetailModal('${safeAthId}', '${away.id || away.team?.id}')" title="انقر لعرض بطاقة وإحصائيات اللاعب">
                                     <div class="bench-player-info">
+                                        <div class="bench-player-thumb-wrap">
+                                            ${headshot ? `
+                                                <img src="${headshot}" class="bench-player-thumb" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">
+                                            ` : ''}
+                                            <span class="bench-player-fallback-icon" style="${headshot ? 'display:none;' : 'display:flex;'}"><i class="fa-solid fa-user"></i></span>
+                                        </div>
                                         <span class="bench-player-num">${num}</span>
                                         <span class="bench-player-name">${name}</span>
                                     </div>
@@ -1943,7 +2128,58 @@ window.switchStatsTab = (tabId) => {
     renderActiveStatsTabPane();
 };
 
-// مستمعات أحداث نافذة تفاصيل المباراة
+// ==================== ميزة التنقل بالسحب يميناً ويساراً (Swipe Navigation) ====================
+let touchStartX = 0;
+let touchStartY = 0;
+let touchStartTime = 0;
+
+const attachStatsSwipeListeners = () => {
+    const sheet = document.querySelector('.match-stats-sheet');
+    if (!sheet) return;
+
+    sheet.addEventListener('touchstart', (e) => {
+        // تجنب اعتراض السحب إذا كان المستخدم يمرر في شريط التبويبات نفسه أو في جدول الترتيب
+        if (e.target.closest('.stats-tabs-bar') || e.target.closest('.standings-table-wrap') || e.target.closest('.tactical-pitch')) {
+            touchStartTime = 0;
+            return;
+        }
+        if (!e.touches || e.touches.length !== 1) return;
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchStartTime = Date.now();
+    }, { passive: true });
+
+    sheet.addEventListener('touchend', (e) => {
+        if (!touchStartTime) return;
+        if (!e.changedTouches || e.changedTouches.length !== 1) return;
+        const touch = e.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        const elapsed = Date.now() - touchStartTime;
+        touchStartTime = 0;
+
+        // التأكد من أن الإيماءة أفقية وحاسمة وليست تمريراً رأسياً
+        if (elapsed < 650 && Math.abs(deltaX) >= 42 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
+            const currentIdx = STATS_TABS_LIST.indexOf(currentActiveStatsTab);
+            if (currentIdx !== -1) {
+                if (deltaX < 0) {
+                    // سحب نحو اليسار: انتقال للتبويب التالي في القائمة
+                    if (currentIdx < STATS_TABS_LIST.length - 1) {
+                        window.switchStatsTab(STATS_TABS_LIST[currentIdx + 1]);
+                    }
+                } else {
+                    // سحب نحو اليمين: رجوع للتبويب السابق
+                    if (currentIdx > 0) {
+                        window.switchStatsTab(STATS_TABS_LIST[currentIdx - 1]);
+                    }
+                }
+            }
+        }
+    }, { passive: true });
+};
+
+// مستمعات أحداث نافذة تفاصيل المباراة ونافذة اللاعب
 const statsModalEl = document.getElementById('matchStatsModal');
 if (statsModalEl) {
     document.getElementById('closeStatsModalBtn')?.addEventListener('click', () => closeMatchStats(false));
@@ -1957,6 +2193,18 @@ if (statsModalEl) {
             const targetTab = btn.dataset?.tab || 'statsTabSummary';
             window.switchStatsTab(targetTab);
         });
+    });
+
+    attachStatsSwipeListeners();
+}
+
+// مستمعات نافذة اللاعب المنبثقة
+const playerModalEl = document.getElementById('playerDetailModal');
+if (playerModalEl) {
+    document.getElementById('closePlayerModalBtn')?.addEventListener('click', () => window.closePlayerDetailModal(false));
+    document.getElementById('closePlayerModalX')?.addEventListener('click', () => window.closePlayerDetailModal(false));
+    playerModalEl.addEventListener('click', (e) => {
+        if (e.target === playerModalEl) window.closePlayerDetailModal(false);
     });
 }
 

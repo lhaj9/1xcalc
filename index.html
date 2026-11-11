@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="./css/calculator.css?v=b-calc-7">
     <link rel="stylesheet" href="./css/slips.css?v=b-calc-7">
     <link rel="stylesheet" href="./css/matches.css?v=b-calc-7">
-    <link rel="stylesheet" href="./css/modals.css?v=b-calc-8">
+    <link rel="stylesheet" href="./css/modals.css?v=b-calc-9">
 </head>
 
 <body>
@@ -1129,6 +1129,27 @@
         </div>
     </div>
 
+    <!-- ==================== نافذة بطاقة تفاصيل اللاعب المنبثقة (Player Details Bottom Sheet Modal) ==================== -->
+    <div class="modal-overlay" id="playerDetailModal" aria-hidden="true" style="display: none;">
+        <div class="modal-sheet player-detail-sheet">
+            <div class="stats-sheet-header">
+                <button type="button" class="stats-top-back-btn" id="closePlayerModalBtn" title="الرجوع">
+                    <i class="fa-solid fa-arrow-right"></i>
+                    <span>الرجوع</span>
+                </button>
+                <div class="stats-header-info">
+                    <span class="news-modal-top-title"><i class="fa-solid fa-id-card" style="color:var(--accent-primary);"></i> بطاقة تفاصيل اللاعب</span>
+                </div>
+                <div class="stats-header-actions">
+                    <button type="button" class="stats-header-close-x" id="closePlayerModalX" title="إغلاق">✕</button>
+                </div>
+            </div>
+            <div class="player-modal-body" id="playerModalBody">
+                <!-- يتم تعبئة محتوى وتفاصيل اللاعب برمجياً -->
+            </div>
+        </div>
+    </div>
+
     <!-- ==================== نافذة تفاصيل الخبر الرياضي المنبثقة (News Detail Bottom Sheet Modal) ==================== -->
     <div class="modal-overlay" id="newsDetailModal" aria-hidden="true" style="display: none;">
         <div class="modal-sheet news-detail-sheet">
@@ -1164,7 +1185,7 @@
     <script src="./js/calculator.js?v=48"></script>
     <script src="./js/slips.js?v=48"></script>
     <script src="./js/matches.js?v=49"></script>
-    <script src="./js/match-details.js?v=49"></script>
+    <script src="./js/match-details.js?v=50"></script>
     <script src="./js/calendar.js?v=48"></script>
     <script src="./js/app.js?v=48"></script>
 </body>
