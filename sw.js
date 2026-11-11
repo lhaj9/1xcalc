@@ -1,4 +1,4 @@
-const CACHE_NAME = 'arb-calc-pwa-v45';
+const CACHE_NAME = 'b-calc-pwa-v2';
 const ASSETS = [
     './',
     './index.html',
@@ -6,11 +6,16 @@ const ASSETS = [
     './README.md',
     './favicon.ico',
     './favicon.png',
+    './apple-touch-icon.png',
     './icon-192.png',
     './icon-512.png',
-    './apple-touch-icon.png',
     './icon-192.webp',
     './icon-512.webp',
+    './icon-maskable-192.png',
+    './icon-maskable-512.png',
+    './icon-maskable-192.webp',
+    './icon-maskable-512.webp',
+    './LOGO/LOGO.png',
     './css/variables.css',
     './css/base.css',
     './css/calculator.css',
@@ -45,7 +50,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    // استراتيجية Network-First للملفات المحلية للتأكد من وصول التحديثات للهواتف فور النشر
+    // استراتيجية Network-First للملفات المحلية لضمان التحديث اللحظي مع الجاهزية التامة للعمل دون اتصال
     if (event.request.method === 'GET' && event.request.url.startsWith(self.location.origin)) {
         event.respondWith(
             fetch(event.request)

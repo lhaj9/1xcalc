@@ -1,5 +1,5 @@
 /* ==================== APP SHELL, NAVIGATION & SPLASH SCREEN ==================== */
-        /* ==================== 1XBET APP HEADER (FIXED/STICKY MOBILE APP BAR) ==================== */
+        /* ==================== B-CALC APP HEADER (FIXED/STICKY MOBILE APP BAR) ==================== */
         .app-header {
             position: -webkit-sticky;
             position: sticky;
@@ -21,7 +21,7 @@
         .brand-area {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             direction: ltr !important;
             unicode-bidi: isolate;
         }
@@ -29,13 +29,14 @@
         .brand-app-icon {
             width: 32px;
             height: 32px;
-            border-radius: 9px;
+            border-radius: 8px;
             object-fit: contain;
-            box-shadow: 0 3px 10px rgba(104, 28, 251, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+            display: block;
         }
 
-        .brand-1xbet {
+        .brand-1xbet,
+        .brand-title-wrap {
             display: inline-flex;
             align-items: center;
             direction: ltr !important;
@@ -48,11 +49,13 @@
             user-select: none;
         }
 
-        .brand-1xbet .logo-1x {
+        .brand-1xbet .logo-1x,
+        .brand-title-wrap .brand-b {
             color: var(--accent-primary);
         }
 
-        .brand-1xbet .logo-bet {
+        .brand-1xbet .logo-bet,
+        .brand-title-wrap .brand-calc {
             color: var(--green-accent);
         }
 
@@ -99,7 +102,7 @@
             color: var(--accent-primary);
         }
 
-        /* ==================== 1XBET QUICK ACTION BUTTONS ==================== */
+        /* ==================== QUICK ACTION BUTTONS ==================== */
         .quick-action-bar {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -145,7 +148,7 @@
             transform: scale(0.96);
         }
 
-        /* ==================== 1XBET CATEGORY PILLS (SCROLLABLE) ==================== */
+        /* ==================== CATEGORY PILLS (SCROLLABLE) ==================== */
         .category-pills-bar {
             display: flex;
             gap: 8px;
@@ -226,7 +229,7 @@
             }
         }
 
-        /* ==================== 1XBET BOTTOM NAVIGATION BAR ==================== */
+        /* ==================== BOTTOM NAVIGATION BAR ==================== */
         .bottom-nav-bar {
             position: fixed;
             bottom: 0;
@@ -291,7 +294,7 @@
             letter-spacing: -0.2px;
         }
 
-        /* زر القسائم البارز في المنتصف (1XBET BET SLIP FAB) */
+        /* زر القسائم البارز في المنتصف (BET SLIP FAB) */
         .bottom-nav-item.item-betslip {
             position: relative;
             overflow: visible;
@@ -498,7 +501,7 @@
         }
 
 
-        /* ==================== شاشة البداية الرياضية الأنيقة (1XCALC SPLASH SCREEN) ==================== */
+        /* ==================== شاشة البداية الرياضية الأنيقة (B-CALC SPLASH SCREEN) ==================== */
         .splash-screen-overlay {
             position: fixed;
             inset: 0;
@@ -590,7 +593,8 @@
             unicode-bidi: isolate;
         }
 
-        .splash-logo-1x {
+        .splash-logo-1x,
+        .splash-logo-b {
             color: #2575fc;
         }
 
@@ -668,4 +672,4 @@
             text-transform: uppercase;
             box-shadow: 0 3px 12px rgba(251, 191, 36, 0.12);
         }
-
+

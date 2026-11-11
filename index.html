@@ -9,9 +9,11 @@
     <!-- إعدادات PWA وتطبيق الآيفون -->
     <link rel="manifest" href="./manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
+    <title>B-Calc</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="1XCALC">
+    <meta name="apple-mobile-web-app-title" content="B-Calc">
+    <meta name="application-name" content="B-Calc">
 
     <!-- أيقونات الموقع والتطبيق للشاشات المختلفة (Favicon & PWA Icons) -->
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
@@ -23,17 +25,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- تنسيقات المشروع المنظمة (Modular CSS Architecture) -->
-    <link rel="stylesheet" href="./css/variables.css?v=43">
-    <link rel="stylesheet" href="./css/base.css?v=43">
-    <link rel="stylesheet" href="./css/calculator.css?v=43">
-    <link rel="stylesheet" href="./css/slips.css?v=43">
-    <link rel="stylesheet" href="./css/matches.css?v=43">
-    <link rel="stylesheet" href="./css/modals.css?v=43">
+    <link rel="stylesheet" href="./css/variables.css?v=b-calc-2">
+    <link rel="stylesheet" href="./css/base.css?v=b-calc-2">
+    <link rel="stylesheet" href="./css/calculator.css?v=b-calc-2">
+    <link rel="stylesheet" href="./css/slips.css?v=b-calc-2">
+    <link rel="stylesheet" href="./css/matches.css?v=b-calc-2">
+    <link rel="stylesheet" href="./css/modals.css?v=b-calc-2">
 </head>
 
 <body>
 
-    <!-- ==================== شاشة البداية الرياضية الأنيقة (1XCALC SPLASH SCREEN) ==================== -->
+    <!-- ==================== شاشة البداية الرياضية الأنيقة (B-CALC SPLASH SCREEN) ==================== -->
     <div id="appSplashScreen" class="splash-screen-overlay">
         <div class="splash-content-box">
             <!-- كرة القدم المتحركة مع الظل التفاعلي -->
@@ -42,10 +44,9 @@
                 <div class="splash-ball-shadow"></div>
             </div>
 
-            <!-- اسم الموقع نصياً دون أي شعار صورة -->
+            <!-- اسم الموقع الرسمي B-Calc -->
             <div class="splash-brand-title" dir="ltr">
-                <span class="splash-logo-1x">1X</span><span class="splash-logo-calc">CALC</span>
-                <span class="splash-pro-badge">PRO</span>
+                <span class="splash-logo-b">B</span><span class="splash-logo-calc">-Calc</span>
             </div>
 
             <!-- نص التحميل وشريط التقدم الديناميكي -->
@@ -71,9 +72,11 @@
         <!-- إشعار التثبيت الذكي -->
         <div class="install-banner" id="firstVisitInstallBanner">
             <div class="install-banner-info">
-                <div class="install-banner-icon">📲</div>
+                <div class="install-banner-icon">
+                    <img src="./icon-192.png" alt="B-Calc" class="install-banner-logo">
+                </div>
                 <div class="install-banner-text">
-                    <h4>تثبيت التطبيق على هاتفك</h4>
+                    <h4>تثبيت تطبيق B-Calc على هاتفك</h4>
                     <p>يعمل بشاشة كاملة وبدون إنترنت بضغطة واحدة</p>
                 </div>
             </div>
@@ -83,14 +86,13 @@
             </div>
         </div>
 
-        <!-- هيدر تطبيق 1XCALC المستوحى من 1xBet -->
+        <!-- هيدر تطبيق B-Calc -->
         <header class="app-header">
-            <div class="brand-area" dir="ltr">
-                <img src="./icon-192.png" alt="1XCALC Logo" class="brand-app-icon">
-                <span class="brand-1xbet" dir="ltr">
-                    <span class="logo-1x">1X</span><span class="logo-bet">CALC</span>
+            <div class="brand-area" dir="ltr" aria-label="B-CALC">
+                <img src="./icon-192.png" alt="B" class="brand-app-icon">
+                <span class="brand-title-wrap" dir="ltr">
+                    <span class="brand-calc">-CALC</span>
                 </span>
-                <span class="brand-pro-tag">PRO</span>
             </div>
             <div class="header-actions">
                 <button class="icon-btn" id="themeQuickBtn" title="تبديل المظهر">
@@ -109,7 +111,7 @@
 
         <!-- ==================== التبويب الأول: التغطية الثنائية الآنية ==================== -->
         
-        <!-- ==================== التبويب الأول: مركز المباريات والأحداث المباشرة (1XBET Style Live & Matches Hub) ==================== -->
+        <!-- ==================== التبويب الأول: مركز المباريات والأحداث المباشرة (Live & Matches Hub) ==================== -->
         <section id="tabHome" class="tab-panel active">
             <!-- ==================== تصميم واجهة المباريات بأسلوب SofaScore الاحترافي ==================== -->
             <!-- 1. شريط العنوان العلوي وأزرار الإجراءات (Top Bar: Brand, Search Icon, Refresh) -->
@@ -270,7 +272,7 @@
 
 
 
-        <!-- ==================== التبويب الثاني: حاسبة الصفقات والتغطية (1XBET Style Calculator Hub) ==================== -->
+        <!-- ==================== التبويب الثاني: حاسبة الصفقات والتغطية (Calculator Hub) ==================== -->
         <section id="tabCalc" class="tab-panel">
             <!-- أزرار التبديل العلوية الاحترافية بين التغطية الآنية والمتأخرة -->
             <div class="calc-mode-switch-bar">
@@ -626,7 +628,7 @@
             <div id="slipsContainer"></div>
         </section>
 
-        <!-- ==================== التبويب الرابع: السجل والعمليات (1XBET Style History) ==================== -->
+        <!-- ==================== التبويب الرابع: السجل والعمليات (History Hub) ==================== -->
         <section id="tab4" class="tab-panel">
             <div class="card">
                 <div class="card-header">
@@ -644,7 +646,7 @@
             </div>
         </section>
 
-        <!-- ==================== التبويب الخامس: القائمة ولوحة التحكم (1XBET Style Menu) ==================== -->
+        <!-- ==================== التبويب الخامس: القائمة ولوحة التحكم (Menu Hub) ==================== -->
         <section id="tabMenu" class="tab-panel">
             <!-- كارت المظهر السريع مع زر سويتش فوري -->
             <div class="card menu-theme-card" id="menuThemeToggleBtn">
@@ -754,7 +756,7 @@
         </section>
     </div>
 
-    <!-- ==================== شريط التنقل السفلي الثابت (1XBET BOTTOM NAVIGATION BAR) ==================== -->
+    <!-- ==================== شريط التنقل السفلي الثابت (BOTTOM NAVIGATION BAR) ==================== -->
     <nav class="bottom-nav-bar" id="bottomNavBar">
         <button type="button" class="bottom-nav-item active" data-tab="tabHome" title="الرئيسية (مركز المباريات والأحداث)">
             <div class="nav-icon-wrap">
@@ -801,7 +803,7 @@
                     <span>📖 دليل وطريقة عمل التطبيق</span>
                 </div>
                 <div class="help-header-actions">
-                    <a href="https://github.com/lhaj9/1xcalc/blob/main/README.md" target="_blank"
+                    <a href="https://github.com/lhaj9/b-calc/blob/main/README.md" target="_blank"
                         rel="noopener noreferrer" class="github-ext-btn" title="فتح ملف الشرح على GitHub">
                         <span>🔗 GitHub</span>
                     </a>
@@ -947,7 +949,7 @@
                 <!-- يتم تعبئتها ديناميكياً بواسطة JavaScript -->
             </div>
 
-            <!-- شريط التبديل بين أقسام الإحصائيات والأحداث والتفاصيل (6 تبويبات عالمية 1XBET Style) -->
+            <!-- شريط التبديل بين أقسام الإحصائيات والأحداث والتفاصيل (6 تبويبات عالمية) -->
             <div class="stats-tabs-bar">
                 <button type="button" class="stats-tab-btn active" data-tab="statsTabOverview">
                     <i class="fa-solid fa-chart-column"></i>

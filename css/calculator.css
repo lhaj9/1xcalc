@@ -535,7 +535,7 @@
         }
 
 
-        /* ==================== 1XBET CALCULATOR MODE SWITCHER ==================== */
+        /* ==================== B-CALC CALCULATOR MODE SWITCHER ==================== */
         .calc-mode-switch-bar {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -578,4 +578,4 @@
             border-color: #059669;
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35);
         }
-
+

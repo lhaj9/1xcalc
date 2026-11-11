@@ -130,7 +130,7 @@
             }
             if (dateStr) text += `📅 الموعد: ${dateStr}\n`;
             if (venue) text += `🏟️ الملعب: ${venue}\n`;
-            text += `⚡ تم النسخ عبر تطبيق 1XCALC PRO`;
+            text += `⚡ تم النسخ عبر تطبيق B-Calc`;
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(() => {

@@ -1,4 +1,4 @@
-/* ==================== 1XCALC PRO DESIGN TOKENS & VARIABLES ==================== */
+/* ==================== B-CALC DESIGN TOKENS & VARIABLES ==================== */
         :root[data-theme="light"] {
             --bg-main: #f4f6fa;
             --bg-card: #ffffff;
@@ -7,7 +7,7 @@
             --text-main: #0e1726;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --accent-primary: #1055a4; /* أزرق 1xBet الملكي */
+            --accent-primary: #1055a4; /* أزرق B-Calc الملكي */
             --accent-hover: #0c4383;
             --accent-bg: rgba(16, 85, 164, 0.08);
             --blue-accent: #166fe5;
@@ -110,6 +110,13 @@
             gap: 10px;
         }
 
+        .install-banner-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: block;
+        }
+
         .install-banner-icon {
             width: 40px;
             height: 40px;
@@ -164,4 +171,4 @@
             align-items: center;
             justify-content: center;
         }
-
+

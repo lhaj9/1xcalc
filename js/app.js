@@ -391,7 +391,7 @@ const htmlEl = document.documentElement;
             const targetPanel = document.getElementById(tabId);
             if (targetPanel) targetPanel.classList.add('active');
 
-            // 2. تحديث الشريط السفلي 1xBet
+            // 2. تحديث الشريط السفلي
             document.querySelectorAll('.bottom-nav-item').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.tab === tabId);
             });

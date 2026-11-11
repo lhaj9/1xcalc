@@ -1,7 +1,7 @@
 // ==================== نظام التدويل واللغات (i18n Localization Engine) ====================
 const I18N_TRANSLATIONS = {
     ar: {
-        app_title: '1XCALC PRO',
+        app_title: 'B-Calc',
         live_now: 'مباشر الآن',
         upcoming_matches: 'المباريات القادمة والجدول',
         all_matches: 'جميع المباريات',
@@ -19,7 +19,7 @@ const I18N_TRANSLATIONS = {
         reset: 'تصفير'
     },
     en: {
-        app_title: '1XCALC PRO',
+        app_title: 'B-Calc',
         live_now: 'LIVE Now',
         upcoming_matches: 'Pre-match & Schedule',
         all_matches: 'All Matches',
@@ -37,7 +37,7 @@ const I18N_TRANSLATIONS = {
         reset: 'Reset'
     },
     fr: {
-        app_title: '1XCALC PRO',
+        app_title: 'B-Calc',
         live_now: 'En direct (LIVE)',
         upcoming_matches: 'Matchs à venir & Calendrier',
         all_matches: 'Tous les matchs',

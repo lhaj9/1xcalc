@@ -1,5 +1,5 @@
-/* ==================== 1XBET LIVE MATCHES & TOURNAMENTS HUB ==================== */
-        /* ==================== 1XBET LIVE MATCHES & EVENTS HUB ==================== */
+/* ==================== LIVE MATCHES & TOURNAMENTS HUB ==================== */
+        /* ==================== LIVE MATCHES & EVENTS HUB ==================== */
         .matches-header-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -896,7 +896,7 @@
         }
 
 
-        /* ==================== نظام التصفية والتحكم الزمني الاحترافي (1XBET LIVE & PRE-MATCH SWITCHER) ==================== */
+        /* ==================== نظام التصفية والتحكم الزمني الاحترافي (LIVE & PRE-MATCH SWITCHER) ==================== */
         .matches-status-switch {
             display: flex;
             background: var(--bg-card);
