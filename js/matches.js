@@ -5,61 +5,62 @@
     // قائمة الدوريات الكبرى والبطولات العالمية مع التغطية الشاملة
     const MAJOR_LEAGUES = [
         // بطولات ودوريات كرة القدم العالمية
-        { code: 'all', sport: 'soccer', name: 'كل بطولات كرة القدم (تغطية عالمية شاملة)', shortName: 'الكل', country: 'عالمي', region: 'world', logo: './icon-192.png', flagImg: '' },
-        { code: 'uefa.nations', sport: 'soccer', name: 'دوري الأمم الأوروبية (Nations League)', shortName: 'أمم أوروبا', country: 'أوروبا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2288.png', flagImg: 'https://flagcdn.com/w40/eu.png' },
+        { code: 'all', sport: 'soccer', name: 'كل بطولات كرة القدم (تغطية عالمية شاملة)', shortName: 'الكل', country: 'عالمي', region: 'world', logo: '', flagImg: '' },
+        { code: 'uefa.nations', sport: 'soccer', name: 'دوري الأمم الأوروبية (Nations League)', shortName: 'أمم أوروبا', country: 'أوروبا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2395.png', flagImg: 'https://flagcdn.com/w40/eu.png' },
         { code: 'uefa.champions', sport: 'soccer', name: 'دوري أبطال أوروبا (Champions League)', shortName: 'دوري الأبطال', country: 'أوروبا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2.png', flagImg: 'https://flagcdn.com/w40/eu.png' },
         { code: 'uefa.europa', sport: 'soccer', name: 'الدوري الأوروبي (Europa League)', shortName: 'اليوروبا ليغ', country: 'أوروبا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2310.png', flagImg: 'https://flagcdn.com/w40/eu.png' },
-        { code: 'uefa.europa.conf', sport: 'soccer', name: 'دوري المؤتمر الأوروبي (Conference League)', shortName: 'دوري المؤتمر', country: 'أوروبا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2288.png', flagImg: 'https://flagcdn.com/w40/eu.png' },
+        { code: 'uefa.europa.conf', sport: 'soccer', name: 'دوري المؤتمر الأوروبي (Conference League)', shortName: 'دوري المؤتمر', country: 'أوروبا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/20296.png', flagImg: 'https://flagcdn.com/w40/eu.png' },
         { code: 'eng.1', sport: 'soccer', name: 'الدوري الإنجليزي الممتاز (Premier League)', shortName: 'البريميرليغ', country: 'إنجلترا', region: 'england', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png', flagImg: 'https://flagcdn.com/w40/gb-eng.png' },
         { code: 'eng.2', sport: 'soccer', name: 'دوري البطولة الإنجليزية (Championship)', shortName: 'التشامبيونشيب', country: 'إنجلترا', region: 'england', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/24.png', flagImg: 'https://flagcdn.com/w40/gb-eng.png' },
-        { code: 'eng.fa', sport: 'soccer', name: 'كأس الاتحاد الإنجليزي (FA Cup)', shortName: 'كأس إنجلترا', country: 'إنجلترا', region: 'england', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png', flagImg: 'https://flagcdn.com/w40/gb-eng.png' },
+        { code: 'eng.fa', sport: 'soccer', name: 'كأس الاتحاد الإنجليزي (FA Cup)', shortName: 'كأس إنجلترا', country: 'إنجلترا', region: 'england', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/40.png', flagImg: 'https://flagcdn.com/w40/gb-eng.png' },
         { code: 'esp.1', sport: 'soccer', name: 'الدوري الإسباني (LaLiga)', shortName: 'لا ليغا', country: 'إسبانيا', region: 'spain', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png', flagImg: 'https://flagcdn.com/w40/es.png' },
-        { code: 'esp.copa_del_rey', sport: 'soccer', name: 'كأس ملك إسبانيا (Copa del Rey)', shortName: 'كأس الملك', country: 'إسبانيا', region: 'spain', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png', flagImg: 'https://flagcdn.com/w40/es.png' },
+        { code: 'esp.copa_del_rey', sport: 'soccer', name: 'كأس ملك إسبانيا (Copa del Rey)', shortName: 'كأس الملك', country: 'إسبانيا', region: 'spain', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/80.png', flagImg: 'https://flagcdn.com/w40/es.png' },
         { code: 'ita.1', sport: 'soccer', name: 'الدوري الإيطالي (Serie A)', shortName: 'سيريا A', country: 'إيطاليا', region: 'italy', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/12.png', flagImg: 'https://flagcdn.com/w40/it.png' },
         { code: 'ger.1', sport: 'soccer', name: 'الدوري الألماني (Bundesliga)', shortName: 'البوندسليغا', country: 'ألمانيا', region: 'germany', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/10.png', flagImg: 'https://flagcdn.com/w40/de.png' },
-        { code: 'ger.2', sport: 'soccer', name: 'الدوري الألماني الدرجة الثانية (2. Bundesliga)', shortName: 'البوندسليغا 2', country: 'ألمانيا', region: 'germany', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/10.png', flagImg: 'https://flagcdn.com/w40/de.png' },
+        { code: 'ger.2', sport: 'soccer', name: 'الدوري الألماني الدرجة الثانية (2. Bundesliga)', shortName: 'البوندسليغا 2', country: 'ألمانيا', region: 'germany', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/97.png', flagImg: 'https://flagcdn.com/w40/de.png' },
         { code: 'fra.1', sport: 'soccer', name: 'الدوري الفرنسي (Ligue 1)', shortName: 'ليغ 1', country: 'فرنسا', region: 'france', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/9.png', flagImg: 'https://flagcdn.com/w40/fr.png' },
-        { code: 'rus.1', sport: 'soccer', name: 'الدوري الروسي الممتاز (Russian Premier)', shortName: 'الدوري الروسي', country: 'روسيا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/3939.png', flagImg: 'https://flagcdn.com/w40/ru.png' },
+        { code: 'rus.1', sport: 'soccer', name: 'الدوري الروسي الممتاز (Russian Premier)', shortName: 'الدوري الروسي', country: 'روسيا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/106.png', flagImg: 'https://flagcdn.com/w40/ru.png' },
         { code: 'aus.1', sport: 'soccer', name: 'الدوري الأسترالي (A-League)', shortName: 'الدوري الأسترالي', country: 'أستراليا', region: 'asia', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1308.png', flagImg: 'https://flagcdn.com/w40/au.png' },
         { code: 'ksa.1', sport: 'soccer', name: 'دوري روشن السعودي (Roshn Saudi League)', shortName: 'دوري روشن', country: 'السعودية', region: 'saudi', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2488.png', flagImg: 'https://flagcdn.com/w40/sa.png' },
         { code: 'por.1', sport: 'soccer', name: 'الدوري البرتغالي (Primeira Liga)', shortName: 'البرتغالي', country: 'البرتغال', region: 'portugal', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/14.png', flagImg: 'https://flagcdn.com/w40/pt.png' },
         { code: 'ned.1', sport: 'soccer', name: 'الدوري الهولندي (Eredivisie)', shortName: 'الهولندي', country: 'هولندا', region: 'netherlands', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/11.png', flagImg: 'https://flagcdn.com/w40/nl.png' },
-        { code: 'tur.1', sport: 'soccer', name: 'الدوري التركي (Süper Lig)', shortName: 'التركي', country: 'تركيا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png', flagImg: 'https://flagcdn.com/w40/tr.png' },
+        { code: 'tur.1', sport: 'soccer', name: 'الدوري التركي (Süper Lig)', shortName: 'التركي', country: 'تركيا', region: 'europe', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/18.png', flagImg: 'https://flagcdn.com/w40/tr.png' },
         
         // بطولات ودوريات الأمريكتين
-        { code: 'col.1', sport: 'soccer', name: 'الدوري الكولومبي (Liga DIMAYOR)', shortName: 'كولومبيا', country: 'كولومبيا', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/650.png', flagImg: 'https://flagcdn.com/w40/co.png' },
+        { code: 'col.1', sport: 'soccer', name: 'الدوري الكولومبي (Liga DIMAYOR)', shortName: 'كولومبيا', country: 'كولومبيا', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1543.png', flagImg: 'https://flagcdn.com/w40/co.png' },
         { code: 'bra.1', sport: 'soccer', name: 'الدوري البرازيلي (Brasileirão Serie A)', shortName: 'البرازيل', country: 'البرازيل', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/85.png', flagImg: 'https://flagcdn.com/w40/br.png' },
         { code: 'arg.1', sport: 'soccer', name: 'الدوري الأرجنتيني (Liga Profesional)', shortName: 'الأرجنتين', country: 'الأرجنتين', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1.png', flagImg: 'https://flagcdn.com/w40/ar.png' },
         { code: 'mex.1', sport: 'soccer', name: 'الدوري المكسيكي (Liga BBVA MX)', shortName: 'المكسيك', country: 'المكسيك', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/22.png', flagImg: 'https://flagcdn.com/w40/mx.png' },
         { code: 'usa.1', sport: 'soccer', name: 'الدوري الأمريكي (MLS)', shortName: 'MLS', country: 'الولايات المتحدة', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/19.png', flagImg: 'https://flagcdn.com/w40/us.png' },
-        { code: 'conmebol.libertadores', sport: 'soccer', name: 'كوبا ليبرتادوريس (Copa Libertadores)', shortName: 'ليبرتادوريس', country: 'أمريكا الجنوبية', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2684.png', flagImg: 'https://flagcdn.com/w40/ar.png' },
-        { code: 'conmebol.sudamericana', sport: 'soccer', name: 'كوبا سود أمريكانا (Sudamericana)', shortName: 'سود أمريكانا', country: 'أمريكا الجنوبية', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2685.png', flagImg: 'https://flagcdn.com/w40/br.png' },
+        { code: 'conmebol.libertadores', sport: 'soccer', name: 'كوبا ليبرتادوريس (Copa Libertadores)', shortName: 'ليبرتادوريس', country: 'أمريكا الجنوبية', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/58.png', flagImg: 'https://flagcdn.com/w40/ar.png' },
+        { code: 'conmebol.sudamericana', sport: 'soccer', name: 'كوبا سود أمريكانا (Sudamericana)', shortName: 'سود أمريكانا', country: 'أمريكا الجنوبية', region: 'americas', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1208.png', flagImg: 'https://flagcdn.com/w40/br.png' },
 
         // بطولات كرة السلة
-        { code: 'all', sport: 'basketball', name: 'كل مباريات كرة السلة (NBA والمحترفين)', shortName: 'الكل', country: 'عالمي', region: 'world', logo: './icon-192.png', flagImg: '' },
-        { code: 'nba', sport: 'basketball', name: 'دوري كرة السلة الأمريكي (NBA)', shortName: 'NBA', country: 'الولايات المتحدة', region: 'usa', logo: 'https://a.espncdn.com/i/leaguelogos/nba/500/nba.png', flagImg: 'https://flagcdn.com/w40/us.png' },
-        { code: 'mens-college-basketball', sport: 'basketball', name: 'دوري الجامعات الأمريكي (NCAA Basketball)', shortName: 'NCAA', country: 'الولايات المتحدة', region: 'usa', logo: 'https://a.espncdn.com/i/leaguelogos/ncaa/500/ncaa.png', flagImg: 'https://flagcdn.com/w40/us.png' }
+        { code: 'all', sport: 'basketball', name: 'كل مباريات كرة السلة (NBA والمحترفين)', shortName: 'الكل', country: 'عالمي', region: 'world', logo: '', flagImg: '' },
+        { code: 'nba', sport: 'basketball', name: 'دوري كرة السلة الأمريكي (NBA)', shortName: 'NBA', country: 'الولايات المتحدة', region: 'usa', logo: 'https://a.espncdn.com/i/teamlogos/leagues/500/nba.png', flagImg: 'https://flagcdn.com/w40/us.png' },
+        { code: 'mens-college-basketball', sport: 'basketball', name: 'دوري الجامعات الأمريكي (NCAA Basketball)', shortName: 'NCAA', country: 'الولايات المتحدة', region: 'usa', logo: 'https://a.espncdn.com/redesign/assets/img/icons/NCAASports_MensBasketball.png', flagImg: 'https://flagcdn.com/w40/us.png' }
     ];
 
-    // قاموس تحسين أسماء البطولات الدولية المجمعة
+    // قاموس تحسين أسماء وشعارات وأعلام البطولات الدولية المجمعة
     const TOURNAMENT_NAME_MAP = {
-        'colombian primera a': { name: 'الدوري الكولومبي (Liga DIMAYOR)', country: 'كولومبيا', flag: 'https://flagcdn.com/w40/co.png' },
-        'bolivian liga profesional': { name: 'الدوري البوليفي (División Profesional)', country: 'بوليفيا', flag: 'https://flagcdn.com/w40/bo.png' },
-        'brazilian serie a': { name: 'الدوري البرازيلي (Brasileirão)', country: 'البرازيل', flag: 'https://flagcdn.com/w40/br.png' },
-        'argentine liga profesional de fútbol': { name: 'الدوري الأرجنتيني الممتاز', country: 'الأرجنتين', flag: 'https://flagcdn.com/w40/ar.png' },
-        'mexican liga bbva mx': { name: 'الدوري المكسيكي (Liga MX)', country: 'المكسيك', flag: 'https://flagcdn.com/w40/mx.png' },
-        'ncaam soccer': { name: 'دوري الجامعات الأمريكي (NCAA)', country: 'الولايات المتحدة', flag: 'https://flagcdn.com/w40/us.png' },
-        'ncaaw soccer': { name: 'دوري الجامعات الأمريكي للسيدات', country: 'الولايات المتحدة', flag: 'https://flagcdn.com/w40/us.png' },
-        'spanish copa del rey': { name: 'كأس ملك إسبانيا (Copa del Rey)', country: 'إسبانيا', flag: 'https://flagcdn.com/w40/es.png' },
-        'english premier league': { name: 'الدوري الإنجليزي الممتاز', country: 'إنجلترا', flag: 'https://flagcdn.com/w40/gb-eng.png' },
-        'english fa cup': { name: 'كأس الاتحاد الإنجليزي (FA Cup)', country: 'إنجلترا', flag: 'https://flagcdn.com/w40/gb-eng.png' },
-        'spanish laliga': { name: 'الدوري الإسباني (LaLiga)', country: 'إسبانيا', flag: 'https://flagcdn.com/w40/es.png' },
-        'italian serie a': { name: 'الدوري الإيطالي (Serie A)', country: 'إيطاليا', flag: 'https://flagcdn.com/w40/it.png' },
-        'german bundesliga': { name: 'الدوري الألماني (Bundesliga)', country: 'ألمانيا', flag: 'https://flagcdn.com/w40/de.png' },
-        'french ligue 1': { name: 'الدوري الفرنسي (Ligue 1)', country: 'فرنسا', flag: 'https://flagcdn.com/w40/fr.png' },
-        'uefa nations league': { name: 'دوري الأمم الأوروبية (Nations League)', country: 'أوروبا', flag: 'https://flagcdn.com/w40/eu.png' },
-        'uefa champions league': { name: 'دوري أبطال أوروبا', country: 'أوروبا', flag: 'https://flagcdn.com/w40/eu.png' },
-        'saudi professional league': { name: 'دوري روشن السعودي', country: 'السعودية', flag: 'https://flagcdn.com/w40/sa.png' }
+        'colombian primera a': { name: 'الدوري الكولومبي (Liga DIMAYOR)', country: 'كولومبيا', flag: 'https://flagcdn.com/w40/co.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1543.png' },
+        'bolivian liga profesional': { name: 'الدوري البوليفي (División Profesional)', country: 'بوليفيا', flag: 'https://flagcdn.com/w40/bo.png', logo: '' },
+        'brazilian serie a': { name: 'الدوري البرازيلي (Brasileirão)', country: 'البرازيل', flag: 'https://flagcdn.com/w40/br.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/85.png' },
+        'argentine liga profesional de fútbol': { name: 'الدوري الأرجنتيني الممتاز', country: 'الأرجنتين', flag: 'https://flagcdn.com/w40/ar.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/1.png' },
+        'mexican liga bbva mx': { name: 'الدوري المكسيكي (Liga MX)', country: 'المكسيك', flag: 'https://flagcdn.com/w40/mx.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/22.png' },
+        'ncaam soccer': { name: 'دوري الجامعات الأمريكي (NCAA)', country: 'الولايات المتحدة', flag: 'https://flagcdn.com/w40/us.png', logo: 'https://a.espncdn.com/redesign/assets/img/icons/NCAASports_MensBasketball.png' },
+        'ncaaw soccer': { name: 'دوري الجامعات الأمريكي للسيدات', country: 'الولايات المتحدة', flag: 'https://flagcdn.com/w40/us.png', logo: '' },
+        'spanish copa del rey': { name: 'كأس ملك إسبانيا (Copa del Rey)', country: 'إسبانيا', flag: 'https://flagcdn.com/w40/es.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/80.png' },
+        'english premier league': { name: 'الدوري الإنجليزي الممتاز (Premier League)', country: 'إنجلترا', flag: 'https://flagcdn.com/w40/gb-eng.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png' },
+        'english fa cup': { name: 'كأس الاتحاد الإنجليزي (FA Cup)', country: 'إنجلترا', flag: 'https://flagcdn.com/w40/gb-eng.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/40.png' },
+        'english league championship': { name: 'دوري البطولة الإنجليزية (Championship)', country: 'إنجلترا', flag: 'https://flagcdn.com/w40/gb-eng.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/24.png' },
+        'spanish laliga': { name: 'الدوري الإسباني (LaLiga)', country: 'إسبانيا', flag: 'https://flagcdn.com/w40/es.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png' },
+        'italian serie a': { name: 'الدوري الإيطالي (Serie A)', country: 'إيطاليا', flag: 'https://flagcdn.com/w40/it.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/12.png' },
+        'german bundesliga': { name: 'الدوري الألماني (Bundesliga)', country: 'ألمانيا', flag: 'https://flagcdn.com/w40/de.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/10.png' },
+        'french ligue 1': { name: 'الدوري الفرنسي (Ligue 1)', country: 'فرنسا', flag: 'https://flagcdn.com/w40/fr.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/9.png' },
+        'uefa nations league': { name: 'دوري الأمم الأوروبية (Nations League)', country: 'أوروبا', flag: 'https://flagcdn.com/w40/eu.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2395.png' },
+        'uefa champions league': { name: 'دوري أبطال أوروبا (Champions League)', country: 'أوروبا', flag: 'https://flagcdn.com/w40/eu.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2.png' },
+        'saudi professional league': { name: 'دوري روشن السعودي (Roshn Saudi League)', country: 'السعودية', flag: 'https://flagcdn.com/w40/sa.png', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2488.png' }
     };
 
     // قاموس مطابقة الدول لأعلامها وأسمائها بالعربية
@@ -221,6 +222,30 @@
         return rawCode || 'other';
     };
 
+    // دالة استخراج وتوليد الشعار الرسمي للفرق الرياضية بدقة من سيرفرات ESPN العالمية
+    const getTeamLogoUrl = (team, sport = 'soccer') => {
+        if (!team) return '';
+        if (typeof team.logo === 'string' && team.logo.startsWith('http')) return team.logo;
+        if (Array.isArray(team.logos) && team.logos[0]?.href && team.logos[0].href.startsWith('http')) {
+            return team.logos[0].href;
+        }
+
+        // استخراج معرف النادي الرقمي من id أو uid
+        let teamId = team.id;
+        if (!teamId && team.uid) {
+            const m = String(team.uid).match(/~t:([^~]+)/);
+            if (m) teamId = m[1];
+        }
+
+        if (teamId && /^\d+$/.test(String(teamId).trim())) {
+            const cleanId = String(teamId).trim();
+            const sportPath = (sport === 'basketball') ? 'nba' : 'soccer';
+            return `https://a.espncdn.com/i/teamlogos/${sportPath}/500/${cleanId}.png`;
+        }
+
+        return '';
+    };
+
     // جلب جدول مباريات دوري محدد عبر واجهة ESPN العامة
     const fetchLeagueScoreboard = async (sport, leagueCode, dateStr = null) => {
         const cacheKey = `${sport}_${leagueCode}_${dateStr || 'default'}`;
@@ -303,7 +328,7 @@
                         name: resolvedName,
                         shortName: resolvedName,
                         country: resolvedCountry,
-                        logo: './icon-192.png',
+                        logo: mapped?.logo || '',
                         flagImg: resolvedFlag
                     };
                 }
@@ -1000,8 +1025,16 @@
     };
 
     const formatMatchTime = (iso) => {
+        if (!iso) return '';
         try {
-            return new Date(iso).toLocaleTimeString('ar-MA', { hour: '2-digit', minute: '2-digit' });
+            const d = new Date(iso);
+            if (isNaN(d.getTime())) return '';
+            const tzMode = localStorage.getItem('arb_match_timezone') || 'gmt';
+            if (tzMode === 'local') {
+                return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+            }
+            // الافتراضي: توقيت غرينتش الرسمي (GMT / UTC) المناسب للمغرب
+            return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
         } catch {
             return '';
         }
@@ -1061,7 +1094,7 @@
                     name: ev.leagueMeta?.name || c,
                     shortName: ev.leagueMeta?.shortName || c,
                     country: ev.leagueMeta?.country || 'دولي',
-                    logo: ev.leagueMeta?.logo || './icon-192.png',
+                    logo: (ev.leagueMeta?.logo && ev.leagueMeta.logo !== './icon-192.png') ? ev.leagueMeta.logo : '',
                     flagImg: ev.leagueMeta?.flagImg || 'https://flagcdn.com/w40/un.png'
                 });
                 knownCodes.add(c);
@@ -1116,17 +1149,19 @@
             const isFav = favoriteLeagues.has(league.code);
             const isSelected = currentLeague === league.code;
 
-            const logoImg = league.logo
-                ? `<img src="${league.logo}" class="sofa-league-thumb" alt="" onerror="this.style.display='none'">`
+            const hasValidLogo = league.logo && league.logo !== './icon-192.png' && league.logo.startsWith('http');
+            const logoImg = hasValidLogo
+                ? `<img src="${league.logo}" class="sofa-league-thumb" alt="" onerror="this.style.display='none'; const n = this.parentElement.querySelector('.sofa-country-flag'); if(n) n.style.display='inline-block';">`
                 : '';
             const flagImg = league.flagImg
-                ? `<img src="${league.flagImg}" class="sofa-country-flag" alt="" onerror="this.style.display='none'">`
-                : `<span class="sofa-country-icon">⚽</span>`;
+                ? `<img src="${league.flagImg}" class="sofa-country-flag" alt="" style="${hasValidLogo ? 'display:none;' : ''}" onerror="this.style.display='none'">`
+                : `<span class="sofa-country-icon" style="${hasValidLogo ? 'display:none;' : ''}">⚽</span>`;
 
             html += `
                 <div class="sofa-league-row ${isSelected ? 'active' : ''}" onclick="selectLeagueFromDirectory('${league.code}')">
                     <div class="sofa-league-info">
-                        ${logoImg || flagImg}
+                        ${logoImg}
+                        ${flagImg}
                         <div class="sofa-league-names">
                             <span class="sofa-league-main-name">${league.name}</span>
                             <span class="sofa-league-sub-name">${league.country || 'دولي'}</span>
@@ -1431,8 +1466,9 @@
             postStatusText = 'PEN';
         }
 
-        const homeLogo = home.team?.logo || './icon-192.png';
-        const awayLogo = away.team?.logo || './icon-192.png';
+        const defaultTeamShield = 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/default-team-logo-500.png';
+        const homeLogo = getTeamLogoUrl(home.team, ev.sport || currentSport) || defaultTeamShield;
+        const awayLogo = getTeamLogoUrl(away.team, ev.sport || currentSport) || defaultTeamShield;
         const homeName = home.team?.displayName || home.team?.name || 'المضيف';
         const awayName = away.team?.displayName || away.team?.name || 'الضيف';
 
@@ -1484,11 +1520,11 @@
                 <!-- عمود الفريقين رأسياً (وسط) -->
                 <div class="sofa-row-teams-col">
                     <div class="sofa-row-team ${homeWon ? 'is-winner' : (awayWon ? 'is-loser' : '')}">
-                        <img src="${homeLogo}" alt="" class="sofa-row-crest" loading="lazy" onerror="this.src='./icon-192.png'">
+                        <img src="${homeLogo}" alt="" class="sofa-row-crest" loading="lazy" onerror="this.onerror=null; this.src='${defaultTeamShield}';">
                         <span class="sofa-row-team-name">${homeName}</span>
                     </div>
                     <div class="sofa-row-team ${awayWon ? 'is-winner' : (homeWon ? 'is-loser' : '')}">
-                        <img src="${awayLogo}" alt="" class="sofa-row-crest" loading="lazy" onerror="this.src='./icon-192.png'">
+                        <img src="${awayLogo}" alt="" class="sofa-row-crest" loading="lazy" onerror="this.onerror=null; this.src='${defaultTeamShield}';">
                         <span class="sofa-row-team-name">${awayName}</span>
                     </div>
                 </div>
@@ -1511,11 +1547,12 @@
 
     function renderTournamentGroup(grp, tournId, isCollapsed = false) {
         const isFav = favoriteLeagues.has(grp.matches[0]?.leagueCode);
-        const logoImg = grp.meta.logo
-            ? `<img src="${grp.meta.logo}" class="sofa-tourn-logo" alt="" onerror="this.style.display='none'">`
+        const hasValidLogo = grp.meta.logo && grp.meta.logo !== './icon-192.png' && grp.meta.logo.startsWith('http');
+        const logoImg = hasValidLogo
+            ? `<img src="${grp.meta.logo}" class="sofa-tourn-logo" alt="" onerror="this.style.display='none'; const n = this.parentElement.querySelector('.sofa-tourn-flag'); if(n) n.style.display='inline-block';">`
             : '';
         const flagImg = grp.meta.flagImg
-            ? `<img src="${grp.meta.flagImg}" class="sofa-tourn-flag" alt="" onerror="this.style.display='none'">`
+            ? `<img src="${grp.meta.flagImg}" class="sofa-tourn-flag" alt="" style="${hasValidLogo ? 'display:none;' : ''}" onerror="this.style.display='none'">`
             : '';
 
         let matchesHtml = '';
@@ -1527,7 +1564,8 @@
             <div class="sofa-tournament-card ${isCollapsed ? 'is-collapsed' : ''}" id="${tournId}">
                 <div class="sofa-tourn-header" onclick="toggleTournGroup('${tournId}')" role="button" tabindex="0" aria-expanded="${!isCollapsed}" title="انقر لطي أو فتح مباريات هذه البطولة">
                     <div class="sofa-tourn-title-wrap">
-                        ${logoImg || flagImg}
+                        ${logoImg}
+                        ${flagImg}
                         <div class="sofa-tourn-titles">
                             <span class="sofa-tourn-name">${grp.meta.name}</span>
                             <span class="sofa-tourn-country">${grp.meta.country || 'دولي'}</span>
@@ -1666,4 +1704,6 @@
     window.getSelectedDate = () => selectedDate;
     window.parseMinuteDetail = parseMinuteDetail;
     window.initLiveMinuteTicker = initLiveMinuteTicker;
+    window.formatMatchTime = formatMatchTime;
+    window.getTeamLogoUrl = getTeamLogoUrl;
 })();

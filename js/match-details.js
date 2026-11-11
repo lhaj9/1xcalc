@@ -184,8 +184,9 @@
 
             const homeName = home.team?.displayName || 'المضيف';
             const awayName = away.team?.displayName || 'الضيف';
-            const homeLogo = home.team?.logo || home.team?.logos?.[0]?.href || './icon-192.png';
-            const awayLogo = away.team?.logo || away.team?.logos?.[0]?.href || './icon-192.png';
+            const defaultTeamShield = 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/default-team-logo-500.png';
+            const homeLogo = (typeof window.getTeamLogoUrl === 'function' ? window.getTeamLogoUrl(home.team, currentActiveStatsSport) : home.team?.logo) || defaultTeamShield;
+            const awayLogo = (typeof window.getTeamLogoUrl === 'function' ? window.getTeamLogoUrl(away.team, currentActiveStatsSport) : away.team?.logo) || defaultTeamShield;
 
             const state = comp.status?.type?.state || 'pre';
             const isLive = state === 'in';
@@ -206,16 +207,21 @@
             const matchTitle = `${homeName} ضد ${awayName}`;
 
             // 1. تحديث الترويسة
-            const leagueMeta = MAJOR_LEAGUES.find(l => l.code === currentActiveStatsLeague) || { name: 'رياضة', flag: '⚽' };
+            const leagueMeta = (typeof window.MAJOR_LEAGUES !== 'undefined' ? window.MAJOR_LEAGUES : MAJOR_LEAGUES).find(l => l.code === currentActiveStatsLeague) || { name: 'رياضة', flag: '⚽' };
             const leagueLogoEl = document.getElementById('statsLeagueLogo');
             const leagueFlagEl = document.getElementById('statsLeagueFlag');
             const leagueNameEl = document.getElementById('statsLeagueName');
             const matchRoundEl = document.getElementById('statsMatchRound');
 
+            const hasValidLeagueLogo = leagueMeta.logo && leagueMeta.logo !== './icon-192.png' && leagueMeta.logo.startsWith('http');
             if (leagueLogoEl) {
-                if (leagueMeta.logo) {
+                if (hasValidLeagueLogo) {
                     leagueLogoEl.src = leagueMeta.logo;
                     leagueLogoEl.style.display = 'block';
+                    leagueLogoEl.onerror = () => {
+                        leagueLogoEl.style.display = 'none';
+                        if (leagueFlagEl && leagueMeta.flagImg) leagueFlagEl.style.display = 'inline-block';
+                    };
                 } else {
                     leagueLogoEl.style.display = 'none';
                 }
@@ -223,7 +229,7 @@
             if (leagueFlagEl) {
                 if (leagueMeta.flagImg) {
                     leagueFlagEl.src = leagueMeta.flagImg;
-                    leagueFlagEl.style.display = 'block';
+                    leagueFlagEl.style.display = hasValidLeagueLogo ? 'none' : 'inline-block';
                 } else {
                     leagueFlagEl.style.display = 'none';
                 }
@@ -253,8 +259,12 @@
                     else if (rLower.includes('cancel')) cleanStatus = 'مباراة ملغاة';
                     else if (rawDate) {
                         try {
-                            const dObj = new Date(rawDate);
-                            cleanStatus = dObj.toLocaleTimeString('ar-MA', { hour: '2-digit', minute: '2-digit' });
+                            if (typeof window.formatMatchTime === 'function') {
+                                cleanStatus = window.formatMatchTime(rawDate);
+                            } else {
+                                const dObj = new Date(rawDate);
+                                cleanStatus = dObj.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'UTC' });
+                            }
                         } catch {
                             cleanStatus = 'قادمة';
                         }
@@ -308,7 +318,7 @@
                 heroBanner.innerHTML = `
                     <div class="stats-hero-grid">
                         <div class="stats-team-box ${homeWon ? 'is-winner' : ''}">
-                            <img src="${homeLogo}" alt="${homeName}" class="stats-team-crest" onerror="this.src='./icon-192.png'">
+                            <img src="${homeLogo}" alt="${homeName}" class="stats-team-crest" onerror="this.onerror=null; this.src='https://a.espncdn.com/combiner/i?img=/i/teamlogos/default-team-logo-500.png';">
                             <span class="stats-team-name">${homeName}</span>
                             ${homeWon ? '<span class="winner-tag">فائز ✓</span>' : ''}
                         </div>
@@ -316,7 +326,7 @@
                         ${scoreCenterHtml}
 
                         <div class="stats-team-box ${awayWon ? 'is-winner' : ''}">
-                            <img src="${awayLogo}" alt="${awayName}" class="stats-team-crest" onerror="this.src='./icon-192.png'">
+                            <img src="${awayLogo}" alt="${awayName}" class="stats-team-crest" onerror="this.onerror=null; this.src='https://a.espncdn.com/combiner/i?img=/i/teamlogos/default-team-logo-500.png';">
                             <span class="stats-team-name">${awayName}</span>
                             ${awayWon ? '<span class="winner-tag">فائز ✓</span>' : ''}
                         </div>
@@ -766,7 +776,8 @@
                         <tbody>
                             ${entries.map((entry, idx) => {
                                 const tName = entry.team?.displayName || entry.team?.name || 'فريق';
-                                const logo = entry.team?.logos?.[0]?.href || entry.team?.logo || './icon-192.png';
+                                const defaultShield = 'https://a.espncdn.com/combiner/i?img=/i/teamlogos/default-team-logo-500.png';
+                                const logo = (typeof window.getTeamLogoUrl === 'function' ? window.getTeamLogoUrl(entry.team, currentActiveStatsSport) : (entry.team?.logos?.[0]?.href || entry.team?.logo)) || defaultShield;
                                 const tLower = tName.toLowerCase();
                                 const isMatchTeam = tLower.includes(homeName) || homeName.includes(tLower) || tLower.includes(awayName) || awayName.includes(tLower);
 
@@ -780,7 +791,7 @@
                                         <td><b>${rank}</b></td>
                                         <td>
                                             <div class="standings-team-name-cell">
-                                                <img src="${logo}" alt="" class="standings-team-mini-logo" onerror="this.src='./icon-192.png'">
+                                                <img src="${logo}" alt="" class="standings-team-mini-logo" onerror="this.onerror=null; this.src='${defaultShield}';">
                                                 <span>${tName}</span>
                                                 ${isMatchTeam ? '<span style="font-size:0.62rem; background:var(--accent-primary); color:#fff; padding:1px 5px; border-radius:4px;">مباراة الآن</span>' : ''}
                                             </div>
@@ -817,14 +828,19 @@
             let dateStr = 'غير متوفر';
             try {
                 if (comp.date) {
+                    const tzMode = localStorage.getItem('arb_match_timezone') || 'gmt';
+                    const tzOpt = (tzMode === 'local') ? {} : { timeZone: 'UTC' };
+                    const tzSuffix = (tzMode === 'local') ? ' (توقيت محلي)' : ' (توقيت غرينتش GMT)';
                     dateStr = new Date(comp.date).toLocaleString('ar-MA', {
                         weekday: 'long',
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
                         hour: '2-digit',
-                        minute: '2-digit'
-                    });
+                        minute: '2-digit',
+                        hour12: false,
+                        ...tzOpt
+                    }) + tzSuffix;
                 }
             } catch { }
 

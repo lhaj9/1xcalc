@@ -163,6 +163,8 @@
             if (defCapEl) defCapEl.value = appSettings.defaultCapital;
             const precEl = document.getElementById('precisionSelect');
             if (precEl) precEl.value = appSettings.precision.toString();
+            const tzEl = document.getElementById('matchTimezoneSelect');
+            if (tzEl) tzEl.value = localStorage.getItem('arb_match_timezone') || 'gmt';
         };
 
 
@@ -452,6 +454,19 @@
             updateTab2();
             renderSlips();
         });
+
+        const matchTzEl = document.getElementById('matchTimezoneSelect');
+        if (matchTzEl) {
+            matchTzEl.addEventListener('change', (e) => {
+                localStorage.setItem('arb_match_timezone', e.target.value);
+                if (typeof window.renderMatchesList === 'function' && window.loadedMatchesEvents) {
+                    window.renderMatchesList(window.loadedMatchesEvents);
+                }
+                if (typeof showToast === 'function') {
+                    showToast('✓ تم تحديث توقيت عرض المباريات');
+                }
+            });
+        }
 
         document.getElementById('exportDataBtn').addEventListener('click', () => {
             const backup = {
