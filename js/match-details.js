@@ -7,18 +7,20 @@
         let currentActiveStatsTab = 'statsTabOverview';
         let currentActiveStatsData = null;
 
-        // دالة إضافة المباراة مباشرة إلى القسائم كصفقة نشطة O₂
+        // دالة إضافة المباراة مباشرة إلى القسائم كصفقة نشطة O₂ مع التحديث اللحظي
         window.addMatchToSavedSlips = (matchTitle, mode = 'delayed') => {
             try {
                 const raw = localStorage.getItem('arb_saved_slips') || '[]';
-                let savedSlips = [];
-                try { savedSlips = JSON.parse(raw); } catch { savedSlips = []; }
-                if (!Array.isArray(savedSlips)) savedSlips = [];
+                let slipsList = [];
+                try { slipsList = JSON.parse(raw); } catch { slipsList = []; }
+                if (!Array.isArray(slipsList)) slipsList = [];
 
                 const titleClean = (matchTitle || '').trim();
-                const existing = savedSlips.find(s => (s.title || s.slipName || '').trim().toLowerCase() === titleClean.toLowerCase());
+                const existing = slipsList.find(s => (s.title || s.slipName || '').trim().toLowerCase() === titleClean.toLowerCase());
                 if (existing) {
-                    showToast(`⚡ هذه المباراة مسجلة بالفعل كصفقة نشطة في القسائم!`);
+                    const existMsg = `⚡ هذه المباراة مسجلة بالفعل كصفقة نشطة في القسائم!`;
+                    if (typeof window.showToast === 'function') window.showToast(existMsg);
+                    else if (typeof showToast === 'function') showToast(existMsg);
                     return;
                 }
 
@@ -42,20 +44,40 @@
                     pct: 2.44
                 };
 
-                savedSlips.unshift(newSlip);
-                localStorage.setItem('arb_saved_slips', JSON.stringify(savedSlips));
+                slipsList.unshift(newSlip);
+                localStorage.setItem('arb_saved_slips', JSON.stringify(slipsList));
+                try { if (typeof savedSlips !== 'undefined') savedSlips = slipsList; } catch {}
+                window.savedSlips = slipsList;
 
+                // 1. تحديث زر الحفظ في المودال فوراً وبشكل لحظي
+                const btnHero = document.getElementById('btnHeroSaveSlip');
+                if (btnHero) {
+                    btnHero.classList.add('is-saved');
+                    btnHero.innerHTML = '<i class="fa-solid fa-check"></i> <span>مضافة للقسائم O₂</span>';
+                }
+
+                // 2. تحديث تبويب القسائم فورياً
                 if (typeof window.renderSlips === 'function') {
                     window.renderSlips();
                 }
 
+                // 3. تحديث قائمة المباريات فورياً لإظهار شارة الصفقة النشطة O2 دون الحاجة لإعادة تحميل
                 if (typeof window.renderMatchesList === 'function' && window.loadedMatchesEvents) {
                     window.renderMatchesList(window.loadedMatchesEvents);
                 }
 
-                showToast(`⚡ تم حفظ [${titleClean}] كصفقة نشطة O₂! ستظهر شارة التنبيه في القائمة.`);
+                const msg = `⚡ تم حفظ [${titleClean}] كصفقة نشطة O₂! ظهرت الشارة في القائمة فوراً.`;
+                if (typeof window.showToast === 'function') {
+                    window.showToast(msg);
+                } else if (typeof showToast === 'function') {
+                    showToast(msg);
+                }
             } catch (e) {
-                showToast('تعذر حفظ الصفقة في القسائم');
+                if (typeof window.showToast === 'function') {
+                    window.showToast('تعذر حفظ الصفقة في القسائم');
+                } else if (typeof showToast === 'function') {
+                    showToast('تعذر حفظ الصفقة في القسائم');
+                }
             }
         };
 
@@ -121,25 +143,10 @@
             }
         };
 
-        // أزرار أسفل محتوى التبويبات للتنقل والحساب والنسخ كما في التصميم الأصلي
+        // زر إغلاق أسفل محتوى التبويبات للعودة للقائمة بعد إزالة الأزرار المكررة ونقلها للأعلى
         const renderTabBottomActions = (matchTitle, isLive) => {
-            const safeTitle = (matchTitle || '').replace(/'/g, "\\'");
             return `
                 <div class="stats-tab-bottom-actions" style="margin-top:16px;">
-                    <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
-                        <button type="button" class="btn-calc-action" style="flex:1; min-width:130px; padding:10px;" onclick="copyMatchDetails()" title="نسخ تقرير وتفاصيل المباراة الشاملة">
-                            <i class="fa-regular fa-copy"></i>
-                            <span>نسخ تفاصيل المباراة</span>
-                        </button>
-                        <button type="button" class="btn-calc-action btn-calc-save" style="flex:1.2; min-width:130px; padding:10px;" onclick="transferMatchToCalc('${safeTitle}', '${isLive ? 'delayed' : 'arbitrage'}'); closeMatchStats();" title="فتح المباراة وتأمين الأرباح في الحاسبة">
-                            <i class="fa-solid fa-bolt"></i>
-                            <span>حساب الصفقة ⚡</span>
-                        </button>
-                        <button type="button" class="btn-calc-action" style="flex:1; min-width:130px; padding:10px; background:rgba(16,185,129,0.12); color:#10b981; border:1px solid rgba(16,185,129,0.35);" onclick="addMatchToSavedSlips('${safeTitle}', '${isLive ? 'delayed' : 'arbitrage'}')" title="حفظ وتثبيت المباراة في القسائم كصفقة نشطة O₂">
-                            <i class="fa-solid fa-plus-circle"></i>
-                            <span>إضافة للقسائم O₂</span>
-                        </button>
-                    </div>
                     <button type="button" class="btn-stats-bottom-close" onclick="closeMatchStats()">
                         <i class="fa-solid fa-xmark"></i>
                         <span>إغلاق تفاصيل المباراة والعودة للقائمة</span>
@@ -348,6 +355,15 @@
             const venueName = data.gameInfo?.venue?.fullName || comp.venue?.fullName || '';
             const matchTitle = `${homeName} ضد ${awayName}`;
 
+            let isAlreadySavedSlip = false;
+            try {
+                const rawSlips = localStorage.getItem('arb_saved_slips') || '[]';
+                const parsedSlips = JSON.parse(rawSlips);
+                if (Array.isArray(parsedSlips)) {
+                    isAlreadySavedSlip = parsedSlips.some(s => (s.title || s.slipName || '').trim().toLowerCase() === matchTitle.trim().toLowerCase());
+                }
+            } catch {}
+
             // 1. تحديث الترويسة
             const leagueMeta = (typeof window.MAJOR_LEAGUES !== 'undefined' ? window.MAJOR_LEAGUES : MAJOR_LEAGUES).find(l => l.code === currentActiveStatsLeague) || { name: 'رياضة', flag: '⚽' };
             const leagueLogoEl = document.getElementById('statsLeagueLogo');
@@ -478,18 +494,23 @@
                     </div>
 
                     <div class="stats-hero-actions-bar">
-                        <button type="button" class="btn-hero-action-copy" onclick="copyMatchTitle('${matchTitle.replace(/'/g, "\\'")}')" title="نسخ اسم المباراة">
-                            <i class="fa-regular fa-copy"></i>
-                            <span>نسخ اسم المباراة</span>
-                        </button>
-                        <button type="button" class="btn-hero-action-calc" onclick="transferMatchToCalc('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}'); closeMatchStats();" title="فتح وحساب صفقة لهذه المباراة في الحاسبة">
+                        <!-- زر الحساب والتأمين الرئيسي العريض -->
+                        <button type="button" class="btn-hero-primary-calc" onclick="transferMatchToCalc('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}'); closeMatchStats();" title="فتح المباراة وحساب أرباح وتأمين الصفقة فوراً في الحاسبة">
                             <i class="fa-solid fa-bolt"></i>
-                            <span>حساب الصفقة ⚡</span>
+                            <span>حساب وتأمين الصفقة ⚡</span>
                         </button>
-                        <button type="button" class="btn-hero-action-save-slip" onclick="addMatchToSavedSlips('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}')" title="إضافة وتثبيت المباراة في القسائم كصفقة نشطة O₂">
-                            <i class="fa-solid fa-plus-circle"></i>
-                            <span>إضافة للقسائم O₂</span>
-                        </button>
+                        
+                        <!-- صف الأزرار الفرعية المتناسقة 50% / 50% -->
+                        <div class="stats-hero-sub-row">
+                            <button type="button" class="btn-hero-sub-action btn-hero-copy-details" onclick="copyMatchDetails()" title="نسخ تقرير وتفاصيل المباراة الشاملة">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>نسخ تفاصيل المباراة</span>
+                            </button>
+                            <button type="button" class="btn-hero-sub-action btn-hero-save-slip ${isAlreadySavedSlip ? 'is-saved' : ''}" id="btnHeroSaveSlip" onclick="addMatchToSavedSlips('${matchTitle.replace(/'/g, "\\'")}', '${isLive ? 'delayed' : 'arbitrage'}')" title="إضافة وتثبيت المباراة في القسائم كصفقة نشطة O₂">
+                                <i class="fa-solid ${isAlreadySavedSlip ? 'fa-check' : 'fa-plus-circle'}"></i>
+                                <span>${isAlreadySavedSlip ? 'مضافة للقسائم O₂' : 'إضافة للقسائم O₂'}</span>
+                            </button>
+                        </div>
                     </div>
                 `;
             }

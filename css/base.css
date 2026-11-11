@@ -1,10 +1,21 @@
 /* ==================== APP SHELL, NAVIGATION & SPLASH SCREEN ==================== */
-        /* ==================== 1XBET APP HEADER ==================== */
+        /* ==================== 1XBET APP HEADER (FIXED/STICKY MOBILE APP BAR) ==================== */
         .app-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 2px 10px 2px;
+            padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 10px 12px;
+            margin: calc(-10px - env(safe-area-inset-top, 0px)) -12px 10px -12px;
+            background: var(--bg-main);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: background-color 0.2s ease, border-color 0.2s ease;
         }
 
         .brand-area {

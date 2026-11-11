@@ -252,6 +252,15 @@
         };
 
         const renderSlips = () => {
+            // مزامنة فورية للصفقات من التخزين المحلي لضمان تحديث الواجهة اللحظي عند إضافة أي صفقة من تبويب المباريات
+            try {
+                const storedSlips = JSON.parse(localStorage.getItem('arb_saved_slips') || '[]');
+                if (Array.isArray(storedSlips)) {
+                    savedSlips = storedSlips;
+                    window.savedSlips = storedSlips;
+                }
+            } catch (e) {}
+
             sanitizeAndAuditSlips();
 
             const p = appSettings.precision;

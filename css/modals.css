@@ -348,91 +348,92 @@
             max-width: 140px;
         }
 
-        /* أزرار الإجراءات السريعة (حساب الصفقة والنسخ) داخل بطاقة النتيجة البارزة */
+        /* أزرار الإجراءات السريعة (حساب الصفقة والنسخ وحفظ القسيمة) داخل بطاقة النتيجة البارزة */
         .stats-hero-actions-bar {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
             width: 100%;
-            margin-top: 4px;
+            margin-top: 10px;
         }
 
-        .btn-hero-action-calc {
-            flex: 1.5;
+        .btn-hero-primary-calc {
+            width: 100%;
             background: linear-gradient(135deg, #0e52a8 0%, #1d72ee 100%);
             color: #ffffff;
             border: none;
-            border-radius: 11px;
-            padding: 10px 14px;
-            font-size: 0.82rem;
-            font-weight: 800;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.88rem;
+            font-weight: 900;
             font-family: inherit;
             cursor: pointer;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 3px 12px rgba(16, 85, 164, 0.35);
+            box-shadow: 0 4px 14px rgba(16, 85, 164, 0.35);
             transition: all 0.15s ease;
         }
 
-        .btn-hero-action-calc:active {
-            transform: scale(0.97);
+        .btn-hero-primary-calc:active {
+            transform: scale(0.98);
         }
 
-        .btn-hero-action-copy {
-            flex: 1;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
+        .stats-hero-sub-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .btn-hero-sub-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 10px 8px;
             border-radius: 11px;
-            padding: 10px 12px;
             font-size: 0.78rem;
             font-weight: 800;
             font-family: inherit;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 0.15s ease;
-        }
-
-        .btn-hero-action-copy:hover {
-            border-color: var(--accent-primary);
-            color: var(--accent-primary);
-        }
-
-        .btn-hero-action-copy:active {
-            transform: scale(0.97);
-        }
-
-        .btn-hero-action-save-slip {
-            flex: 1.1;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.35);
-            color: #10b981;
-            border-radius: 11px;
-            padding: 10px 12px;
-            font-size: 0.78rem;
-            font-weight: 800;
-            font-family: inherit;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
             transition: all 0.15s ease;
             white-space: nowrap;
         }
 
-        .btn-hero-action-save-slip:hover {
-            background: #10b981;
-            color: #ffffff;
+        .btn-hero-sub-action:active {
+            transform: scale(0.97);
         }
 
-        .btn-hero-action-save-slip:active {
-            transform: scale(0.97);
+        .btn-hero-copy-details {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-hero-copy-details:hover {
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .btn-hero-save-slip {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #10b981;
+        }
+
+        .btn-hero-save-slip:hover {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+        }
+
+        .btn-hero-save-slip.is-saved {
+            background: #10b981;
+            border-color: #059669;
+            color: #ffffff;
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.35);
         }
 
         html[data-theme="light"] .stats-team-box {
