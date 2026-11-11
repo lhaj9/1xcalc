@@ -12,6 +12,7 @@
             if (!modal) return;
 
             currentActiveStatsEventId = eventId;
+            window.currentActiveStatsEventId = eventId;
             currentActiveStatsTab = 'statsTabOverview';
 
             // العثور على بيانات اللقاء من الذاكرة الحية أولاً
@@ -145,6 +146,7 @@
         };
 
         const closeMatchStats = (fromPopState = false) => {
+            window.currentActiveStatsEventId = null;
             const modal = document.getElementById('matchStatsModal');
             if (modal) {
                 modal.classList.remove('open');
@@ -188,7 +190,10 @@
             const state = comp.status?.type?.state || 'pre';
             const isLive = state === 'in';
             const isFinished = state === 'post';
-            const statusDetail = comp.status?.type?.detail || (isLive ? 'مباشر' : (isFinished ? 'انتهت' : 'قريباً'));
+            const rawDetail = comp.status?.type?.detail || '';
+            const statusDetail = isLive && typeof window.parseMinuteDetail === 'function'
+                ? window.parseMinuteDetail(currentActiveStatsEventId, rawDetail, comp.date || header.date)
+                : (rawDetail || (isLive ? 'مباشر' : (isFinished ? 'انتهت' : 'قريباً')));
 
             const homeScore = parseInt(home.score, 10);
             const awayScore = parseInt(away.score, 10);

@@ -254,74 +254,173 @@
         }
     };
 
-    // نظام تحديث الدقائق الحية محلياً في بطاقات المباريات (Live Minute Ticker Engine)
+    // نظام تحديث الدقائق الحية محلياً في بطاقات المباريات ومودال الإحصائيات (Live Minute Ticker Engine)
     const initLiveMinuteTicker = () => {
         if (liveTickerInterval) clearInterval(liveTickerInterval);
 
         liveTickerInterval = setInterval(() => {
-            const liveCards = document.querySelectorAll('.match-card.is-live');
-            if (liveCards.length === 0) return;
-
             const now = Date.now();
-            liveCards.forEach(card => {
-                const eventId = card.dataset.eventId;
-                if (!eventId || !matchMinutesMap.has(eventId)) return;
+            const liveRows = document.querySelectorAll('.sofa-match-row.is-live-row');
 
-                const track = matchMinutesMap.get(eventId);
-                if (track.isSpecial) return; // HT, FT, Postponed
+            if (liveRows.length > 0) {
+                liveRows.forEach(row => {
+                    const eventId = row.dataset.eventId;
+                    if (!eventId || !matchMinutesMap.has(eventId)) return;
 
-                const elapsedMinutes = Math.floor((now - track.baseTime) / 60000);
-                if (elapsedMinutes <= 0) return;
+                    const track = matchMinutesMap.get(eventId);
+                    if (track.isSpecial) return; // HT, FT, Postponed
 
-                let currentMinute = track.baseMinute + elapsedMinutes;
+                    const elapsedMinutes = Math.floor((now - track.baseTime) / 60000);
+                    let currentMinute = track.baseMinute + elapsedMinutes;
 
-                // القيود المنطقية لأوقات كرة القدم
-                if (track.baseMinute <= 45 && currentMinute > 45) {
-                    currentMinute = 45; // انتظار إعلان الوقت بدل الضائع أو الاستراحة
-                } else if (track.baseMinute > 45 && currentMinute > 90) {
-                    currentMinute = 90;
+                    // في حال كانت الدقيقة محسوبة محلياً من بداية المباراة
+                    if (track.calculatedFromKickoff && track.matchDate) {
+                        const totalFromStart = Math.floor((now - track.matchDate) / 60000);
+                        if (totalFromStart > 47 && totalFromStart <= 62) {
+                            track.isSpecial = true;
+                            track.isHalftime = true;
+                            const minEl = row.querySelector('.sofa-row-live-min');
+                            if (minEl && minEl.textContent !== 'استراحة') minEl.textContent = 'استراحة';
+                            return;
+                        } else if (totalFromStart > 62) {
+                            currentMinute = Math.min(90, 45 + (totalFromStart - 62));
+                        }
+                    }
+
+                    // القيود المنطقية لأوقات كرة القدم
+                    if (track.baseMinute <= 45 && currentMinute > 45 && !track.isExtra) {
+                        currentMinute = 45; // انتظار إعلان الوقت بدل الضائع أو الاستراحة
+                    } else if (track.baseMinute > 45 && currentMinute > 90 && !track.isExtra) {
+                        currentMinute = 90;
+                    }
+
+                    let displayStr = `${currentMinute}'`;
+                    if (track.isExtra) {
+                        const extraElapsed = Math.floor((now - track.baseTime) / 60000);
+                        displayStr = `${track.baseMinute}+${track.extraMinute + extraElapsed}'`;
+                    }
+
+                    const minEl = row.querySelector('.sofa-row-live-min');
+                    if (minEl && minEl.textContent !== displayStr) {
+                        minEl.textContent = displayStr;
+                    }
+                });
+            }
+
+            // تحديث نافذة إحصائيات وتفاصيل المباراة اللحظية إن كانت مفتوحة
+            if (window.currentActiveStatsEventId && matchMinutesMap.has(window.currentActiveStatsEventId)) {
+                const track = matchMinutesMap.get(window.currentActiveStatsEventId);
+                const modalLiveTag = document.querySelector('#statsHeroBanner .stats-hero-status.tag-live');
+                if (modalLiveTag && !track.isSpecial) {
+                    const elapsedMinutes = Math.floor((now - track.baseTime) / 60000);
+                    let curMin = track.baseMinute + elapsedMinutes;
+                    if (track.baseMinute <= 45 && curMin > 45 && !track.isExtra) curMin = 45;
+                    else if (track.baseMinute > 45 && curMin > 90 && !track.isExtra) curMin = 90;
+
+                    const disp = track.isExtra ? `${track.baseMinute}+${track.extraMinute}'` : `${curMin}'`;
+                    modalLiveTag.innerHTML = `<span class="live-dot-pulse"></span> ${disp}`;
                 }
-
-                const displayStr = track.isExtra ? track.originalStr : `${currentMinute}'`;
-
-                // تحديث نص الشارة العلوية
-                const badgeEl = card.querySelector('.status-live .live-min-text');
-                if (badgeEl) badgeEl.textContent = displayStr;
-
-                // تحديث التسمية الفرعية أسفل النتيجة
-                const subLabel = card.querySelector('.status-sub-label.live-label .live-min-sub');
-                if (subLabel) subLabel.textContent = displayStr;
-            });
-        }, 30000); // فحص وتحديث كل 30 ثانية لضمان الدقة
+            }
+        }, 10000); // تحديث فوري دوري كل 10 ثوانٍ لضمان استجابة وتزامن عداد الدقائق محلياً
     };
 
-    // تحليل الدقيقة من نص ESPN المباشر
-    const parseMinuteDetail = (eventId, detailStr) => {
+    // التحديث الدوري الخلفي التلقائي للمباريات الحية (Silent Background Live Scoreboard Refresh)
+    let liveAutoFetchInterval = null;
+    const initLiveAutoFetch = () => {
+        if (liveAutoFetchInterval) clearInterval(liveAutoFetchInterval);
+
+        liveAutoFetchInterval = setInterval(() => {
+            if (document.hidden) return; // الحفاظ على الموارد والبطارية إذا كان التبويب غير نشط
+            const hasLive = (loadedMatchesEvents || []).some(ev => ev.status?.type?.state === 'in');
+            if (hasLive || currentStatusMode === 'live') {
+                // تحديث هادئ بدون لودينغ سبينر لجلب النتائج والأهداف الجديدة من السيرفر
+                loadMatches(false, false);
+            }
+        }, 50000); // فحص كل 50 ثانية
+    };
+
+    // تحليل وتتبع الدقيقة محلياً من مزود البيانات أو حسابها من توقيت انطلاق المباراة
+    const parseMinuteDetail = (eventId, detailStr, matchDate) => {
         const raw = (detailStr || '').trim();
         const now = Date.now();
 
-        if (!raw || raw.toLowerCase().includes('ht') || raw.toLowerCase().includes('half') || raw.toLowerCase().includes('ft')) {
+        const lower = raw.toLowerCase();
+        if (lower.includes('ht') || lower.includes('half') || lower.includes('استراحة')) {
+            matchMinutesMap.set(eventId, { isSpecial: true, isHalftime: true, originalStr: 'استراحة' });
+            return 'استراحة';
+        }
+
+        if (lower.includes('ft') || lower.includes('full') || lower.includes('انتهت')) {
+            matchMinutesMap.set(eventId, { isSpecial: true, isFinished: true, originalStr: 'FT' });
+            return 'FT';
+        }
+
+        if (lower.includes('postponed') || lower.includes('cancel') || lower.includes('مؤجل') || lower.includes('ملغ')) {
             matchMinutesMap.set(eventId, { isSpecial: true, originalStr: raw });
             return raw;
         }
 
-        // استخراج الرقم (مثلاً '38 أو 38' أو 90+2')
-        const match = raw.match(/(\d+)/);
+        // 1. هل المزود وفر رقماً صريحاً للدقيقة؟ (مثلاً: 38 أو 38' أو 45+2')
+        const match = raw.match(/(\d+)(?:\+(\d+))?/);
         if (match) {
             const minNum = parseInt(match[1], 10);
-            const isExtra = raw.includes('+');
+            const extraNum = match[2] ? parseInt(match[2], 10) : 0;
+            const isExtra = Boolean(match[2]);
+
             matchMinutesMap.set(eventId, {
                 baseMinute: minNum,
+                extraMinute: extraNum,
                 isExtra,
                 baseTime: now,
                 originalStr: raw,
-                isSpecial: false
+                isSpecial: false,
+                matchDate: matchDate ? new Date(matchDate).getTime() : null,
+                calculatedFromKickoff: false
             });
-        } else {
-            matchMinutesMap.set(eventId, { isSpecial: true, originalStr: raw });
+
+            return isExtra ? `${minNum}+${extraNum}'` : `${minNum}'`;
         }
 
-        return raw;
+        // 2. إذا لم يوفر المزود الدقيقة (أو كان النص عاماً مثل "مباشر" أو "Live"):
+        // يتم حساب الدقيقة لحظياً وتتبعها محلياً على جهاز المستخدم بناءً على موعد انطلاق المباراة
+        if (matchDate) {
+            const startTime = new Date(matchDate).getTime();
+            const elapsedFromStart = Math.max(0, Math.floor((now - startTime) / 60000));
+
+            let calcMin = 1;
+            let isHt = false;
+
+            if (elapsedFromStart <= 0) {
+                calcMin = 1;
+            } else if (elapsedFromStart <= 47) {
+                calcMin = Math.min(45, elapsedFromStart);
+            } else if (elapsedFromStart <= 62) {
+                isHt = true;
+            } else {
+                calcMin = Math.min(90, 45 + (elapsedFromStart - 62));
+            }
+
+            if (isHt) {
+                matchMinutesMap.set(eventId, { isSpecial: true, isHalftime: true, originalStr: 'استراحة', matchDate: startTime, baseTime: now });
+                return 'استراحة';
+            }
+
+            matchMinutesMap.set(eventId, {
+                baseMinute: calcMin,
+                extraMinute: 0,
+                isExtra: false,
+                baseTime: now,
+                originalStr: `${calcMin}'`,
+                isSpecial: false,
+                matchDate: startTime,
+                calculatedFromKickoff: true
+            });
+
+            return `${calcMin}'`;
+        }
+
+        matchMinutesMap.set(eventId, { isSpecial: true, originalStr: raw || 'مباشر' });
+        return raw || 'مباشر';
     };
 
     // تنسيق وعرض التاريخ في شريط تصفح الأيام بأسلوب SofaScore (< اليوم >)
@@ -353,6 +452,8 @@
         if (!labelEl) return;
         if (currentTimeFilter === 'day') {
             labelEl.textContent = formatDateNavLabel(selectedDate);
+        } else if (currentTimeFilter === 'custom' && customPeriodStart && customPeriodEnd) {
+            labelEl.textContent = `${formatDateNavLabel(customPeriodStart)} - ${formatDateNavLabel(customPeriodEnd)}`;
         } else {
             const timeFilterLabels = {
                 'all': 'كل المواعيد المتاحة',
@@ -591,7 +692,7 @@
     };
 
     // جلب المباريات الشامل مع الفصل الذكي للتواريخ ودعم التغذية العالمية الحية LIVE
-    const loadMatches = async (forceRefresh = false) => {
+    const loadMatches = async (forceRefresh = false, showLoading = true) => {
         const container = document.getElementById('homeMatchesContainer');
         if (!container) return;
 
@@ -606,13 +707,15 @@
             return;
         }
 
-        container.innerHTML = `
-            <div class="match-loading-card">
-                <div class="match-spinner"></div>
-                <div style="font-weight: 800; font-size: 0.88rem;">جاري جلب وفحص جدول المباريات...</div>
-                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">تحديث مباشر من سيرفرات الرياضة العالمية</div>
-            </div>
-        `;
+        if (showLoading || !container.children.length) {
+            container.innerHTML = `
+                <div class="match-loading-card">
+                    <div class="match-spinner"></div>
+                    <div style="font-weight: 800; font-size: 0.88rem;">جاري جلب وفحص جدول المباريات...</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">تحديث مباشر من سيرفرات الرياضة العالمية</div>
+                </div>
+            `;
+        }
 
         const relevantLeagues = MAJOR_LEAGUES.filter(l => l.sport === currentSport && l.code !== 'all');
         const targetLeagues = currentLeague === 'all'
@@ -778,6 +881,7 @@
 
             renderMatchesList(loadedMatchesEvents.length ? loadedMatchesEvents : (window.loadedMatchesEvents || []));
             initLiveMinuteTicker();
+            initLiveAutoFetch();
         } catch (e) {
             container.innerHTML = `
                 <div class="match-loading-card">
@@ -1169,7 +1273,7 @@
         const isLive = state === 'in';
         const isFinished = state === 'post';
         const rawDetail = ev.status?.type?.detail || '';
-        const statusDetail = isLive ? parseMinuteDetail(ev.id, rawDetail) : rawDetail;
+        const statusDetail = isLive ? parseMinuteDetail(ev.id, rawDetail, ev.date) : rawDetail;
 
         const homeScore = parseInt(home.score, 10);
         const awayScore = parseInt(away.score, 10);
@@ -1427,4 +1531,6 @@
     window.buildMatchCardHTML = buildMatchCardHTML;
     window.MAJOR_LEAGUES = MAJOR_LEAGUES;
     window.getSelectedDate = () => selectedDate;
+    window.parseMinuteDetail = parseMinuteDetail;
+    window.initLiveMinuteTicker = initLiveMinuteTicker;
 })();

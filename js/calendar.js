@@ -226,40 +226,62 @@
         updatePeriodDisplayBoxes();
     });
 
-    // الفترات السريعة
+    // الفترات السريعة الجاهزة والتفاعل الفوري معها (Quick Presets Engine)
     document.querySelectorAll('.preset-pill, .cal-preset-chip').forEach(btn => {
         btn.addEventListener('click', () => {
             const preset = btn.dataset.preset;
             const now = new Date();
 
             if (preset === 'today') {
-                if (window.calendarMode === 'single') {
-                    if (typeof window.jumpToToday === 'function') window.jumpToToday();
-                    closeSetPeriodModal(false);
-                    return;
-                }
-                customPeriodStart = new Date(now);
-                customPeriodEnd = new Date(now);
+                if (typeof window.jumpToToday === 'function') window.jumpToToday();
+                if (typeof showToast === 'function') showToast('📅 تم الانتقال إلى مباريات اليوم');
+                closeSetPeriodModal(false);
+                return;
             } else if (preset === 'tomorrow') {
-                const tmr = new Date(now); tmr.setDate(now.getDate() + 1);
-                if (window.calendarMode === 'single') {
-                    if (typeof window.selectDayDate === 'function') window.selectDayDate(tmr);
-                    closeSetPeriodModal(false);
-                    return;
-                }
-                customPeriodStart = tmr;
-                customPeriodEnd = tmr;
+                const tmr = new Date(now);
+                tmr.setDate(now.getDate() + 1);
+                if (typeof window.selectDayDate === 'function') window.selectDayDate(tmr);
+                if (typeof showToast === 'function') showToast(`📅 تم اختيار: غداً (${formatShortDate(tmr)})`);
+                closeSetPeriodModal(false);
+                return;
             } else if (preset === 'weekend') {
                 const day = now.getDay();
-                const friOffset = (5 - day + 7) % 7;
-                const fri = new Date(now); fri.setDate(now.getDate() + friOffset);
-                const sun = new Date(fri); sun.setDate(fri.getDate() + 2);
-                customPeriodStart = fri;
-                customPeriodEnd = sun;
+                let friOffset = 0;
+                if (day === 5) {
+                    friOffset = 0; // اليوم هو الجمعة
+                } else if (day === 6) {
+                    friOffset = -1; // أمس كان الجمعة
+                } else if (day === 0) {
+                    friOffset = -2; // الجمعة كان قبل يومين
+                } else {
+                    friOffset = 5 - day; // الجمعة القادم
+                }
+                const fri = new Date(now);
+                fri.setDate(now.getDate() + friOffset);
+                const sun = new Date(fri);
+                sun.setDate(fri.getDate() + 2);
+
+                if (typeof window.applyCustomPeriod === 'function') {
+                    window.applyCustomPeriod(fri, sun);
+                }
+                if (typeof showToast === 'function') {
+                    showToast(`📅 تم تحديد فترة نهاية الأسبوع (${formatShortDate(fri)} - ${formatShortDate(sun)})`);
+                }
+                closeSetPeriodModal(false);
+                return;
             } else if (preset === 'next7') {
-                customPeriodStart = new Date(now);
-                const end7 = new Date(now); end7.setDate(now.getDate() + 6);
-                customPeriodEnd = end7;
+                const start7 = new Date(now);
+                const end7 = new Date(now);
+                end7.setDate(now.getDate() + 6);
+
+                if (typeof window.applyCustomPeriod === 'function') {
+                    window.applyCustomPeriod(start7, end7);
+                }
+                if (typeof showToast === 'function') {
+                    showToast(`📅 تم تحديد فترة الـ 7 أيام القادمة (${formatShortDate(start7)} - ${formatShortDate(end7)})`);
+                }
+                closeSetPeriodModal(false);
+                return;
             }
 
             calViewingMonth = customPeriodStart.getMonth();

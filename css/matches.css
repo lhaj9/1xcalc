@@ -315,20 +315,25 @@
             border-color: var(--accent-primary);
         }
 
-        /* ==================== تصميم وتفاعل طي وفتح الأيام (Collapsible Day Groups) ==================== */
+        /* ==================== تصميم وتفاعل طي وفتح الأيام كحاوية أم وقوائم الدوريات كأبناء (Hierarchical Day Groups) ==================== */
         .day-group-section {
-            margin-bottom: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
             transition: all 0.2s ease;
         }
 
         .day-group-header {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 8px 12px;
-            margin-top: 10px;
-            margin-bottom: 8px;
-            font-size: 0.78rem;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.07) 0%, transparent 100%), var(--bg-card);
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 0;
+            padding: 10px 14px;
+            margin: 0;
+            font-size: 0.82rem;
             font-weight: 900;
             color: var(--text-main);
             display: flex;
@@ -336,28 +341,27 @@
             justify-content: space-between;
             cursor: pointer;
             user-select: none;
-            transition: all 0.18s ease;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: background 0.18s ease;
         }
 
         .day-group-header:hover {
             border-color: var(--accent-primary);
-            background: var(--accent-bg, rgba(59, 130, 246, 0.05));
+            background: var(--accent-bg, rgba(59, 130, 246, 0.08));
         }
 
         .day-group-header:active {
-            transform: scale(0.99);
+            background: var(--bg-elevated);
         }
 
         .day-group-title {
             display: flex;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
             font-weight: 900;
         }
 
         .day-group-icon {
-            font-size: 0.88rem;
+            font-size: 0.95rem;
         }
 
         .day-group-meta {
@@ -370,7 +374,7 @@
             background: var(--bg-input);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 2px 9px;
+            padding: 2px 10px;
             font-size: 0.68rem;
             font-weight: 800;
             color: var(--text-muted);
@@ -389,18 +393,45 @@
         }
 
         .day-group-body {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 8px;
+            background: var(--bg-elevated);
             animation: fadeInGroup 0.22s ease-out;
         }
 
-        /* حالة الطي: تدوير السهم وإخفاء المباريات */
+        /* تنسيق بطاقات البطولات عند تواجدها كعناصر فرعية داخل مجلد اليوم */
+        .day-group-body .sofa-tournament-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 0;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        .day-group-body .sofa-tournament-card .sofa-tourn-header {
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 12px 12px 0 0;
+            padding: 8px 12px;
+        }
+
+        .day-group-body .sofa-tournament-card.is-collapsed .sofa-tourn-header {
+            border-bottom: none;
+            border-radius: 12px;
+        }
+
+        /* حالة الطي: تدوير السهم وإخفاء الدوريات والمباريات */
         .day-group-section.is-collapsed .day-group-chevron {
             transform: rotate(90deg);
         }
 
         .day-group-section.is-collapsed .day-group-header {
+            border-bottom: none;
             margin-bottom: 0;
-            opacity: 0.92;
+            opacity: 0.95;
         }
 
         .day-group-section.is-collapsed .day-group-badge {
@@ -1519,8 +1550,12 @@
     margin-right: 2px;
 }
 
+.sofa-tournament-card:not(.is-collapsed) .sofa-tourn-chevron {
+    transform: rotate(0deg);
+}
+
 .sofa-tournament-card.is-collapsed .sofa-tourn-chevron {
-    transform: rotate(180deg);
+    transform: rotate(90deg);
 }
 
 .sofa-tournament-card.is-collapsed .sofa-tourn-matches {
