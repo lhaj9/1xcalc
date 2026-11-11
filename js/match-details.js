@@ -380,12 +380,11 @@ const renderHeroBannerHTML = (data) => {
     `;
 };
 
-// استخراج أو توليد رابط صورة وجه اللاعب (Player Headshot)
+// استخراج رابط صورة وجه اللاعب الرسمي من المزود
 const getPlayerHeadshotUrl = (player) => {
     const ath = player?.athlete || {};
-    if (ath.headshot?.href) return ath.headshot.href;
-    if (ath.id) {
-        return `https://a.espncdn.com/combiner/i?img=/i/headshots/soccer/players/full/${ath.id}.png&w=96&h=96&scale=crop`;
+    if (ath.headshot?.href) {
+        return ath.headshot.href;
     }
     return '';
 };
@@ -485,7 +484,7 @@ window.openPlayerDetailModal = (athleteId, teamId) => {
         <div class="player-card-hero">
             <div class="player-card-avatar-wrap">
                 ${headshot ? `
-                    <img src="${headshot}" alt="${name}" class="player-card-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <img src="${headshot}" alt="${name}" class="player-card-avatar-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" referrerpolicy="no-referrer">
                 ` : ''}
                 <div class="pitch-player-fallback-num" style="${headshot ? 'display:none;' : 'display:flex; font-size:1.4rem;'}">${jersey}</div>
             </div>
@@ -1430,23 +1429,35 @@ const renderLineupsTab = (data, container) => {
     const miniStrip = renderMiniScoreStrip(data);
 
     const rosters = data.rosters || [];
-    if (!Array.isArray(rosters) || rosters.length < 2) {
+    const homeRoster = rosters.find(r => r.team?.id === home.id || r.team?.id === home.team?.id) || rosters[0];
+    const awayRoster = rosters.find(r => r.team?.id === away.id || r.team?.id === away.team?.id) || rosters[1];
+
+    const homePlayers = Array.isArray(homeRoster?.roster) ? homeRoster.roster : [];
+    const awayPlayers = Array.isArray(awayRoster?.roster) ? awayRoster.roster : [];
+
+    // التحقق الدقيق مما إذا كانت التشكيلة وقائمة اللاعبين متوفرة فعلياً للقاء
+    if (homePlayers.length === 0 && awayPlayers.length === 0) {
         container.innerHTML = `
             ${miniStrip}
             <div class="stats-empty-state">
                 <div class="stats-empty-icon">👥</div>
-                <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">التشكيلة الرسمية لم تُعلن بعد</div>
-                <div style="font-size: 0.73rem; max-width: 320px; line-height: 1.4;">
-                    يتم اعتماد التشكيلات والخطط التكتيكية الرسمية قبل انطلاق المباراة بنحو ساعة تقريباً من مصادر الأندية الرسمية.
+                <div style="font-weight: 800; font-size: 0.88rem; color: var(--text-main);">التشكيلة الرسمية لم تُعلن بعد لهذا اللقاء</div>
+                <div style="font-size: 0.73rem; max-width: 320px; line-height: 1.4; color: var(--text-muted); margin-top: 4px;">
+                    يتم اعتماد التشكيلات والخطط التكتيكية وصور اللاعبين الرسمية فور صدورها من الأندية الرسمية (قبل انطلاق المباراة بنحو 60 دقيقة).
+                </div>
+                <div style="margin-top: 14px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+                    <button type="button" class="match-refresh-btn" onclick="window.switchStatsTab('statsTabSummary')" style="padding: 7px 15px; font-size: 0.76rem;">
+                        <i class="fa-solid fa-house"></i> العودة للملخص
+                    </button>
+                    <button type="button" class="match-refresh-btn" onclick="window.switchStatsTab('statsTabInfo')" style="padding: 7px 15px; font-size: 0.76rem; background:var(--bg-card); color:var(--text-main); border:1px solid var(--border-color);">
+                        <i class="fa-solid fa-circle-info"></i> بطاقة معلومات اللقاء
+                    </button>
                 </div>
             </div>
             ${renderTabBottomActions(matchTitle, isLive)}
         `;
         return;
     }
-
-    const homeRoster = rosters.find(r => r.team?.id === home.id || r.team?.id === home.team?.id) || rosters[0];
-    const awayRoster = rosters.find(r => r.team?.id === away.id || r.team?.id === away.team?.id) || rosters[1];
 
     const homeFormation = homeRoster.formation || '4-3-3';
     const awayFormation = awayRoster.formation || '4-3-3';
@@ -1480,7 +1491,7 @@ const renderLineupsTab = (data, container) => {
                     <div class="pitch-player-node" onclick="window.openPlayerDetailModal('${safeAthId}', '${teamId}')" title="${name} (#${num}) - انقر لعرض بطاقة وإحصائيات اللاعب">
                         <div class="pitch-player-avatar-wrap ${shirtCls}">
                             ${headshot ? `
-                                <img src="${headshot}" alt="${name}" class="pitch-player-headshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">
+                                <img src="${headshot}" alt="${name}" class="pitch-player-headshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy" referrerpolicy="no-referrer">
                             ` : ''}
                             <div class="pitch-player-fallback-num" style="${headshot ? 'display:none;' : 'display:flex;'}">${num}</div>
                             <span class="pitch-player-jersey-pill">${num}</span>
@@ -1558,7 +1569,7 @@ const renderLineupsTab = (data, container) => {
                                     <div class="bench-player-info">
                                         <div class="bench-player-thumb-wrap">
                                             ${headshot ? `
-                                                <img src="${headshot}" class="bench-player-thumb" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">
+                                                <img src="${headshot}" class="bench-player-thumb" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy" referrerpolicy="no-referrer">
                                             ` : ''}
                                             <span class="bench-player-fallback-icon" style="${headshot ? 'display:none;' : 'display:flex;'}"><i class="fa-solid fa-user"></i></span>
                                         </div>
@@ -1595,7 +1606,7 @@ const renderLineupsTab = (data, container) => {
                                     <div class="bench-player-info">
                                         <div class="bench-player-thumb-wrap">
                                             ${headshot ? `
-                                                <img src="${headshot}" class="bench-player-thumb" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">
+                                                <img src="${headshot}" class="bench-player-thumb" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy" referrerpolicy="no-referrer">
                                             ` : ''}
                                             <span class="bench-player-fallback-icon" style="${headshot ? 'display:none;' : 'display:flex;'}"><i class="fa-solid fa-user"></i></span>
                                         </div>
@@ -2159,19 +2170,19 @@ const attachStatsSwipeListeners = () => {
         const elapsed = Date.now() - touchStartTime;
         touchStartTime = 0;
 
-        // التأكد من أن الإيماءة أفقية وحاسمة وليست تمريراً رأسياً
+        // التأكد من أن الإيماءة أفقية وحاسمة وليست تمريراً رأسياً (تم عكس اتجاه السحب حسب رغبة المستخدم)
         if (elapsed < 650 && Math.abs(deltaX) >= 42 && Math.abs(deltaX) > Math.abs(deltaY) * 1.25) {
             const currentIdx = STATS_TABS_LIST.indexOf(currentActiveStatsTab);
             if (currentIdx !== -1) {
                 if (deltaX < 0) {
-                    // سحب نحو اليسار: انتقال للتبويب التالي في القائمة
-                    if (currentIdx < STATS_TABS_LIST.length - 1) {
-                        window.switchStatsTab(STATS_TABS_LIST[currentIdx + 1]);
-                    }
-                } else {
-                    // سحب نحو اليمين: رجوع للتبويب السابق
+                    // سحب نحو اليسار: الرجوع للتبويب السابق
                     if (currentIdx > 0) {
                         window.switchStatsTab(STATS_TABS_LIST[currentIdx - 1]);
+                    }
+                } else {
+                    // سحب نحو اليمين: الانتقال للتبويب التالي
+                    if (currentIdx < STATS_TABS_LIST.length - 1) {
+                        window.switchStatsTab(STATS_TABS_LIST[currentIdx + 1]);
                     }
                 }
             }
